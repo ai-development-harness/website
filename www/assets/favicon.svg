@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AI Development Harness">
+  <defs>
+    <linearGradient id="g" x1="10" y1="8" x2="52" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5963"/>
+      <stop offset="1" stop-color="#ff3147"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#090e14"/>
+  <path d="M12 45 28.5 16h9L22 45h-10Z" fill="url(#g)"/>
+  <path d="m34.8 18 7.2 12.6L35.8 42h-9L34.8 28l-4-7 4-3Z" fill="#ff4a58"/>
+  <path d="M42.8 31.5 53 49h-9L38.3 39l4.5-7.5Z" fill="#ff3147"/>
+  <path d="M25 45h20l-4 7H21l4-7Z" fill="#ff5c65" opacity=".88"/>
+</svg>

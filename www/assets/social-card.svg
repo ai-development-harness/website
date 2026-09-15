@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="r" cx="0" cy="0" r="1" gradientTransform="translate(980 80) rotate(132) scale(530 470)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff3f50" stop-opacity=".24"/><stop offset="1" stop-color="#ff3f50" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="red" x1="80" y1="80" x2="175" y2="175" gradientUnits="userSpaceOnUse"><stop stop-color="#ff5963"/><stop offset="1" stop-color="#ff3147"/></linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#ffffff" stroke-opacity=".035"/></pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#070b10"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#r)"/>
+  <path d="M0 86h710l55-55h435" stroke="#ff3f50" stroke-opacity=".5" fill="none"/>
+
+  <g transform="translate(74 54)">
+    <path d="M0 48 22 9h12L13 48H0Z" fill="url(#red)"/>
+    <path d="m30 12 10 18-8.5 15H19l11-19-5-9 5-5Z" fill="#ff4a58"/>
+    <path d="m41 31 13 23H42L34.7 41 41 31Z" fill="#ff3147"/>
+    <path d="M17 48h27l-5 9H12l5-9Z" fill="#ff5c65"/>
+    <text x="75" y="27" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="760" fill="#f4f6f8">AI Development Harness</text>
+    <text x="76" y="48" font-family="Inter,Arial,sans-serif" font-size="9" font-weight="650" letter-spacing="3" fill="#788591">IDEAS TO REAL PROJECTS</text>
+  </g>
+
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="76" y="220" font-size="21" font-weight="780" letter-spacing="2" fill="#ff4b59">БОЛЬШЕ, ЧЕМ ШАБЛОН</text>
+    <text x="76" y="286" font-size="58" font-weight="820" letter-spacing="-2.8" fill="#f4f6f8">Системная разработка</text>
+    <text x="76" y="350" font-size="58" font-weight="820" letter-spacing="-2.8" fill="#f4f6f8">проектов <tspan fill="#ff4b59">с AI</tspan></text>
+    <text x="78" y="400" font-size="19" fill="#9da9b4">Контекст, требования, ADR, STEP, проверки и review —</text>
+    <text x="78" y="430" font-size="19" fill="#9da9b4">в репозитории, а не в истории чата.</text>
+  </g>
+
+  <g transform="translate(770 178)">
+    <rect width="360" height="310" rx="18" fill="#0c1219" stroke="#72808c" stroke-opacity=".28"/>
+    <rect width="360" height="42" rx="18" fill="#101720"/>
+    <path d="M0 42h360" stroke="#72808c" stroke-opacity=".22"/>
+    <circle cx="20" cy="21" r="4" fill="#ff3f50"/><circle cx="34" cy="21" r="4" fill="#3b4650"/><circle cx="48" cy="21" r="4" fill="#3b4650"/>
+    <text x="180" y="25" text-anchor="middle" font-family="monospace" font-size="10" fill="#8f9ba5">project flow</text>
+
+    <g font-family="monospace" font-size="12">
+      <rect x="24" y="70" width="312" height="52" rx="10" fill="#0a0f15" stroke="#72808c" stroke-opacity=".18"/>
+      <text x="42" y="92" fill="#ff4b59">01</text><text x="76" y="92" fill="#f4f6f8">PROJECT_BRIEF.local.md</text><text x="76" y="108" fill="#687581" font-size="9">опишите проект своими словами</text>
+      <path d="M42 122v18" stroke="#596671"/>
+      <rect x="24" y="140" width="312" height="52" rx="10" fill="#ff3f50" fill-opacity=".07" stroke="#ff3f50" stroke-opacity=".35"/>
+      <text x="42" y="162" fill="#ff4b59">02</text><text x="76" y="162" fill="#f4f6f8">INIT PROJECT</text><text x="76" y="178" fill="#687581" font-size="9">REQ · ADR · STEP · roadmap</text>
+      <path d="M42 192v18" stroke="#596671"/>
+      <rect x="24" y="210" width="312" height="52" rx="10" fill="#0a0f15" stroke="#72808c" stroke-opacity=".18"/>
+      <text x="42" y="232" fill="#ff4b59">03</text><text x="76" y="232" fill="#f4f6f8">RUN STEP-001</text><text x="76" y="248" fill="#687581" font-size="9">plan → implement → verify → review</text>
+    </g>
+  </g>
+
+  <g transform="translate(76 520)" font-family="monospace" font-size="12" fill="#687581">
+    <text>ai-development-harness.ru</text>
+    <text x="864">OPEN SOURCE · GITHUB TEMPLATE</text>
+  </g>
+</svg>

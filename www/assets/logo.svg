@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 88" role="img" aria-label="AI Development Harness">
+  <defs>
+    <linearGradient id="lg" x1="5" y1="8" x2="70" y2="78" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5963"/><stop offset="1" stop-color="#ff3147"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(2 6)">
+    <path d="M7 59 29 20h12L20 59H7Z" fill="url(#lg)"/>
+    <path d="m37 23 10 18-8.5 15H26l11-19-5-9 5-5Z" fill="#ff4a58"/>
+    <path d="m48 42 13 23H49L41.7 52 48 42Z" fill="#ff3147"/>
+    <path d="M24 59h27l-5 9H19l5-9Z" fill="#ff5c65" opacity=".9"/>
+  </g>
+  <g fill="#f2f5f7" font-family="Inter,Segoe UI,Arial,sans-serif">
+    <text x="86" y="35" font-size="23" font-weight="780" letter-spacing="-.5">AI Development Harness</text>
+    <text x="87" y="58" font-size="9" font-weight="650" letter-spacing="3.2" fill="#7f8b96">IDEAS TO REAL PROJECTS</text>
+  </g>
+</svg>
