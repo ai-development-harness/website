@@ -3,381 +3,216 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#070b10">
+  <meta name="theme-color" content="#050914">
   <meta name="color-scheme" content="dark">
-  <title>AI Development Harness — системная разработка с AI</title>
-  <meta name="description" content="AI Development Harness превращает работу с ChatGPT и Codex из набора разрозненных промптов в воспроизводимый процесс: требования, ADR, STEP, реализация, проверки, review и Git workflow.">
-  <link rel="canonical" href="https://ai-development-harness.ru">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/logo.svg" as="image" type="image/svg+xml">
-
+  <title>AI Development Harness — репозиторий как память проекта</title>
+  <meta name="description" content="AI Development Harness превращает репозиторий в долговременную память проекта: требования, ADR, STEP, код, evidence, review и безопасный Git workflow.">
+  <link rel="canonical" href="https://ai-development-harness.ru/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/assets/logo.svg" as="image" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">
-  <meta property="og:title" content="AI Development Harness — системная разработка с AI">
-  <meta property="og:description" content="Структура, процесс и правила для AI-разработки, которые живут в репозитории — а не в истории чата.">
-  <meta property="og:url" content="https://ai-development-harness.ru">
-  <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="AI Development Harness — от идеи к реальному проекту">
-
+  <meta property="og:title" content="AI Development Harness — репозиторий как память проекта">
+  <meta property="og:description" content="Воспроизводимый AI-workflow: от идеи и требований до кода, доказательств, независимого review и безопасных изменений.">
+  <meta property="og:url" content="https://ai-development-harness.ru/">
+  <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AI Development Harness">
-  <meta name="twitter:description" content="Системный процесс AI-разработки прямо в вашем репозитории.">
-  <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.png">
-
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <a class="skip-link" href="#content">К содержимому</a>
 
   <header class="site-header">
-    <div class="container nav-shell">
-      <a class="brand" href="https://ai-development-harness.ru" aria-label="AI Development Harness — на главную">
-        <img src="assets/logo.svg" width="236" height="40" alt="AI Development Harness">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="AI Development Harness — на главную">
+        <img src="/assets/logo.svg" width="272" height="44" alt="AI Development Harness">
       </a>
-
-      <nav class="nav-links" aria-label="Основная навигация">
-        <a href="#why">Зачем</a>
+      <nav class="desktop-nav" aria-label="Основная навигация">
+        <a href="#problem">Проблема</a>
         <a href="#workflow">Как работает</a>
+        <a href="#traceability">Архитектура</a>
         <a href="#example">Пример</a>
-        <a href="#advantages">Преимущества</a>
+        <a href="#audience">Для кого</a>
       </nav>
-
-      <a class="button button--small button--outline" href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">
-        GitHub
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-      </a>
+      <div class="header-actions">
+        <a class="github-link" href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="button button--small button--primary desktop-cta" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
+        <button class="menu-button" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" hidden>
+      <a href="#problem">Проблема</a>
+      <a href="#workflow">Как работает</a>
+      <a href="#traceability">Архитектура</a>
+      <a href="#example">Пример</a>
+      <a href="#audience">Для кого</a>
+      <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон</a>
+    </nav>
   </header>
 
-  <main id="content">
+  <main id="content" tabindex="-1">
     <section class="hero" id="top">
-      <div class="hero-glow hero-glow--one"></div>
-      <div class="hero-glow hero-glow--two"></div>
-      <div class="container hero-grid">
+      <div class="hero-grid-bg" aria-hidden="true"></div>
+      <div class="container hero-layout">
         <div class="hero-copy">
-          <div class="eyebrow"><span></span> Больше, чем шаблон</div>
-          <h1>Полноценная система для <em>AI-разработки</em> проектов</h1>
-          <p class="hero-lead">
-            AI Development Harness переносит проектный контекст, правила и процесс разработки в репозиторий. ChatGPT и Codex получают понятную структуру работы — от идеи и требований до реализации, проверок, review и Git.
-          </p>
-
+          <div class="eyebrow">Репозиторий как память · AI как сопроцессор</div>
+          <h1>Ваш репозиторий становится <span>долгосрочной памятью проекта</span></h1>
+          <p class="hero-lead">Воспроизводимый AI-workflow для разработки: от идей и требований до кода, доказательств и безопасных изменений.</p>
           <div class="hero-actions">
-            <a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">
-              Открыть на GitHub
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </a>
-            <a class="button button--ghost" href="#example">
-              Посмотреть пример
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-            </a>
+            <a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
+            <a class="button button--ghost" href="#workflow">Как это работает <span>↓</span></a>
           </div>
-
-          <div class="hero-traits" aria-label="Ключевые свойства">
-            <div><span class="trait-icon">⌁</span><strong>Структура</strong><small>Контекст проекта в Git</small></div>
-            <div><span class="trait-icon">◇</span><strong>Процесс</strong><small>От STEP до review</small></div>
-            <div><span class="trait-icon">□</span><strong>Документация</strong><small>REQ, ADR и evidence</small></div>
-            <div><span class="trait-icon">✓</span><strong>Контроль</strong><small>Проверки вместо доверия</small></div>
+          <div class="hero-facts" aria-label="Ключевые свойства">
+            <span>Открытый template</span><span>Работает с Git</span><span>Для solo и команд</span>
           </div>
         </div>
 
-        <div class="hero-product" aria-label="Пример структуры AI Development Harness">
-          <div class="product-aura"></div>
-          <div class="repo-window">
-            <div class="window-bar">
-              <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-              <div class="window-title">ai-development-harness/</div>
-              <div class="window-state">main</div>
-            </div>
-            <div class="repo-body">
-              <div class="repo-tree" aria-label="Структура проекта">
-                <div class="tree-row tree-row--muted"><span>⌄</span><b>PROJECT</b></div>
-                <div class="tree-row"><span>▣</span><b>.agents/</b><small>skills</small></div>
-                <div class="tree-row"><span>▣</span><b>.codex/</b><small>agents</small></div>
-                <div class="tree-row"><span>▣</span><b>docs/</b><small>REQ · ADR</small></div>
-                <div class="tree-row tree-row--active"><span>▣</span><b>planning/</b><small>STEP · review</small></div>
-                <div class="tree-row"><span>▣</span><b>tools/</b><small>validation</small></div>
-                <div class="tree-row"><span>≡</span><b>AGENTS.md</b><small>protocol</small></div>
-                <div class="tree-row"><span>≡</span><b>README.md</b><small>entrypoint</small></div>
-              </div>
-
-              <div class="repo-status">
-                <div class="status-label">PROJECT FLOW</div>
-                <div class="status-step"><i>01</i><span><b>Brief</b><small>Опишите проект своими словами</small></span><strong>ready</strong></div>
-                <div class="flow-line"></div>
-                <div class="status-step status-step--accent"><i>02</i><span><b>INIT PROJECT</b><small>Создать knowledge base и roadmap</small></span><strong>run</strong></div>
-                <div class="flow-line"></div>
-                <div class="status-step"><i>03</i><span><b>RUN STEP-001</b><small>Plan → Implement → Review</small></span><strong>next</strong></div>
-
-                <div class="terminal-line"><span>›</span><code>STATUS PROJECT</code><i class="cursor"></i></div>
-              </div>
-            </div>
-            <div class="repo-footer">
-              <span><i class="ok-dot"></i> repository-grounded</span>
-              <span>REQ ↔ ADR ↔ STEP ↔ evidence</span>
-            </div>
+        <div class="memory-map" aria-label="Связи между артефактами AI Development Harness">
+          <div class="map-glow"></div>
+          <div class="map-label">Единая контекстная система</div>
+          <div class="map-core">
+            <img src="/assets/mark.svg" width="84" height="84" alt="">
+            <strong>AI Development</strong><span>Harness</span>
           </div>
-          <div class="floating-label floating-label--left">source of truth</div>
-          <div class="floating-label floating-label--right">deterministic gates</div>
+          <div class="map-node node-brief"><b>Project Brief</b><small>цели и контекст</small></div>
+          <div class="map-node node-req"><b>REQ</b><small>требования и критерии</small></div>
+          <div class="map-node node-adr"><b>ADR</b><small>архитектурные решения</small></div>
+          <div class="map-node node-step"><b>STEP</b><small>пошаговый план</small></div>
+          <div class="map-node node-code"><b>Code</b><small>реализация</small></div>
+          <div class="map-node node-evidence"><b>Evidence</b><small>результаты и артефакты</small></div>
+          <div class="map-node node-review"><b>Review</b><small>проверка и findings</small></div>
+          <div class="map-node node-git"><b>Git</b><small>безопасные изменения</small></div>
+          <svg class="map-lines" viewBox="0 0 760 510" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="flow" x1="0" x2="1"><stop stop-color="#20e4ff"/><stop offset=".55" stop-color="#4387ff"/><stop offset="1" stop-color="#b14cff"/></linearGradient></defs>
+            <path d="M130 120 C235 120 250 220 355 235"/><path d="M130 235 C230 235 255 235 355 235"/><path d="M130 350 C235 350 250 255 355 235"/>
+            <path d="M405 235 C500 235 500 112 600 112"/><path d="M405 235 C505 235 510 205 600 205"/><path d="M405 235 C505 235 510 298 600 298"/><path d="M650 205 C700 205 700 390 630 390"/><path d="M650 298 C700 298 700 390 630 390"/>
+          </svg>
+          <div class="map-caption">идеи → структура → код → доказательства → развитие</div>
         </div>
       </div>
     </section>
 
-    <section class="section section--intro" id="why">
+    <section class="section section--problem" id="problem">
       <div class="container">
-        <div class="section-heading section-heading--split">
-          <div>
-            <div class="eyebrow"><span></span> Проблема</div>
-            <h2>AI умеет писать код.<br><em>Но проекту этого мало.</em></h2>
-          </div>
-          <p>
-            Без устойчивого контекста каждая новая сессия снова выясняет архитектуру, договорённости и текущий план. Результат зависит от того, что осталось в чате — а не от состояния самого проекта.
-          </p>
+        <div class="section-intro section-intro--split">
+          <div><div class="eyebrow">Проблема</div><h2 class="section-title">Почему AI-разработка без системы быстро заходит в тупик</h2></div>
+          <p>Когда решения живут в чатах, а не в репозитории, проект теряет причинно-следственные связи. Следующая сессия получает код, но не память о том, почему он именно такой.</p>
         </div>
-
-        <div class="comparison-grid">
-          <article class="comparison-card comparison-card--manual">
-            <div class="card-kicker">Без Harness</div>
-            <h3>Ручной процесс расползается</h3>
-            <ul class="check-list check-list--bad">
-              <li>Промпты и решения живут в разных чатах</li>
-              <li>Требования смешиваются с планом и архитектурой</li>
-              <li>Review часто делает тот же контекст, что писал код</li>
-              <li>Мелкие задачи либо теряются, либо обрастают бюрократией</li>
-              <li>Новая сессия вынуждена восстанавливать историю</li>
-            </ul>
-          </article>
-
-          <article class="comparison-card comparison-card--harness">
-            <div class="card-kicker card-kicker--accent">С Harness</div>
-            <h3>Репозиторий помнит всё важное</h3>
-            <ul class="check-list">
-              <li>REQ, ADR и STEP разделены по назначению</li>
-              <li>Implementation plan сохраняется рядом с задачей</li>
-              <li>Проверки дают evidence, а review остаётся независимым</li>
-              <li><code>QUICK FIX</code> закрывает безопасные micro-change без лишних STEP</li>
-              <li>Любая новая сессия стартует с project state, а не с пересказа чата</li>
-            </ul>
-          </article>
+        <div class="problem-grid">
+          <article class="problem-card"><div class="icon icon--pink">◎</div><h3>Контекст теряется</h3><p>Важные решения, требования и обсуждения разбросаны по чатам и документам.</p></article>
+          <article class="problem-card"><div class="icon">▤</div><h3>Нет прослеживаемости</h3><p>Непонятно, почему принято решение и как оно связано с текущим кодом.</p></article>
+          <article class="problem-card"><div class="icon icon--warn">△</div><h3>Нестабильный результат</h3><p>Разные сессии приходят к разным решениям и повторно исследуют одно и то же.</p></article>
+          <article class="problem-card"><div class="icon">♧</div><h3>Рискованные изменения</h3><p>Без явного scope, verification и review AI легко меняет больше, чем требовалось.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="section section--workflow" id="workflow">
+    <section class="section" id="workflow">
       <div class="container">
-        <div class="section-heading">
-          <div class="eyebrow"><span></span> Как это работает</div>
-          <h2>От идеи до результата — <em>по одному понятному процессу</em></h2>
-          <p>Harness не пытается заменить разработчика. Он делает взаимодействие человека, AI и репозитория воспроизводимым.</p>
+        <div class="section-intro section-intro--split">
+          <div><div class="eyebrow">Как это работает</div><h2 class="section-title">Структурированный процесс. Реальные результаты.</h2></div>
+          <p>Каждый этап оставляет durable handoff в репозитории. Новая сессия продолжает работу из фактического состояния проекта, а не из памяти чата.</p>
         </div>
-
-        <div class="workflow-grid">
-          <article class="workflow-card">
-            <div class="workflow-number">01</div>
-            <div class="workflow-icon">▱</div>
-            <h3>Создайте проект</h3>
-            <p>Используйте GitHub template и опишите цель, пользователей, ограничения и предпочтительный стек в локальном brief.</p>
-            <code>PROJECT_BRIEF.local.md</code>
-          </article>
-          <article class="workflow-card">
-            <div class="workflow-number">02</div>
-            <div class="workflow-icon">⌘</div>
-            <h3>Инициализируйте контекст</h3>
-            <p>Initializer превращает сырой brief в требования, архитектурный baseline, roadmap и связанные STEP.</p>
-            <code>INIT PROJECT</code>
-          </article>
-          <article class="workflow-card">
-            <div class="workflow-number">03</div>
-            <div class="workflow-icon">▶</div>
-            <h3>Запускайте STEP</h3>
-            <p>Планирование, реализация, deterministic verification, независимый review и исправления идут по единому контракту.</p>
-            <code>RUN STEP-001</code>
-          </article>
-          <article class="workflow-card">
-            <div class="workflow-number">04</div>
-            <div class="workflow-icon">⌁</div>
-            <h3>Продолжайте без потери контекста</h3>
-            <p>Статус, решения и доказательства остаются в Git. Следующая сессия понимает проект без восстановления истории чата.</p>
-            <code>NEXT STEP</code>
-          </article>
+        <div class="process-row">
+          <article class="process-step"><span class="step-no">01</span><div class="step-icon">▱</div><h3>Фиксируем контекст</h3><p>Brief, цели, ограничения и требования становятся частью project knowledge base.</p></article>
+          <article class="process-step"><span class="step-no">02</span><div class="step-icon">⌘</div><h3>Принимаем решения</h3><p>Устойчивые архитектурные решения фиксируются как ADR, неизвестное — как research.</p></article>
+          <article class="process-step"><span class="step-no">03</span><div class="step-icon">≡</div><h3>Планируем STEP</h3><p>Задача получает scope, зависимости, acceptance criteria и verification.</p></article>
+          <article class="process-step"><span class="step-no">04</span><div class="step-icon">&lt;/&gt;</div><h3>Реализуем и доказываем</h3><p>Код и тесты привязываются к task contract, а проверки формируют evidence.</p></article>
+          <article class="process-step"><span class="step-no">05</span><div class="step-icon">✓</div><h3>Проверяем и развиваем</h3><p>Независимый review даёт PASS, FAIL или BLOCKED и определяет следующий переход.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="section section--example" id="example">
-      <div class="container example-grid">
+    <section class="section section--traceability" id="traceability">
+      <div class="container trace-layout">
+        <div class="trace-copy">
+          <div class="eyebrow">Полная прослеживаемость</div>
+          <h2 class="section-title">Всё связано. Всё в репозитории. Всё под контролем.</h2>
+          <p>Harness разделяет требования, решения, task contracts, реализацию и доказательства — и связывает их в одну читаемую систему.</p>
+          <a class="text-link" href="https://github.com/ai-development-harness/ai-development-harness-template/blob/main/docs/harness/DOCUMENT_MODEL.md" target="_blank" rel="noreferrer">Подробнее о модели документации →</a>
+        </div>
+        <div class="traceability-flow" aria-label="Поток контекста и доказательств">
+          <div class="flow-kicker">Поток контекста и правды</div>
+          <div class="flow-track">
+            <div class="flow-card"><b>Project Brief</b><small>цели · ограничения</small></div><i>→</i>
+            <div class="flow-card"><b>REQ</b><small>контракты продукта</small></div><i>→</i>
+            <div class="flow-card flow-card--green"><b>ADR</b><small>устойчивые решения</small></div><i>→</i>
+            <div class="flow-card"><b>STEP</b><small>scope · criteria</small></div><i>→</i>
+            <div class="flow-stack"><div class="flow-card"><b>Code</b><small>реализация</small></div><div class="flow-card"><b>Evidence</b><small>тесты · логи</small></div></div><i>→</i>
+            <div class="flow-card flow-card--violet"><b>Review</b><small>verdict · findings</small></div><i>→</i>
+            <div class="flow-card flow-card--violet"><b>Git</b><small>история изменений</small></div>
+          </div>
+          <div class="flow-footer">полная прослеживаемость от идеи до результата</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="example">
+      <div class="container example-layout">
         <div class="example-copy">
-          <div class="eyebrow"><span></span> Небольшой пример</div>
-          <h2>Вы формулируете задачу.<br><em>Harness превращает её в работу.</em></h2>
-          <p>
-            Не нужно вручную придумывать формат тикета, писать отдельный план реализации и объяснять следующему агенту, что произошло. Контекст сохраняется в проектных артефактах.
-          </p>
-          <div class="example-note">
-            <span>Важно</span>
-            <p>Production code не меняется на этапе создания STEP. Сначала Harness фиксирует контракт задачи, зависимости, acceptance criteria и verification.</p>
-          </div>
+          <div class="eyebrow">Практический пример</div>
+          <h2 class="section-title">От запроса к работающему коду</h2>
+          <p>Короткая команда становится структурированной задачей. План и связи сохраняются в репозитории до начала production mutation.</p>
+          <a class="button button--ghost" href="https://github.com/ai-development-harness/ai-development-harness-template/blob/main/docs/harness/COMMANDS.md" target="_blank" rel="noreferrer">Все команды</a>
         </div>
+        <div class="example-panels">
+          <div class="terminal-panel">
+            <div class="panel-bar"><span class="dots">● ● ●</span><b>Project session</b></div>
+            <pre><code><span class="prompt">YOU ›</span> ADD STEP: Добавить экспорт отчётов в PDF
 
-        <div class="console" aria-label="Пример использования Harness">
-          <div class="console-bar">
-            <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-            <span>Codex / ChatGPT</span>
-            <small>project session</small>
+<span class="muted">HARNESS › анализирую REQ / ADR / dependencies…</span>
+<span class="muted">HARNESS › формирую acceptance criteria…</span>
+<span class="success">✓ Создан STEP-012</span>
+
+<span class="prompt">YOU ›</span> RUN STEP-012</code></pre>
           </div>
-          <div class="console-body">
-            <div class="console-entry">
-              <span class="prompt-label">YOU</span>
-              <code>ADD STEP: Добавить вход через GitHub OAuth</code>
-            </div>
-            <div class="console-response">
-              <span class="prompt-label prompt-label--ai">HARNESS</span>
-              <p>Создан <b>STEP-012</b></p>
-              <div class="console-meta">
-                <span>Type <b>FEATURE</b></span>
-                <span>Priority <b>HIGH</b></span>
-                <span>Risk <b>SECURITY</b></span>
-              </div>
-              <ul>
-                <li>связаны существующие REQ</li>
-                <li>проверены dependencies</li>
-                <li>добавлены acceptance criteria</li>
-                <li>определены verification gates</li>
-              </ul>
-              <div class="next-command"><span>next</span><code>PLAN STEP-012</code></div>
-            </div>
-            <div class="console-entry console-entry--second">
-              <span class="prompt-label">YOU</span>
-              <code>RUN STEP-012</code>
-            </div>
-            <div class="run-flow">
-              <span>PLAN</span><i>→</i><span>IMPLEMENT</span><i>→</i><span>VERIFY</span><i>→</i><span>REVIEW</span><i>→</i><span class="run-flow--accent">PASS</span>
-            </div>
+          <div class="step-panel">
+            <div class="panel-bar"><span>STEP-012.md</span><span class="status">готов к PLAN</span></div>
+            <h3>Экспорт отчётов в PDF</h3>
+            <div class="step-meta"><span>FEATURE</span><span>Medium risk</span></div>
+            <div class="mini-grid"><div><b>Связи</b><small>REQ-018<br>ADR-007</small></div><div><b>Acceptance</b><small>PDF формируется<br>Покрыт тестами</small></div><div><b>Verification</b><small>unit + e2e<br>build</small></div><div><b>Next</b><small>PLAN STEP-012</small></div></div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" id="advantages">
-      <div class="container">
-        <div class="section-heading section-heading--split">
-          <div>
-            <div class="eyebrow"><span></span> Почему это лучше старта с нуля</div>
-            <h2>Меньше настройки.<br><em>Больше инженерной дисциплины.</em></h2>
-          </div>
-          <p>
-            Обычный новый репозиторий даёт пустое пространство. Harness сразу задаёт работающие границы: как хранить решения, как выполнять задачи, как проверять результат и как безопасно работать с Git.
-          </p>
-        </div>
-
-        <div class="benefits-grid">
-          <article class="benefit-card benefit-card--large">
-            <span class="benefit-symbol">⌘</span>
-            <h3>Единый интерфейс команд</h3>
-            <p>Стабильные команды вместо каждый раз новых промптов. Они одинаково читаются человеком и агентом.</p>
-            <div class="command-cloud">
-              <code>INIT PROJECT</code><code>ADD STEP</code><code>RUN STEP</code><code>QUICK FIX</code><code>STATUS PROJECT</code><code>RECONCILE</code>
-            </div>
-          </article>
-          <article class="benefit-card">
-            <span class="benefit-symbol">◇</span>
-            <h3>Traceability</h3>
-            <p>Требование связано с работой, решение — с ограничениями, а выполненный STEP — с реальными доказательствами.</p>
-          </article>
-          <article class="benefit-card">
-            <span class="benefit-symbol">✓</span>
-            <h3>Проверяемое качество</h3>
-            <p>AI-вердикт не заменяет build, tests, lint и остальные deterministic gates конкретного проекта.</p>
-          </article>
-          <article class="benefit-card">
-            <span class="benefit-symbol">↗</span>
-            <h3>Git без сюрпризов</h3>
-            <p><code>GIT CHECK</code>, <code>COMMIT</code>, <code>PUSH</code> и <code>PR</code> разделены и подчиняются repository policy.</p>
-          </article>
-          <article class="benefit-card">
-            <span class="benefit-symbol">✦</span>
-            <h3>Расширяемые skills</h3>
-            <p>Ищите, инспектируйте, устанавливайте или создавайте project-specific skills без смешивания их с core protocol.</p>
-          </article>
-          <article class="benefit-card benefit-card--wide">
-            <span class="benefit-symbol">∞</span>
-            <div>
-              <h3>Контекст переживает чат</h3>
-              <p>Главная идея Harness: репозиторий — source of truth. Новая сессия может продолжить работу, читая актуальные файлы проекта вместо пересказа предыдущего разговора.</p>
-            </div>
-            <div class="trace-line" aria-label="Цепочка контекста">
-              <span>REQ</span><i></i><span>ADR</span><i></i><span>STEP</span><i></i><span>CODE</span><i></i><span>EVIDENCE</span><i></i><span>REVIEW</span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--commands">
-      <div class="container">
-        <div class="section-heading">
-          <div class="eyebrow"><span></span> Не только happy path</div>
-          <h2>Реальная разработка состоит<br><em>не только из больших фич</em></h2>
-          <p>Harness учитывает повседневные сценарии, на которых обычно ломаются слишком формальные процессы.</p>
-        </div>
-
-        <div class="scenario-list">
-          <article>
-            <div class="scenario-command"><code>QUICK FIX</code></div>
-            <div><h3>Исправили опечатку?</h3><p>Без отдельного STEP, если изменение действительно локальное и low-risk.</p></div>
-            <span class="scenario-tag">micro-change</span>
-          </article>
-          <article>
-            <div class="scenario-command"><code>ADD STEP</code></div>
-            <div><h3>Появилась новая задача?</h3><p>Короткое описание превращается в связанный task contract с dependencies и критериями готовности.</p></div>
-            <span class="scenario-tag">planning</span>
-          </article>
-          <article>
-            <div class="scenario-command"><code>RECONCILE</code></div>
-            <div><h3>Код и документация разошлись?</h3><p>Harness сначала фиксирует drift и corrective work, а не переписывает проект молча.</p></div>
-            <span class="scenario-tag">audit</span>
-          </article>
-          <article>
-            <div class="scenario-command"><code>GENERATE GITHUB TEMPLATES</code></div>
-            <div><h3>Стек проекта изменился?</h3><p>Issue Forms и PR template можно пересобрать по актуальным технологиям и tooling.</p></div>
-            <span class="scenario-tag">tooling</span>
-          </article>
+    <section class="section section--audience" id="audience">
+      <div class="container audience-layout">
+        <div><div class="eyebrow">Для кого</div><h2 class="section-title">Создан для разработки, которая продолжается дольше одного чата</h2></div>
+        <div class="audience-grid">
+          <article><span>&lt;/&gt;</span><h3>Разработчики</h3><p>Быстрее стартуют и меньше объясняют повторно.</p></article>
+          <article><span>◎</span><h3>Технические лиды</h3><p>Получают видимую архитектуру, критерии и review gates.</p></article>
+          <article><span>◇</span><h3>Продуктовые команды</h3><p>Связывают требования с фактической реализацией и evidence.</p></article>
+          <article><span>↗</span><h3>AI-native проекты</h3><p>Строят процесс вокруг агентов, не теряя инженерную дисциплину.</p></article>
         </div>
       </div>
     </section>
 
     <section class="cta-section">
-      <div class="cta-glow"></div>
-      <div class="container">
-        <div class="cta-card">
-          <div class="cta-mark" aria-hidden="true"><img src="assets/favicon.svg" alt=""></div>
-          <div class="eyebrow"><span></span> Open Source · GitHub Template</div>
-          <h2>Соберите проект вокруг процесса,<br><em>а не вокруг истории чата.</em></h2>
-          <p>Возьмите AI Development Harness как основу нового репозитория, заполните brief и начните с <code>INIT PROJECT</code>.</p>
-          <div class="cta-actions">
-            <a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">
-              Перейти в GitHub
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </a>
-            <a class="text-link" href="https://github.com/ai-development-harness/ai-development-harness-template/blob/main/docs/harness/GETTING_STARTED.md" target="_blank" rel="noreferrer">Начало работы <span>→</span></a>
-          </div>
+      <div class="container cta-card">
+        <div class="cta-glow"></div>
+        <div>
+          <div class="eyebrow">Чат управляет работой. Репозиторий хранит память. Git фиксирует историю.</div>
+          <h2 class="cta-title">Начните новый проект с AI Development Harness</h2>
+          <p>Один template. Durable context. Проверяемый workflow от brief до review и Git.</p>
+        </div>
+        <div class="cta-actions">
+          <a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
+          <a class="button button--ghost" href="https://github.com/ai-development-harness/ai-development-harness-template/tree/main/docs/harness" target="_blank" rel="noreferrer">Документация</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <img src="assets/logo.svg" width="236" height="40" alt="AI Development Harness">
-        <p>Идеи превращаются в реальные проекты.</p>
-      </div>
-      <div class="footer-meta">
-        <a href="https://ai-development-harness.ru">ai-development-harness.ru</a>
-        <span>Open Source</span>
-        <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub ↗</a>
-      </div>
+    <div class="container footer-inner">
+      <img src="/assets/logo.svg" width="220" height="36" alt="AI Development Harness">
+      <p>Repository-native workflow для системной AI-разработки.</p>
+      <div class="footer-links"><a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a><a href="https://github.com/ai-development-harness/ai-development-harness-template/tree/main/docs/harness" target="_blank" rel="noreferrer">Документация</a><a href="#top">Наверх ↑</a></div>
     </div>
   </footer>
+  <script type="module" src="/main.js"></script>
 </body>
 </html>

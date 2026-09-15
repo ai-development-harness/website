@@ -1,17 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 88" role="img" aria-label="AI Development Harness">
-  <defs>
-    <linearGradient id="lg" x1="5" y1="8" x2="70" y2="78" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#ff5963"/><stop offset="1" stop-color="#ff3147"/>
-    </linearGradient>
-  </defs>
-  <g transform="translate(2 6)">
-    <path d="M7 59 29 20h12L20 59H7Z" fill="url(#lg)"/>
-    <path d="m37 23 10 18-8.5 15H26l11-19-5-9 5-5Z" fill="#ff4a58"/>
-    <path d="m48 42 13 23H49L41.7 52 48 42Z" fill="#ff3147"/>
-    <path d="M24 59h27l-5 9H19l5-9Z" fill="#ff5c65" opacity=".9"/>
-  </g>
-  <g fill="#f2f5f7" font-family="Inter,Segoe UI,Arial,sans-serif">
-    <text x="86" y="35" font-size="23" font-weight="780" letter-spacing="-.5">AI Development Harness</text>
-    <text x="87" y="58" font-size="9" font-weight="650" letter-spacing="3.2" fill="#7f8b96">IDEAS TO REAL PROJECTS</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 90" role="img" aria-label="AI Development Harness">
+  <defs><linearGradient id="lg" x1="6" y1="8" x2="76" y2="80" gradientUnits="userSpaceOnUse"><stop stop-color="#31f2ff"/><stop offset=".5" stop-color="#2b80ff"/><stop offset="1" stop-color="#b047ff"/></linearGradient></defs>
+  <g transform="translate(2 5)"><path d="M7 61 31 18h13L21 61H7Z" fill="url(#lg)"/><path d="m40 22 11 20-9 17H28l12-22-5-10 5-5Z" fill="#318fff"/><path d="m52 43 14 25H52L44 54l8-11Z" fill="#9b4dff"/><path d="M26 61h29l-5 10H21l5-10Z" fill="#3b73ff"/></g>
+  <g fill="#f5f8ff" font-family="Inter,Segoe UI,Arial,sans-serif"><text x="92" y="43" font-size="25" font-weight="780" letter-spacing="-.5">AI Development <tspan fill="#9d63ff">Harness</tspan></text><text x="93" y="66" font-size="9" font-weight="700" letter-spacing="3.6" fill="#7691b8">BUILD WITH CONTEXT</text></g>
 </svg>

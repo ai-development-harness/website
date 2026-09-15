@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="AI Development Harness">
+  <defs>
+    <linearGradient id="a" x1="16" y1="12" x2="82" y2="82" gradientUnits="userSpaceOnUse"><stop stop-color="#31f2ff"/><stop offset=".48" stop-color="#2987ff"/><stop offset="1" stop-color="#a947ff"/></linearGradient>
+    <linearGradient id="b" x1="70" y1="38" x2="70" y2="82" gradientUnits="userSpaceOnUse"><stop stop-color="#52a4ff"/><stop offset="1" stop-color="#bd44ff"/></linearGradient>
+  </defs>
+  <path d="M10 78 42 16h15L28 78H10Z" fill="url(#a)"/>
+  <path d="m52 26 15 27-12 22H36l16-29-7-13 7-7Z" fill="#2998ff"/>
+  <path d="m68 51 18 32H68L57 64l11-13Z" fill="url(#b)"/>
+  <path d="M29 77h42l-7 11H22l7-11Z" fill="#396eff"/>
+</svg>
