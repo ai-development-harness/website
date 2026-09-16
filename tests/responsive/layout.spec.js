@@ -9,7 +9,7 @@ test.describe('Адаптивность — геометрия страниц', 
       expect(overflow).toBeLessThanOrEqual(1);
     });
 
-    test(`основной заголовок страницы ${страница.path} полностью помещается в viewport`, async ({ page }) => {
+    test(`основной заголовок страницы ${страница.path} полностью помещается в области экрана`, async ({ page }) => {
       await page.goto(страница.path);
       const box = await page.locator('h1').boundingBox();
       const viewport = page.viewportSize();
@@ -58,7 +58,7 @@ test.describe('Адаптивность — геометрия страниц', 
     expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
   });
 
-  test('CTA не выходит за границы viewport', async ({ page }) => {
+  test('финальный призыв к действию не выходит за границы экрана', async ({ page }) => {
     await page.goto('/');
     const box = await page.locator('.cta-box').boundingBox();
     const viewport = page.viewportSize();
