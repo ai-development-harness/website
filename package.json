@@ -17,6 +17,5 @@
     "@playwright/test": "^1.55.0",
     "concurrently": "^9.2.4",
     "http-server": "^14.1.1"
-  },
-  "packageManager": "npm@10"
+  }
 }
