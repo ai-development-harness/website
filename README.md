@@ -25,7 +25,7 @@ yarn dev
 
 ## Тесты
 
-Обычный прогон Playwright во всех поддерживаемых профилях устройств:
+Полный прогон Playwright:
 
 ```bash
 yarn test
@@ -49,11 +49,26 @@ HTML-отчёт последнего прогона:
 yarn test:report
 ```
 
-Тесты запускаются для desktop Chromium, iPad Pro 11 и Pixel 7. Проверяются основной контент, адаптивная навигация, отсутствие горизонтального overflow, anchors, внешние ссылки и базовый accessibility contract.
+Тесты разбиты по смысловым каталогам в `tests/`:
+
+- `home/` — первый экран, ключевые секции и анимированный терминал;
+- `docs/` — структура и навигация документации;
+- `navigation/` — шапка, мобильное меню, внутренние и внешние ссылки;
+- `responsive/` — геометрия и отсутствие переполнения на разных viewport;
+- `accessibility/` — семантика, landmarks и клавиатурная навигация;
+- `seo/` — canonical, metadata, JSON-LD, sitemap и robots.txt;
+- `analytics/` — локальное отключение Яндекс Метрики;
+- `runtime/` — статические ресурсы, console/page errors и ошибочные ответы;
+- `content/` — русская терминология и сохранение технических имён команд;
+- `infrastructure/` — Yarn, lockfile, Playwright и CI-инварианты.
+
+Все названия test case и test suite пишутся по-русски.
+
+`desktop-chromium` выполняет полный набор тестов. `tablet-webkit` и `mobile-chromium` дополнительно прогоняют проверки, чувствительные к браузеру и размеру экрана: главную страницу, анимацию, адаптивность, шапку и клавиатурную навигацию. Это сохраняет полноценное кроссбраузерное покрытие без бессмысленного тройного запуска статических SEO-проверок.
 
 ## CI
 
-`.github/workflows/ci.yml` использует Yarn 1.22.22, устанавливает зависимости через `yarn install --frozen-lockfile` и запускает Playwright на `push` в `main` и на каждый Pull Request. При любом результате HTML-report сохраняется как GitHub Actions artifact.
+`.github/workflows/ci.yml` использует Yarn 1.22.22, устанавливает зависимости через `yarn install --frozen-lockfile` и запускает Playwright на `push` в `main` и на каждый Pull Request. Для полного набора тестов job имеет лимит 25 минут. При любом результате HTML-report сохраняется как GitHub Actions artifact.
 
 ## Production
 
