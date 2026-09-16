@@ -8,6 +8,13 @@ on:
 permissions:
   contents: read
 
+# Для одного PR нужен полный прогон только актуального head. Если во время CI
+# появляется новый commit, устаревший run отменяется, а новый запускает тот же
+# полный набор тестов с нуля.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   playwright:
     runs-on: ubuntu-latest
