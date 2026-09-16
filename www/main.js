@@ -134,3 +134,7 @@ if (terminalPanel && !reduceMotion) {
     runTerminalDemo();
   }
 }
+
+import('/search.js')
+  .then(({ initSiteSearch }) => initSiteSearch())
+  .catch((error) => console.error('Не удалось инициализировать поиск по сайту', error));
