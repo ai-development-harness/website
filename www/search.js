@@ -10,6 +10,8 @@ const FALLBACK_PUBLIC_PATHS = [
 ];
 
 const MAX_RESULTS = 8;
+export const SEARCH_INDEX_STORAGE_KEY = 'aih:search-index:v2';
+
 let indexPromise = null;
 let lastTrigger = null;
 
@@ -47,10 +49,11 @@ export async function getPublicPaths() {
   }
 }
 
-function textOf(element) {
+function textOf(element, { withoutCommands = false } = {}) {
   if (!element) return '';
   const clone = element.cloneNode(true);
   clone.querySelectorAll('script, style, nav, .toc, .prev-next, [aria-hidden="true"]').forEach((node) => node.remove());
+  if (withoutCommands) clone.querySelectorAll('.command-item').forEach((node) => node.remove());
   return clone.textContent?.replace(/\s+/g, ' ').trim() || '';
 }
 
@@ -60,52 +63,37 @@ function pageTitleFrom(documentNode) {
     || 'Без названия';
 }
 
-function createItem({ path, href, pageTitle, title, text, kind, keywords = '' }) {
-  return {
-    path,
-    href,
-    pageTitle,
-    title,
-    text,
-    kind,
-    keywords,
-    normalizedTitle: normalizeSearchText(title),
-    normalizedPageTitle: normalizeSearchText(pageTitle),
-    normalizedText: normalizeSearchText(text),
-    normalizedKeywords: normalizeSearchText(keywords),
-  };
+function createEntry({ fragment = '', title, text, kind, keywords }) {
+  const entry = { fragment, title, text, kind };
+  if (keywords && keywords !== title) entry.keywords = keywords;
+  return entry;
 }
 
-export function extractSearchItems(html, path) {
+export function extractSearchPage(html, path) {
   const documentNode = new DOMParser().parseFromString(html, 'text/html');
   const main = documentNode.querySelector('main');
-  if (!main) return [];
+  if (!main) return null;
 
-  const pageTitle = pageTitleFrom(documentNode);
+  const title = pageTitleFrom(documentNode);
   const description = documentNode.querySelector('meta[name="description"]')?.getAttribute('content') || '';
-  const items = [createItem({
-    path,
-    href: path,
-    pageTitle,
-    title: pageTitle,
+  const page = {
+    title,
     text: description || textOf(main).slice(0, 900),
-    kind: 'page',
-  })];
+    entries: [],
+  };
 
   for (const section of main.querySelectorAll('section[id]')) {
-    const id = section.id;
+    const fragment = section.id;
     const heading = section.querySelector('h2, h3');
-    if (!id || !heading) continue;
+    if (!fragment || !heading) continue;
 
-    const title = heading.textContent?.trim();
-    if (!title) continue;
+    const sectionTitle = heading.textContent?.trim();
+    if (!sectionTitle) continue;
 
-    items.push(createItem({
-      path,
-      href: `${path}#${id}`,
-      pageTitle,
-      title,
-      text: textOf(section),
+    page.entries.push(createEntry({
+      fragment,
+      title: sectionTitle,
+      text: textOf(section, { withoutCommands: true }),
       kind: 'section',
     }));
   }
@@ -114,24 +102,25 @@ export function extractSearchItems(html, path) {
     const code = command.querySelector('h3 code');
     if (!code) continue;
 
-    const title = code.textContent?.trim();
-    if (!title) continue;
+    const commandTitle = code.textContent?.trim();
+    if (!commandTitle) continue;
 
     const section = command.closest('section[id]');
-    items.push(createItem({
-      path,
-      href: section?.id ? `${path}#${section.id}` : path,
-      pageTitle,
-      title,
+    page.entries.push(createEntry({
+      fragment: command.id || section?.id || '',
+      title: commandTitle,
       text: textOf(command),
       kind: 'command',
-      keywords: title,
     }));
   }
 
   const unique = new Map();
-  for (const item of items) unique.set(`${item.href}|${item.title}`, item);
-  return [...unique.values()];
+  for (const entry of page.entries) {
+    unique.set(`${entry.kind}|${entry.fragment}|${entry.title}`, entry);
+  }
+  page.entries = [...unique.values()];
+
+  return page;
 }
 
 export async function buildSearchIndex() {
@@ -143,18 +132,101 @@ export async function buildSearchIndex() {
     });
 
     if (!response.ok) throw new Error(`Не удалось загрузить ${path}: ${response.status}`);
-    return extractSearchItems(await response.text(), path);
+    return [path, extractSearchPage(await response.text(), path)];
   }));
 
-  return pages.flat();
+  return Object.fromEntries(pages.filter(([, page]) => page));
 }
 
-function getIndex() {
-  indexPromise ||= buildSearchIndex().catch((error) => {
+function isSearchIndex(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+  const pages = Object.values(value);
+  if (!pages.length) return false;
+
+  return pages.every((page) => (
+    page
+    && typeof page === 'object'
+    && typeof page.title === 'string'
+    && typeof page.text === 'string'
+    && Array.isArray(page.entries)
+    && page.entries.every((entry) => (
+      entry
+      && typeof entry === 'object'
+      && typeof entry.fragment === 'string'
+      && typeof entry.title === 'string'
+      && typeof entry.text === 'string'
+      && ['section', 'command'].includes(entry.kind)
+    ))
+  ));
+}
+
+function readSessionIndex() {
+  try {
+    const cached = sessionStorage.getItem(SEARCH_INDEX_STORAGE_KEY);
+    if (!cached) return null;
+    const parsed = JSON.parse(cached);
+    return isSearchIndex(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeSessionIndex(index) {
+  try {
+    sessionStorage.setItem(SEARCH_INDEX_STORAGE_KEY, JSON.stringify(index));
+  } catch {
+    // Поиск продолжает работать в памяти, даже если storage недоступен или переполнен.
+  }
+}
+
+export function getSearchIndex() {
+  indexPromise ||= (async () => {
+    const cached = readSessionIndex();
+    if (cached) return cached;
+
+    const index = await buildSearchIndex();
+    writeSessionIndex(index);
+    return index;
+  })().catch((error) => {
     indexPromise = null;
     throw error;
   });
+
   return indexPromise;
+}
+
+function hrefFor(path, fragment = '') {
+  return fragment ? `${path}#${fragment}` : path;
+}
+
+function materializeSearchItems(index) {
+  const items = [];
+
+  for (const [path, page] of Object.entries(index || {})) {
+    items.push({
+      path,
+      href: path,
+      pageTitle: page.title,
+      title: page.title,
+      text: page.text,
+      kind: 'page',
+      keywords: '',
+    });
+
+    for (const entry of page.entries) {
+      items.push({
+        path,
+        href: hrefFor(path, entry.fragment),
+        pageTitle: page.title,
+        title: entry.title,
+        text: entry.text,
+        kind: entry.kind,
+        keywords: entry.keywords || '',
+      });
+    }
+  }
+
+  return items;
 }
 
 export function scoreSearchItem(item, query) {
@@ -164,25 +236,30 @@ export function scoreSearchItem(item, query) {
   const tokens = tokenize(normalizedQuery);
   if (!tokens.length) return 0;
 
-  const fields = [item.normalizedTitle, item.normalizedPageTitle, item.normalizedKeywords, item.normalizedText];
+  const normalizedTitle = normalizeSearchText(item.title);
+  const normalizedPageTitle = normalizeSearchText(item.pageTitle);
+  const normalizedKeywords = normalizeSearchText(item.keywords);
+  const normalizedText = normalizeSearchText(item.text);
+  const fields = [normalizedTitle, normalizedPageTitle, normalizedKeywords, normalizedText];
+
   if (!tokens.every((token) => fields.some((field) => field.includes(token)))) return 0;
 
   let score = 0;
-  if (item.normalizedTitle === normalizedQuery) score += 420;
-  else if (item.normalizedTitle.startsWith(normalizedQuery)) score += 300;
-  else if (item.normalizedTitle.includes(normalizedQuery)) score += 240;
+  if (normalizedTitle === normalizedQuery) score += 420;
+  else if (normalizedTitle.startsWith(normalizedQuery)) score += 300;
+  else if (normalizedTitle.includes(normalizedQuery)) score += 240;
 
-  if (item.normalizedKeywords === normalizedQuery) score += 380;
-  else if (item.normalizedKeywords.includes(normalizedQuery)) score += 220;
+  if (normalizedKeywords === normalizedQuery) score += 380;
+  else if (normalizedKeywords.includes(normalizedQuery)) score += 220;
 
-  if (item.normalizedPageTitle.includes(normalizedQuery)) score += 130;
-  if (item.normalizedText.includes(normalizedQuery)) score += 90;
+  if (normalizedPageTitle.includes(normalizedQuery)) score += 130;
+  if (normalizedText.includes(normalizedQuery)) score += 90;
 
   for (const token of tokens) {
-    if (item.normalizedTitle.includes(token)) score += 70;
-    if (item.normalizedKeywords.includes(token)) score += 65;
-    if (item.normalizedPageTitle.includes(token)) score += 28;
-    if (item.normalizedText.includes(token)) score += 14;
+    if (normalizedTitle.includes(token)) score += 70;
+    if (normalizedKeywords.includes(token)) score += 65;
+    if (normalizedPageTitle.includes(token)) score += 28;
+    if (normalizedText.includes(token)) score += 14;
   }
 
   if (item.kind === 'command') score += 35;
@@ -191,7 +268,7 @@ export function scoreSearchItem(item, query) {
 }
 
 export function rankSearchResults(index, query, limit = MAX_RESULTS) {
-  return index
+  return materializeSearchItems(index)
     .map((item) => ({ item, score: scoreSearchItem(item, query) }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title, 'ru'))
@@ -310,7 +387,7 @@ export function initSiteSearch() {
   headerActions.prepend(button);
   document.body.append(dialog);
 
-  let index = [];
+  let index = null;
   let activeIndex = -1;
   let currentResults = [];
 
@@ -380,12 +457,12 @@ export function initSiteSearch() {
   };
 
   const ensureIndex = async () => {
-    if (index.length) return;
+    if (index) return;
     status.textContent = 'Загружаю поисковый индекс…';
     input.disabled = true;
 
     try {
-      index = await getIndex();
+      index = await getSearchIndex();
       status.textContent = 'Введите запрос: название раздела, команду или термин.';
     } catch {
       status.textContent = 'Не удалось загрузить поисковый индекс. Попробуйте ещё раз.';
