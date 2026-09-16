@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail --names server,browser \"npm:dev:server\" \"npm:dev:open\"",
+    "dev": "concurrently --kill-others-on-fail --names server,browser \"yarn dev:server\" \"yarn dev:open\"",
     "dev:server": "http-server www -p 5173 -c-1",
     "dev:open": "node scripts/open-dev.mjs",
     "preview": "http-server www -p 4173 -c-1",
@@ -17,5 +17,6 @@
     "@playwright/test": "^1.55.0",
     "concurrently": "^9.2.4",
     "http-server": "^14.1.1"
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }
