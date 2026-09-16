@@ -1,0 +1,80 @@
+name: Temporary refresh dev tooling and Metrika
+
+on:
+  push:
+    branches:
+      - feat/multipage-seo-redesign
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: feat/multipage-seo-redesign
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Refresh package lock
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Update Yandex Metrika on all HTML pages
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
+          import { join } from 'node:path'
+
+          const snippet = `<!-- Yandex.Metrika counter -->
+          <script type="text/javascript">
+              if (!['localhost', '127.0.0.1', '::1'].includes(location.hostname)) {
+                  (function(m,e,t,r,i,k,a){
+                      m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                      m[i].l=1*new Date();
+                      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+                  })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=112703953', 'ym');
+
+                  ym(112703953, 'init', {ssr:true, webvisor:true, clickmap:true, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+              }
+          </script>
+          <noscript><div><img src="https://mc.yandex.ru/watch/112703953" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+          <!-- /Yandex.Metrika counter -->`
+
+          const walk = (directory) => readdirSync(directory).flatMap((name) => {
+            const path = join(directory, name)
+            return statSync(path).isDirectory() ? walk(path) : [path]
+          })
+
+          const htmlFiles = walk('www').filter((path) => path.endsWith('.html'))
+          const counterPattern = /<!-- Yandex\.Metrika counter -->[\s\S]*?<!-- \/Yandex\.Metrika counter -->/
+
+          for (const path of htmlFiles) {
+            const source = readFileSync(path, 'utf8')
+            if (!counterPattern.test(source)) {
+              throw new Error(`Yandex Metrika block not found in ${path}`)
+            }
+            writeFileSync(path, source.replace(counterPattern, snippet))
+          }
+
+          console.log(`Updated Yandex Metrika in ${htmlFiles.length} HTML files`)
+          NODE
+
+      - name: Commit generated changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json www
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+            exit 0
+          fi
+          git commit -m "chore: обновить lock и код Метрики"
+          git push origin HEAD:feat/multipage-seo-redesign
