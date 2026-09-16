@@ -5,17 +5,15 @@
 // 1. мобильное меню;
 // 2. демонстрационную анимацию терминала на главной;
 // 3. кнопки копирования для команд и исполняемых блоков кода;
-// 4. инициализацию интерфейса поиска.
+// 4. bootstrap инициализации интерфейса поиска.
 //
 // Специфическая логика поиска намеренно вынесена в ./search.js, чтобы основной
 // скрипт оставался небольшим и чтобы поиск можно было развивать независимо.
-// Сам модуль загружается как обычная зависимость main.js: так обработчики поиска
-// гарантированно установлены до завершения загрузки страницы. При этом тяжёлая
-// часть — построение поискового индекса — по-прежнему запускается только при
-// первом открытии поиска.
+// search.js загружается динамически, но ранние горячие клавиши временно
+// перехватываются здесь и переигрываются после готовности модуля. Поэтому даже
+// первое нажатие сразу после load не теряется. Сам поисковый индекс при этом
+// по-прежнему строится лениво только при первом открытии поиска.
 // -----------------------------------------------------------------------------
-
-import { initSiteSearch } from './search.js?v=c92a5f7e';
 
 // Общий revision-токен клиентских ассетов. Он обязан совпадать с ?v= во всех
 // HTML-страницах и других динамических подключениях. После любого изменения
@@ -386,8 +384,69 @@ installCopyButtons();
 // Поиск по сайту
 // -----------------------------------------------------------------------------
 
-// UI поиска и глобальные shortcuts инициализируются синхронно с main.js.
-// Благодаря статической зависимости событие load не опережает установку
-// обработчиков. Сам поисковый индекс остаётся ленивым и строится только при
-// первом вызове openSearch().
-initSiteSearch();
+/** `/` не должен перехватываться bootstrap-обработчиком внутри поля ввода. */
+function isBootstrapTypingTarget(target) {
+  return target instanceof HTMLElement && (
+    target.matches('input, textarea, select')
+    || target.isContentEditable
+  );
+}
+
+/** Повторяет условия глобальных shortcuts из search.js на время загрузки модуля. */
+function isBootstrapSearchShortcut(event) {
+  const shortcut = (event.ctrlKey || event.metaKey)
+    && event.key.toLocaleLowerCase() === 'k';
+  const slash = event.key === '/'
+    && !event.ctrlKey
+    && !event.metaKey
+    && !event.altKey
+    && !isBootstrapTypingTarget(event.target);
+
+  return shortcut || slash;
+}
+
+// Dynamic import не блокирует window.load. Поэтому между load и завершением
+// импорта существовало небольшое окно, в котором первое Ctrl/Cmd+K или `/`
+// терялось. Временный listener закрывает это окно: он сохраняет параметры
+// раннего нажатия, а после initSiteSearch() переигрывает событие уже штатному
+// обработчику search.js. Затем bootstrap-listener полностью удаляется.
+let searchReady;
+
+const bootstrapSearchShortcut = (event) => {
+  if (!isBootstrapSearchShortcut(event)) return;
+
+  event.preventDefault();
+  const replay = {
+    key: event.key,
+    code: event.code,
+    ctrlKey: event.ctrlKey,
+    metaKey: event.metaKey,
+    altKey: event.altKey,
+    shiftKey: event.shiftKey,
+  };
+
+  searchReady.then((ready) => {
+    if (!ready) return;
+
+    document.dispatchEvent(new KeyboardEvent('keydown', {
+      ...replay,
+      bubbles: true,
+      cancelable: true,
+    }));
+  });
+};
+
+document.addEventListener('keydown', bootstrapSearchShortcut);
+
+searchReady = import(`/js/search.js?v=${ASSET_REVISION}`)
+  .then(({ initSiteSearch }) => {
+    initSiteSearch();
+    return true;
+  })
+  .catch((error) => {
+    console.error('Не удалось инициализировать поиск по сайту', error);
+    return false;
+  })
+  .finally(() => {
+    document.removeEventListener('keydown', bootstrapSearchShortcut);
+  });
