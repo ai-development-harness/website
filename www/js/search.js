@@ -15,6 +15,16 @@
 //    сессия строит индекс заново из актуального сайта.
 // -----------------------------------------------------------------------------
 
+// Query-параметр текущего ES-модуля содержит общий revision сайта. Мы читаем его
+// через import.meta.url вместо дублирования токена в search.js: так динамически
+// подключаемый search.css автоматически получает ту же версию, что и сам модуль.
+const ASSET_REVISION = new URL(import.meta.url).searchParams.get('v') || '';
+
+/** Добавляет к локальному ассету revision текущего модуля, если он присутствует. */
+function versionedAsset(path) {
+  return ASSET_REVISION ? `${path}?v=${ASSET_REVISION}` : path;
+}
+
 // Если sitemap временно недоступен, поиск всё равно должен работать на текущем
 // наборе публичных страниц. Этот список — аварийный fallback, а не второй
 // канонический источник навигации.
@@ -542,7 +552,7 @@ function installSearchStyles() {
 
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '/css/search.css';
+  link.href = versionedAsset('/css/search.css');
   link.dataset.searchStyles = 'true';
   document.head.append(link);
 }
