@@ -6,10 +6,46 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
+  generate-yarn-lock:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+
+      - name: Enable Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@1.22.22 --activate
+
+      - name: Generate yarn.lock
+        run: yarn install --ignore-scripts
+
+      - name: Commit yarn.lock if generated
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add yarn.lock
+          if git diff --cached --quiet; then
+            echo "yarn.lock is already current"
+            exit 0
+          fi
+          git commit -m "chore: сгенерировать yarn.lock"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
   playwright:
+    needs: generate-yarn-lock
+    if: always() && (needs.generate-yarn-lock.result == 'success' || needs.generate-yarn-lock.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
