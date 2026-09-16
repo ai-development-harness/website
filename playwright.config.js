@@ -1,12 +1,5 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const responsiveTestMatch = [
-  '**/home/**/*.spec.js',
-  '**/responsive/**/*.spec.js',
-  '**/navigation/header.spec.js',
-  '**/accessibility/keyboard.spec.js',
-]
-
 export default defineConfig({
   testDir: './tests',
   timeout: 30_000,
@@ -32,14 +25,12 @@ export default defineConfig({
     },
     {
       name: 'tablet-webkit',
-      testMatch: responsiveTestMatch,
       use: {
         ...devices['iPad Pro 11'],
       },
     },
     {
       name: 'mobile-chromium',
-      testMatch: responsiveTestMatch,
       use: {
         ...devices['Pixel 7'],
       },
