@@ -22,6 +22,127 @@
   box-sizing: border-box;
 }
 
+/* Единая 28×28 геометрия вместо разновесных Unicode-глифов. */
+.workflow-icon {
+  position: relative;
+  font-size: 0;
+}
+
+.workflow-icon::before,
+.workflow-icon::after {
+  content: "";
+  position: absolute;
+  box-sizing: border-box;
+  color: currentColor;
+}
+
+.workflow-step:nth-child(1) .workflow-icon::before {
+  left: 17px;
+  top: 14px;
+  width: 22px;
+  height: 28px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+}
+
+.workflow-step:nth-child(1) .workflow-icon::after {
+  left: 22px;
+  top: 21px;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
+}
+
+.workflow-step:nth-child(2) .workflow-icon::before {
+  left: 16px;
+  top: 16px;
+  width: 24px;
+  height: 24px;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+}
+
+.workflow-step:nth-child(2) .workflow-icon::after {
+  left: 22px;
+  top: 22px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+  opacity: .72;
+}
+
+.workflow-step:nth-child(3) .workflow-icon::before {
+  left: 22px;
+  top: 18px;
+  width: 17px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 8px 0 currentColor, 0 16px 0 currentColor;
+}
+
+.workflow-step:nth-child(3) .workflow-icon::after {
+  left: 16px;
+  top: 18px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 8px 0 currentColor, 0 16px 0 currentColor;
+}
+
+.workflow-step:nth-child(4) .workflow-icon::before {
+  left: 19px;
+  top: 15px;
+  width: 23px;
+  height: 27px;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.workflow-step:nth-child(4) .workflow-icon::after {
+  left: 22px;
+  top: 19px;
+  width: 14px;
+  height: 19px;
+  background: #071a2c;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.workflow-step:nth-child(5) .workflow-icon::before {
+  left: 15px;
+  top: 14px;
+  width: 21px;
+  height: 21px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.workflow-step:nth-child(5) .workflow-icon::after {
+  left: 34px;
+  top: 34px;
+  width: 11px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transform: rotate(45deg);
+  transform-origin: left center;
+}
+
+.workflow-step:nth-child(6) .workflow-icon::before {
+  left: 18px;
+  top: 14px;
+  width: 20px;
+  height: 28px;
+  background:
+    radial-gradient(circle at 3px 3px, currentColor 0 3px, transparent 3.5px),
+    radial-gradient(circle at 17px 11px, currentColor 0 3px, transparent 3.5px),
+    radial-gradient(circle at 3px 25px, currentColor 0 3px, transparent 3.5px),
+    linear-gradient(currentColor, currentColor) 2px 3px / 2px 22px no-repeat,
+    linear-gradient(135deg, transparent 43%, currentColor 44% 56%, transparent 57%) 4px 3px / 13px 10px no-repeat;
+}
+
 .hero-demo {
   margin-top: 30px;
 }
@@ -79,6 +200,42 @@
 
 .hero-shell > .hero-facts .hero-fact b {
   margin: 0 0 2px;
+}
+
+/* CTA: список шагов не растягивается в пустую высокую панель. */
+.cta-box {
+  align-items: start;
+}
+
+.cta-copy {
+  align-self: center;
+}
+
+.cta-quickstart {
+  align-self: start;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.cta-quickstart-kicker {
+  margin-bottom: 12px;
+}
+
+.cta-steps {
+  display: grid;
+  gap: 10px;
+}
+
+.cta-steps li,
+.cta-steps li:first-child {
+  padding: 12px 14px;
+  border: 1px solid rgba(126, 167, 214, .22);
+  border-radius: 12px;
+  background: rgba(4, 13, 27, .48);
 }
 
 @media (max-width: 1180px) {
