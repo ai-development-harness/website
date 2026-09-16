@@ -7,7 +7,7 @@ const command = process.platform === 'win32'
     ? `open "${url}"`
     : `xdg-open "${url}"`
 
-const timer = setTimeout(() => {
+setTimeout(() => {
   exec(command, (error) => {
     if (error) {
       console.error(`Не удалось автоматически открыть ${url}: ${error.message}`)
@@ -15,5 +15,3 @@ const timer = setTimeout(() => {
     }
   })
 }, 500)
-
-timer.unref()
