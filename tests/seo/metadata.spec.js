@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { PUBLIC_PAGES } from '../helpers/site.js';
+import { PUBLIC_PAGES, productionUrl } from '../helpers/site.js';
 
 test.describe('SEO — метаданные публичных страниц', () => {
   for (const publicPage of PUBLIC_PAGES) {
     test(`страница ${publicPage.path} содержит корректный канонический URL и директиву robots`, async ({ page }) => {
       await page.goto(publicPage.path);
 
-      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', publicPage.canonical);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', productionUrl(publicPage.path));
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /index,follow/i);
     });
 
@@ -27,7 +27,7 @@ test.describe('SEO — метаданные публичных страниц', 
 
       await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /.+/);
       await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', /.+/);
-      await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', publicPage.canonical);
+      await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', productionUrl(publicPage.path));
       await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /^https:\/\/ai-development-harness\.ru\//);
       await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
       await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', /.+/);
