@@ -22,16 +22,16 @@ test.describe('Контент — русская терминология', () =
     });
   }
 
-  test('раздел Getting Started называется «Начало работы»', async ({ page }) => {
+  test('раздел начала работы называется «Начало работы»', async ({ page }) => {
     await page.goto('/getting-started/');
     await expect(page.locator('h1')).toHaveText('Начало работы');
     await expect(page.locator('.breadcrumbs')).toContainText('Начало работы');
   });
 
-  test('в навигации используется короткая формулировка «Как начать»', async ({ page }) => {
+  test('в навигации используется формулировка «Начало работы»', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('.desktop-nav a[href="/getting-started/"]')).toHaveText('Как начать');
-    await expect(page.locator('.mobile-nav a[href="/getting-started/"]')).toHaveText('Как начать');
+    await expect(page.locator('.desktop-nav a[href="/getting-started/"]')).toHaveText('Начало работы');
+    await expect(page.locator('.mobile-nav a[href="/getting-started/"]')).toHaveText('Начало работы');
   });
 
   test('имена команд Harness остаются неизменными техническими идентификаторами', async ({ page }) => {
