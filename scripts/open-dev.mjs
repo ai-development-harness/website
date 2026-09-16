@@ -7,11 +7,31 @@ const command = process.platform === 'win32'
     ? `open "${url}"`
     : `xdg-open "${url}"`
 
-setTimeout(() => {
-  exec(command, (error) => {
-    if (error) {
-      console.error(`Не удалось автоматически открыть ${url}: ${error.message}`)
-      process.exitCode = 1
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+let ready = false
+for (let attempt = 0; attempt < 50; attempt += 1) {
+  try {
+    const response = await fetch(url, { method: 'HEAD' })
+    if (response.ok) {
+      ready = true
+      break
     }
-  })
-}, 500)
+  } catch {
+    // Сервер ещё запускается.
+  }
+
+  await sleep(100)
+}
+
+if (!ready) {
+  console.error(`Dev-сервер не стал доступен по адресу ${url}`)
+  process.exit(1)
+}
+
+exec(command, (error) => {
+  if (error) {
+    console.error(`Не удалось автоматически открыть ${url}: ${error.message}`)
+    process.exitCode = 1
+  }
+})
