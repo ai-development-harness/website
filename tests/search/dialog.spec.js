@@ -31,6 +31,21 @@ test.describe('Поиск — диалог и открытие', () => {
     await waitForSearchReady(page);
   });
 
+  test('не теряет Ctrl+K во время загрузки модуля поиска', async ({ page }) => {
+    await page.route('**/js/search.js*', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      await route.continue();
+    });
+
+    // DOM уже готов и main.js успел поставить bootstrap-listener, но search.js
+    // намеренно остаётся в полёте. Именно в этом окне раньше терялся shortcut.
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await page.keyboard.press('Control+K');
+
+    await expect(page.locator('.search-dialog')).toHaveAttribute('open', '');
+    await waitForSearchReady(page);
+  });
+
   test('открывает поиск клавишей слэш вне поля ввода', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('/');
