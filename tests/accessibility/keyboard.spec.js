@@ -3,7 +3,7 @@ import { PUBLIC_PAGES } from '../helpers/site.js';
 
 test.describe('Доступность — клавиатурная навигация', () => {
   for (const страница of PUBLIC_PAGES) {
-    test(`skip-link на странице ${страница.path} переводит фокус к основному содержимому`, async ({ page }) => {
+    test(`ссылка перехода к содержимому на странице ${страница.path} переводит фокус к основному содержимому`, async ({ page }) => {
       await page.goto(страница.path);
 
       await page.keyboard.press('Tab');
