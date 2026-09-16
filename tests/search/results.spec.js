@@ -47,11 +47,13 @@ test.describe('Поиск — результаты', () => {
     await expect(нижнийРегистр.first()).toHaveAttribute('href', первыйHref);
   });
 
-  test('считает ё и е эквивалентными при поиске', async ({ page }) => {
+  test('многословный запрос учитывает все значимые слова', async ({ page }) => {
     await открытьПоиск(page);
-    const результаты = await найти(page, 'сохраняемыи');
+    const результаты = await найти(page, 'обновление Harness');
 
     await expect(результаты.first()).toBeVisible();
+    await expect(page.locator('.search-results')).toContainText(/Harness/i);
+    await expect(page.locator('.search-results')).toContainText(/обновлен/i);
   });
 
   test('ограничивает выдачу восемью результатами', async ({ page }) => {
