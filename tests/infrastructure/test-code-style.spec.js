@@ -43,6 +43,17 @@ function collectCyrillicIdentifiers(source) {
   return [...new Set(findings)];
 }
 
+function collectTestTitles(source) {
+  const titles = [];
+  const titlePattern = /\btest(?:\.describe)?\(\s*([`'"])(.*?)\1/gms;
+
+  for (const match of source.matchAll(titlePattern)) {
+    titles.push(match[2]);
+  }
+
+  return titles;
+}
+
 test.describe('Инфраструктура — стиль кода тестов', () => {
   test('идентификаторы в тестовом JavaScript пишутся на английском', async () => {
     const violations = filesRecursively(TESTS_DIR)
@@ -50,6 +61,19 @@ test.describe('Инфраструктура — стиль кода тестов
       .flatMap((path) => {
         const identifiers = collectCyrillicIdentifiers(readFileSync(path, 'utf8'));
         return identifiers.map((identifier) => `${toUnixPath(path)}: ${identifier}`);
+      });
+
+    expect(violations).toEqual([]);
+  });
+
+  test('названия test и describe содержат русский текст', async () => {
+    const violations = filesRecursively(TESTS_DIR)
+      .filter((path) => path.endsWith('.js'))
+      .flatMap((path) => {
+        const titles = collectTestTitles(readFileSync(path, 'utf8'));
+        return titles
+          .filter((title) => !CYRILLIC.test(title))
+          .map((title) => `${toUnixPath(path)}: ${title}`);
       });
 
     expect(violations).toEqual([]);
