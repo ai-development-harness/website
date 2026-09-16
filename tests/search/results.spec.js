@@ -79,19 +79,21 @@ test.describe('Поиск — результаты', () => {
     await expect(результаты.first().locator('.search-result__title mark')).toHaveText('ADD STEP');
   });
 
-  test('результат команды ведёт к соответствующему разделу справочника', async ({ page }) => {
+  test('результат команды ведёт непосредственно к найденной команде', async ({ page }) => {
     await открытьПоиск(page);
     const результаты = await найти(page, 'ADD STEP');
 
-    await expect(результаты.first()).toHaveAttribute('href', '/commands/#bootstrap');
+    await expect(результаты.first()).toHaveAttribute('href', '/commands/#command-add-step');
   });
 
-  test('переходит по выбранному результату и закрывает диалог', async ({ page }) => {
+  test('переходит к конкретной команде и закрывает диалог', async ({ page }) => {
     await открытьПоиск(page);
     const результаты = await найти(page, 'ADD STEP');
     await результаты.first().click();
 
-    await expect(page).toHaveURL(/\/commands\/#bootstrap$/);
+    await expect(page).toHaveURL(/\/commands\/#command-add-step$/);
+    await expect(page.locator('#command-add-step')).toBeVisible();
+    await expect(page.locator('#command-add-step code')).toContainText('ADD STEP');
     await expect(page.locator('.search-dialog')).not.toHaveAttribute('open', '');
   });
 
