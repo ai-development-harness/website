@@ -5,21 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark">
-<title>Архитектура AI Development Harness: REQ, ADR, STEP и evidence</title>
-<meta name="description" content="Как устроен AI Development Harness: protocol layer, project knowledge base, implementation, REQ/ADR/STEP, canonical sources, projections, agents и repository skills.">
+<title>Архитектура AI Development Harness: REQ, ADR, STEP и доказательства</title>
+<meta name="description" content="Как устроен AI Development Harness: служебный слой, база знаний проекта, реализация, REQ/ADR/STEP, источники истины, представления состояния, агенты и навыки репозитория.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/architecture/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
-<meta property="og:title" content="Архитектура AI Development Harness: REQ, ADR, STEP и evidence">
-<meta property="og:description" content="Как устроен AI Development Harness: protocol layer, project knowledge base, implementation, REQ/ADR/STEP, canonical sources, projections, agents и repository skills.">
+<meta property="og:title" content="Архитектура AI Development Harness: REQ, ADR, STEP и доказательства">
+<meta property="og:description" content="Как устроен AI Development Harness: служебный слой, база знаний проекта, реализация, REQ/ADR/STEP, источники истины, представления состояния, агенты и навыки репозитория.">
 <meta property="og:url" content="https://ai-development-harness.ru/architecture/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Архитектура AI Development Harness: REQ, ADR, STEP и evidence">
-<meta name="twitter:description" content="Как устроен AI Development Harness: protocol layer, project knowledge base, implementation, REQ/ADR/STEP, canonical sources, projections, agents и repository skills.">
+<meta name="twitter:title" content="Архитектура AI Development Harness: REQ, ADR, STEP и доказательства">
+<meta name="twitter:description" content="Как устроен AI Development Harness: служебный слой, база знаний проекта, реализация, REQ/ADR/STEP, источники истины, представления состояния, агенты и навыки репозитория.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <link rel="stylesheet" href="/styles.css">
 <link rel="stylesheet" href="/styles-site.css">
@@ -50,7 +50,7 @@
       <img src="/assets/mark.svg" width="42" height="42" alt="">
       <span class="brand-copy"><strong>AI Development</strong><span>Harness</span></span>
     </a>
-    <nav class="desktop-nav" aria-label="Основная навигация"><a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/" aria-current="page">Архитектура</a></nav>
+    <nav class="desktop-nav" aria-label="Основная навигация"><a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/" aria-current="page">Архитектура</a></nav>
     <div class="header-actions">
       <a class="github-link" href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
       <a class="button button--small button--primary desktop-cta" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
@@ -58,7 +58,7 @@
     </div>
   </div>
   <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" hidden>
-    <a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a>
+    <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a>
     <a href="/repository/">Репозиторий как память</a>
     <a href="/maintenance/">Поддержка</a>
     <a href="/faq/">FAQ</a>
@@ -71,26 +71,26 @@
       <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span>→</span><span>Архитектура Harness</span></nav>
       <div class="eyebrow">Документация Harness</div>
       <h1>Архитектура Harness</h1>
-      <p>Почему требования, решения, задачи, реализация и доказательства разделены — и как они образуют одну traceable систему.</p>
+      <p>Почему требования, решения, задачи, реализация и доказательства разделены — и как они образуют одну прослеживаемую систему.</p>
     </div>
   </header>
   <div class="container docs-shell">
     <article class="article">
-<section id="three-layers"><h2>Три слоя, три разных ответственности</h2><div class="code-block"><pre><code>HARNESS / PROTOCOL
+<section id="three-layers"><h2>Три слоя с разной ответственностью</h2><div class="code-block"><pre><code>HARNESS / PROTOCOL
 AGENTS + skills + commands + policies
              ↓
 PROJECT KNOWLEDGE BASE
 PROJECT + REQ + ADR + architecture + planning
              ↓
 IMPLEMENTATION
-code + tests + migrations + runtime config</code></pre></div><p>Harness — process layer, а не application framework. Product implementation folders намеренно отсутствуют из template до INIT и реальных STEP.</p></section>
-<section id="entities"><h2>REQ, ADR и STEP не смешиваются</h2><div class="article-grid"><div class="mini-card"><h3>REQ</h3><p>Что система обязана обеспечивать? Canonical source — <code>docs/requirements/SPEC.md</code>.</p></div><div class="mini-card"><h3>ADR</h3><p>Какое устойчивое архитектурное решение принято и почему? Canonical source — <code>docs/adr/</code>.</p></div><div class="mini-card"><h3>STEP</h3><p>Какую ограниченную работу выполняем сейчас? Canonical source — <code>planning/tasks/STEP-NNN.md</code>.</p></div><div class="mini-card"><h3>Evidence</h3><p>Какими реальными проверками и артефактами доказан результат acceptance criteria?</p></div></div></section>
-<section id="canonical"><h2>Canonical sources и projections</h2><p><code>STEP-NNN.md</code> — canonical task contract. <code>PLAN.md</code> и <code>STATUS.md</code> — удобные projections. Если projection расходится с task/evidence/factual state, projection исправляется, а не становится новой истиной.</p></section>
-<section id="truth"><h2>Иерархия источников истины</h2><ol><li>Фактический code / migrations / config / tests.</li><li>Accepted ADR.</li><li>Architecture/subsystem docs.</li><li>Requirements.</li><li>STEP.</li><li>PLAN/STATUS projections.</li><li>Brief, chat и неформальные заметки.</li></ol><div class="article-note"><strong>Code не объявляется автоматически «правым».</strong> Если он расходится с Accepted ADR, это architecture drift, который нужно явно разрешить.</div></section>
-<section id="agents"><h2>Роли и независимый контроль</h2><p>Reasoning-heavy стадии можно отдавать сильным planner/reviewer профилям, а механическую реализацию — более экономичному implementer. Reviewer остаётся независимым от implementer. Model/effort настраиваются в <code>.codex/agents/*.toml</code>.</p></section>
-<section id="skills"><h2>Technology knowledge подключается on demand</h2><p>Harness не вшивает все framework playbook в template. <code>FIND SKILL</code> ищет capability, пользователь выбирает кандидат, <code>INSTALL SKILL</code> фиксирует provenance и routing. Third-party skill никогда не становится выше repository contract.</p></section>
+code + tests + migrations + runtime config</code></pre></div><p>Harness — слой процесса, а не фреймворк приложения. Каталоги реализации продукта намеренно отсутствуют в шаблоне до INIT и реальных STEP.</p></section>
+<section id="entities"><h2>REQ, ADR и STEP не смешиваются</h2><div class="article-grid"><div class="mini-card"><h3>REQ</h3><p>Что система обязана обеспечивать? Канонический источник — <code>docs/requirements/SPEC.md</code>.</p></div><div class="mini-card"><h3>ADR</h3><p>Какое устойчивое архитектурное решение принято и почему? Канонический источник — <code>docs/adr/</code>.</p></div><div class="mini-card"><h3>STEP</h3><p>Какую ограниченную работу выполняем сейчас? Канонический источник — <code>planning/tasks/STEP-NNN.md</code>.</p></div><div class="mini-card"><h3>Доказательства</h3><p>Какими реальными проверками и артефактами подтверждено выполнение критериев приёмки?</p></div></div></section>
+<section id="canonical"><h2>Канонические источники и представления состояния</h2><p><code>STEP-NNN.md</code> — канонический контракт задачи. <code>PLAN.md</code> и <code>STATUS.md</code> — удобные представления. Если такое представление расходится с задачей, доказательствами или фактическим состоянием, исправляется представление, а не источник истины.</p></section>
+<section id="truth"><h2>Иерархия источников истины</h2><ol><li>Фактический код / миграции / конфигурация / тесты.</li><li>Принятые ADR.</li><li>Архитектурная документация и документация подсистем.</li><li>Требования.</li><li>STEP.</li><li>Представления PLAN/STATUS.</li><li>Brief, чат и неформальные заметки.</li></ol><div class="article-note"><strong>Код не объявляется автоматически «правым».</strong> Если он расходится с принятым ADR, это архитектурное расхождение, которое нужно явно разрешить.</div></section>
+<section id="agents"><h2>Роли и независимый контроль</h2><p>Стадии с большим объёмом рассуждений можно отдавать сильным профилям planner/reviewer, а механическую реализацию — более экономичному implementer. Reviewer остаётся независимым от implementer. Модель и уровень рассуждения настраиваются в <code>.codex/agents/*.toml</code>.</p></section>
+<section id="skills"><h2>Технологические знания подключаются по необходимости</h2><p>Harness не вшивает в шаблон инструкции для всех возможных фреймворков. <code>FIND SKILL</code> ищет нужную возможность, пользователь выбирает кандидат, а <code>INSTALL SKILL</code> фиксирует происхождение и маршрутизацию. Сторонний навык никогда не получает приоритет над контрактом репозитория.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/commands/"><span>Назад</span>Команды</a><a href="/repository/"><span>Далее</span>Репозиторий как память</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#three-layers">Три слоя</a><a href="#entities">REQ / ADR / STEP</a><a href="#canonical">Canonical и projections</a><a href="#truth">Sources of truth</a><a href="#agents">Агенты</a><a href="#skills">Skills</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#three-layers">Три слоя</a><a href="#entities">REQ / ADR / STEP</a><a href="#canonical">Канонические источники</a><a href="#truth">Источники истины</a><a href="#agents">Агенты</a><a href="#skills">Навыки</a></aside>
   </div>
 </main>
 <footer class="site-footer">
@@ -101,7 +101,7 @@ code + tests + migrations + runtime config</code></pre></div><p>Harness — proc
       <div class="footer-note">ai-development-harness.ru</div>
     </div>
     <nav class="footer-links" aria-label="Навигация в подвале">
-      <a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
+      <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
       <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/maintenance/">Поддержка</a><a href="/faq/">FAQ</a>
       <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
