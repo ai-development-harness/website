@@ -94,7 +94,16 @@ h1 .gradient-text, .gradient-text { background: var(--accent); -webkit-backgroun
 .process-step::after { content: "→"; position: absolute; right: -12px; top: 50%; z-index: 2; color: var(--blue); background: var(--bg); padding: 2px; }
 .process-step:last-child::after { display: none; }
 .step-no { color: var(--text-muted); font-size: 13px; font-weight: 800; letter-spacing: .14em; }
-.step-icon { margin: 18px 0 14px; color: var(--cyan); font-size: 24px; }
+.step-icon { position: relative; width: 24px; height: 24px; margin: 18px 0 14px; color: var(--cyan); font-size: 0; }
+.step-icon::before, .step-icon::after { content: ""; position: absolute; box-sizing: border-box; }
+.process-step:nth-child(1) .step-icon::before { left: 3px; top: 1px; width: 18px; height: 22px; border: 2px solid currentColor; border-radius: 2px; }
+.process-step:nth-child(1) .step-icon::after { left: 7px; top: 7px; width: 10px; height: 2px; background: currentColor; box-shadow: 0 5px 0 currentColor, 0 10px 0 currentColor; }
+.process-step:nth-child(2) .step-icon::before { left: 6px; top: 4px; width: 15px; height: 2px; background: currentColor; box-shadow: 0 7px 0 currentColor, 0 14px 0 currentColor; }
+.process-step:nth-child(2) .step-icon::after { left: 1px; top: 4px; width: 2px; height: 2px; border-radius: 50%; background: currentColor; box-shadow: 0 7px 0 currentColor, 0 14px 0 currentColor; }
+.process-step:nth-child(3) .step-icon::before { left: 5px; top: 3px; width: 16px; height: 18px; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.process-step:nth-child(4) .step-icon::before { left: 2px; top: 2px; width: 15px; height: 15px; border: 2px solid currentColor; border-radius: 50%; }
+.process-step:nth-child(4) .step-icon::after { left: 15px; top: 16px; width: 9px; height: 2px; border-radius: 2px; background: currentColor; transform: rotate(45deg); transform-origin: left center; }
+.process-step:nth-child(5) .step-icon::before { inset: 0; background: radial-gradient(circle at 6px 4px, currentColor 0 2.5px, transparent 3px), radial-gradient(circle at 18px 10px, currentColor 0 2.5px, transparent 3px), radial-gradient(circle at 6px 20px, currentColor 0 2.5px, transparent 3px), linear-gradient(currentColor, currentColor) 5px 4px / 2px 16px no-repeat, linear-gradient(135deg, transparent 43%, currentColor 44% 56%, transparent 57%) 6px 4px / 12px 8px no-repeat; }
 .process-step h3 { margin-bottom: 8px; font-size: 19px; }
 .process-step p { margin: 0; color: var(--text-secondary); font-size: 14px; }
 
