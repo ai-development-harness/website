@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-async function открытьПоиск(page) {
+async function openSearch(page) {
   await page.goto('/');
   await page.getByRole('button', { name: 'Открыть поиск по сайту' }).click();
   await expect(page.locator('.search-input')).toBeEnabled();
@@ -8,7 +8,7 @@ async function открытьПоиск(page) {
 
 test.describe('Поиск — адаптивность', () => {
   test('диалог поиска полностью помещается в область просмотра', async ({ page }) => {
-    await открытьПоиск(page);
+    await openSearch(page);
     const box = await page.locator('.search-dialog').boundingBox();
     const viewport = page.viewportSize();
 
@@ -20,7 +20,7 @@ test.describe('Поиск — адаптивность', () => {
   });
 
   test('поле поиска не создаёт горизонтального переполнения', async ({ page }) => {
-    await открытьПоиск(page);
+    await openSearch(page);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
     expect(overflow).toBeLessThanOrEqual(1);
@@ -28,8 +28,8 @@ test.describe('Поиск — адаптивность', () => {
 
   test('кнопка поиска остаётся доступной рядом с мобильным меню', async ({ page }, testInfo) => {
     await page.goto('/');
-    const поиск = page.getByRole('button', { name: 'Открыть поиск по сайту' });
-    await expect(поиск).toBeVisible();
+    const searchButton = page.getByRole('button', { name: 'Открыть поиск по сайту' });
+    await expect(searchButton).toBeVisible();
 
     if (testInfo.project.name !== 'desktop-chromium') {
       await expect(page.locator('.menu-button')).toBeVisible();
@@ -37,12 +37,12 @@ test.describe('Поиск — адаптивность', () => {
   });
 
   test('результаты поиска остаются читаемыми на узком экране', async ({ page }) => {
-    await открытьПоиск(page);
+    await openSearch(page);
     await page.locator('.search-input').fill('ADD STEP');
-    const первый = page.locator('.search-result').first();
+    const firstResult = page.locator('.search-result').first();
 
-    await expect(первый).toBeVisible();
-    const box = await первый.boundingBox();
+    await expect(firstResult).toBeVisible();
+    const box = await firstResult.boundingBox();
     const viewport = page.viewportSize();
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(viewport.width + 1);
