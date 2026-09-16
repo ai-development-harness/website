@@ -1,0 +1,301 @@
+/* --------------------------------------------------------------------------
+ * Цветовые темы сайта.
+ *
+ * Тёмная тема остаётся базовой в исходных stylesheet-файлах. Здесь собраны
+ * только переопределения для светлой темы и стили переключателя в шапке.
+ * Такой слой позволяет не размазывать проверки data-theme по всем компонентам.
+ * -------------------------------------------------------------------------- */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f8fc;
+  --bg-deep: #edf2f8;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #edf4fb;
+  --surface-soft: rgba(255, 255, 255, .9);
+  --text: #0d1928;
+  --text-secondary: #41536a;
+  --text-muted: #6b7d92;
+  --cyan: #007f9d;
+  --blue: #1769d2;
+  --violet: #7044d7;
+  --success: #087d50;
+  --warning: #a35f00;
+  --error: #c02e47;
+  --border: rgba(42, 80, 119, .18);
+  --border-strong: rgba(23, 112, 181, .38);
+  --accent: linear-gradient(110deg, #0089a8, #1769d2 52%, #7044d7);
+  --shadow: 0 24px 68px rgba(31, 57, 84, .13);
+}
+
+html[data-theme="light"] body {
+  background:
+    radial-gradient(circle at 82% 8%, rgba(112, 68, 215, .09), transparent 28%),
+    radial-gradient(circle at 12% 18%, rgba(0, 127, 157, .08), transparent 25%),
+    var(--bg);
+}
+
+html[data-theme="light"] body::before {
+  opacity: .55;
+  background-image:
+    linear-gradient(rgba(49, 92, 135, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(49, 92, 135, .055) 1px, transparent 1px);
+}
+
+html[data-theme="light"] .site-header {
+  background: rgba(248, 250, 253, .88);
+}
+
+html[data-theme="light"] .desktop-nav a,
+html[data-theme="light"] .github-link {
+  color: #26384c;
+}
+
+html[data-theme="light"] .mobile-nav {
+  background: rgba(248, 250, 253, .98);
+}
+
+html[data-theme="light"] .button--ghost {
+  background: rgba(255, 255, 255, .82);
+}
+
+html[data-theme="light"] .hero-fact,
+html[data-theme="light"] .process-step,
+html[data-theme="light"] .audience-card,
+html[data-theme="light"] .callout,
+html[data-theme="light"] .problem-card,
+html[data-theme="light"] .feature-card,
+html[data-theme="light"] .doc-card,
+html[data-theme="light"] .flow-card {
+  background: rgba(255, 255, 255, .82);
+}
+
+html[data-theme="light"] .section--soft {
+  background: linear-gradient(180deg, rgba(229, 237, 247, .62), rgba(246, 248, 252, .08));
+}
+
+html[data-theme="light"] .memory-map {
+  border-color: rgba(23, 112, 181, .34);
+  background: linear-gradient(160deg, rgba(255, 255, 255, .97), rgba(240, 245, 252, .94));
+  box-shadow: var(--shadow), inset 0 0 60px rgba(23, 112, 181, .035);
+}
+
+html[data-theme="light"] .workflow-icon {
+  background: rgba(232, 242, 251, .9);
+  color: #14779c;
+}
+
+html[data-theme="light"] .workflow-outcome {
+  background: rgba(238, 244, 251, .92);
+  color: #405c74;
+}
+
+html[data-theme="light"] .timeline-note {
+  background: rgba(0, 127, 157, .06);
+  color: #116a80;
+}
+
+/* У иконки RUN STEP внутренняя «дырка» была нарисована цветом тёмного фона. */
+html[data-theme="light"] .workflow-step:nth-child(4) .workflow-icon::after {
+  background: #e8f2fb;
+}
+
+html[data-theme="light"] .traceability-flow {
+  background: rgba(255, 255, 255, .84);
+}
+
+/* Терминал оставляем тёмным и в светлой теме: это самостоятельный кодовый UI. */
+html[data-theme="light"] .terminal-panel,
+html[data-theme="light"] .repo-panel {
+  --text-muted: #8ca0b8;
+  --success: #42d99a;
+  background: #07101d;
+}
+
+html[data-theme="light"] .article code {
+  background: rgba(226, 237, 247, .86);
+  color: #1a4d70;
+}
+
+html[data-theme="light"] .article-note {
+  background: rgba(0, 127, 157, .06);
+}
+
+html[data-theme="light"] .mini-card,
+html[data-theme="light"] .prev-next a,
+html[data-theme="light"] .command-item,
+html[data-theme="light"] .faq-item {
+  background: rgba(255, 255, 255, .82);
+}
+
+/* Исполняемые code-block остаются визуально похожими на терминал. */
+html[data-theme="light"] .code-block {
+  border-color: rgba(34, 75, 113, .24);
+  background: #0b1624;
+}
+
+html[data-theme="light"] .code-block pre,
+html[data-theme="light"] .code-block code {
+  color: #d8e4f1;
+}
+
+/* CTA в светлой теме становится светлой карточкой, а не случайным тёмным пятном. */
+html[data-theme="light"] .cta-box {
+  background: linear-gradient(140deg, rgba(255, 255, 255, .98), rgba(237, 241, 252, .96));
+}
+
+html[data-theme="light"] .cta-box::after {
+  background: radial-gradient(circle, rgba(112, 68, 215, .15), transparent 65%);
+}
+
+html[data-theme="light"] .cta-steps li,
+html[data-theme="light"] .cta-steps li:first-child {
+  border-color: rgba(61, 102, 142, .2);
+  background: rgba(255, 255, 255, .72);
+}
+
+html[data-theme="light"] .cta-step-no {
+  color: #0b728b;
+  background: rgba(0, 127, 157, .06);
+}
+
+/* Поиск загружается динамически после theme.css, поэтому используем более
+ * специфичные селекторы: светлая тема уверенно переопределит search.css. */
+html[data-theme="light"] .site-search-button {
+  background: rgba(255, 255, 255, .82);
+}
+
+html[data-theme="light"] .site-search-button kbd,
+html[data-theme="light"] .search-close,
+html[data-theme="light"] .search-footer kbd {
+  background: rgba(13, 25, 40, .04);
+}
+
+html[data-theme="light"] .search-dialog {
+  border-color: rgba(23, 112, 181, .34);
+  background: rgba(250, 252, 255, .99);
+  box-shadow: 0 36px 110px rgba(36, 58, 82, .24);
+}
+
+html[data-theme="light"] .search-dialog::backdrop {
+  background: rgba(30, 48, 68, .28);
+}
+
+html[data-theme="light"] .search-input-wrap {
+  background: rgba(255, 255, 255, .92);
+}
+
+html[data-theme="light"] .search-result {
+  background: rgba(231, 239, 248, .56);
+}
+
+html[data-theme="light"] .search-result:hover,
+html[data-theme="light"] .search-result.is-active {
+  background: linear-gradient(105deg, rgba(0, 127, 157, .09), rgba(112, 68, 215, .07));
+}
+
+html[data-theme="light"] .search-result mark {
+  background: rgba(0, 127, 157, .12);
+}
+
+/* Copy UI тоже подстраивается под светлую поверхность. */
+html[data-theme="light"] .copy-button {
+  background: rgba(255, 255, 255, .88);
+}
+
+/* --------------------------------------------------------------------------
+ * Переключатель темы в шапке
+ * -------------------------------------------------------------------------- */
+
+.theme-toggle {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.theme-toggle__icon {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* В тёмной теме показываем солнце: кнопка визуально обещает переход к светлой. */
+html[data-theme="dark"] .theme-toggle__icon::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+html[data-theme="dark"] .theme-toggle__icon::after {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 0;
+  width: 2px;
+  height: 20px;
+  border-radius: 2px;
+  background: currentColor;
+  box-shadow: 0 0 0 0 currentColor;
+  transform: rotate(0deg);
+}
+
+html[data-theme="dark"] .theme-toggle__icon {
+  background:
+    linear-gradient(currentColor, currentColor) center / 20px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 2px 20px no-repeat;
+  transform: rotate(45deg) scale(.78);
+}
+
+/* В светлой теме показываем полумесяц: кнопка переключит интерфейс на тёмный. */
+html[data-theme="light"] .theme-toggle__icon::before {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  left: 1px;
+  top: 1px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+html[data-theme="light"] .theme-toggle__icon::after {
+  content: "";
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  left: 7px;
+  top: -1px;
+  border-radius: 50%;
+  background: var(--surface-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle {
+    transition: none;
+  }
+}
