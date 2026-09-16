@@ -55,7 +55,6 @@
       const nextThemeLabel = theme === DARK_THEME ? 'светлую' : 'тёмную';
       button.setAttribute('aria-label', `Включить ${nextThemeLabel} тему`);
       button.setAttribute('title', `Включить ${nextThemeLabel} тему`);
-      button.setAttribute('aria-pressed', String(theme === LIGHT_THEME));
     }
   }
 

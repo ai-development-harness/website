@@ -171,7 +171,26 @@ test.describe('Поиск — поисковый индекс', () => {
     expect(paths).toEqual(EXPECTED_PATHS);
   });
 
-  test('при первом открытии сохраняет построенный индекс в sessionStorage', async ({ page }) => {
+  test('пропускает недоступную страницу и строит индекс из остальных', async ({ page }) => {
+    const unavailablePath = '/faq/';
+    await page.route(`**${unavailablePath}`, (route) => {
+      if (route.request().resourceType() === 'fetch') {
+        return route.fulfill({ status: 503, body: 'unavailable' });
+      }
+      return route.continue();
+    });
+    await page.goto('/');
+
+    const paths = await page.evaluate(async (moduleUrl) => {
+      const { buildSearchIndex } = await import(moduleUrl);
+      return Object.keys(await buildSearchIndex()).sort();
+    }, SEARCH_MODULE_URL);
+
+    expect(paths).not.toContain(unavailablePath);
+    expect(paths).toEqual(EXPECTED_PATHS.filter((path) => path !== unavailablePath));
+  });
+
+  test('при первом открытии сохраняет построенный индекс в sessionStorage вместе с revision', async ({ page }) => {
     await page.goto('/');
     await page.evaluate(() => sessionStorage.clear());
 
@@ -179,14 +198,69 @@ test.describe('Поиск — поисковый индекс', () => {
     await button.click();
     await expect(page.locator('.search-input')).toBeEnabled();
 
-    const cache = await page.evaluate(async (moduleUrl) => {
+    const cacheState = await page.evaluate(async (moduleUrl) => {
       const { SEARCH_INDEX_STORAGE_KEY } = await import(moduleUrl);
       const value = sessionStorage.getItem(SEARCH_INDEX_STORAGE_KEY);
-      return value ? JSON.parse(value) : null;
+      const searchScript = document.querySelector('script[type="module"][src*="/js/search.js?v="]');
+      return {
+        cache: value ? JSON.parse(value) : null,
+        currentRevision: searchScript
+          ? new URL(searchScript.src).searchParams.get('v') || ''
+          : '',
+      };
     }, SEARCH_MODULE_URL);
 
-    expect(cache).not.toBeNull();
-    expect(Object.keys(cache).sort()).toEqual(EXPECTED_PATHS);
+    expect(cacheState.cache).not.toBeNull();
+    expect(cacheState.cache.revision).toBe(cacheState.currentRevision);
+    expect(Object.keys(cacheState.cache.index).sort()).toEqual(EXPECTED_PATHS);
+  });
+
+  test('игнорирует структурно валидный кэш от старого revision и перестраивает индекс', async ({ page }) => {
+    const pageRequests = [];
+    page.on('request', (request) => {
+      if (request.resourceType() !== 'fetch') return;
+      const url = new URL(request.url());
+      if (EXPECTED_PATHS.includes(url.pathname)) pageRequests.push(url.pathname);
+    });
+
+    await page.goto('/');
+    const revisions = await page.evaluate(async (moduleUrl) => {
+      const { SEARCH_INDEX_STORAGE_KEY } = await import(moduleUrl);
+      const searchScript = document.querySelector('script[type="module"][src*="/js/search.js?v="]');
+      const currentRevision = searchScript
+        ? new URL(searchScript.src).searchParams.get('v') || ''
+        : '';
+      const previousRevision = `${currentRevision}-previous`;
+
+      sessionStorage.setItem(SEARCH_INDEX_STORAGE_KEY, JSON.stringify({
+        revision: previousRevision,
+        index: {
+          '/stale/': {
+            title: 'Устаревшая страница',
+            text: 'Структурно валидный индекс предыдущего deploy.',
+            entries: [],
+          },
+        },
+      }));
+
+      return { currentRevision, previousRevision };
+    }, SEARCH_MODULE_URL);
+
+    expect(revisions.previousRevision).not.toBe(revisions.currentRevision);
+
+    await page.getByRole('button', { name: 'Открыть поиск по сайту' }).click();
+    await expect(page.locator('.search-input')).toBeEnabled();
+
+    expect(pageRequests.length).toBeGreaterThanOrEqual(PUBLIC_PAGES.length);
+
+    const cache = await page.evaluate(async (moduleUrl) => {
+      const { SEARCH_INDEX_STORAGE_KEY } = await import(moduleUrl);
+      return JSON.parse(sessionStorage.getItem(SEARCH_INDEX_STORAGE_KEY));
+    }, SEARCH_MODULE_URL);
+
+    expect(cache.revision).toBe(revisions.currentRevision);
+    expect(Object.keys(cache.index).sort()).toEqual(EXPECTED_PATHS);
+    expect(cache.index['/stale/']).toBeUndefined();
   });
 
   test('после перехода на другую страницу использует индекс из sessionStorage без повторной загрузки HTML', async ({ page }) => {
@@ -234,7 +308,8 @@ test.describe('Поиск — поисковый индекс', () => {
     const cacheIsValid = await page.evaluate(async (moduleUrl) => {
       const { SEARCH_INDEX_STORAGE_KEY } = await import(moduleUrl);
       try {
-        return Boolean(JSON.parse(sessionStorage.getItem(SEARCH_INDEX_STORAGE_KEY)));
+        const cache = JSON.parse(sessionStorage.getItem(SEARCH_INDEX_STORAGE_KEY));
+        return Boolean(cache?.revision && cache?.index && Object.keys(cache.index).length);
       } catch {
         return false;
       }

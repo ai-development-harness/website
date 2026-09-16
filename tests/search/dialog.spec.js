@@ -31,9 +31,48 @@ test.describe('Поиск — диалог и открытие', () => {
     await waitForSearchReady(page);
   });
 
+  test('открывает поиск сочетанием Alt+K', async ({ page }) => {
+    await page.goto('/');
+    await page.keyboard.press('Alt+K');
+
+    await expect(page.locator('.search-dialog')).toHaveAttribute('open', '');
+    await waitForSearchReady(page);
+  });
+
   test('открывает поиск клавишей слэш вне поля ввода', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('/');
+
+    await expect(page.locator('.search-dialog')).toHaveAttribute('open', '');
+    await waitForSearchReady(page);
+  });
+
+  test('распознаёт физическую клавишу слэша независимо от раскладки', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        key: '.',
+        code: 'Slash',
+        bubbles: true,
+        cancelable: true,
+      }));
+    });
+
+    await expect(page.locator('.search-dialog')).toHaveAttribute('open', '');
+    await waitForSearchReady(page);
+  });
+
+  test('распознаёт Ctrl+K по физической клавише независимо от раскладки', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => {
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'л',
+        code: 'KeyK',
+        ctrlKey: true,
+        bubbles: true,
+        cancelable: true,
+      }));
+    });
 
     await expect(page.locator('.search-dialog')).toHaveAttribute('open', '');
     await waitForSearchReady(page);

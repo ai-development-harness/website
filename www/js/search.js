@@ -7,9 +7,10 @@
 //
 // Жизненный цикл индекса:
 // 1. при первом открытии поиска проверяем sessionStorage;
-// 2. если кэша нет или он повреждён — загружаем публичные HTML-страницы;
+// 2. если кэша нет, он повреждён или относится к другому revision — загружаем
+//    публичные HTML-страницы;
 // 3. строим компактный индекс, сгруппированный по path страницы;
-// 4. сохраняем его в sessionStorage;
+// 4. сохраняем его в sessionStorage вместе с revision клиентских ассетов;
 // 5. при переходах и reload в той же вкладке переиспользуем готовый индекс;
 // 6. после закрытия вкладки sessionStorage очищается браузером, и следующая
 //    сессия строит индекс заново из актуального сайта.
@@ -42,7 +43,7 @@ const FALLBACK_PUBLIC_PATHS = [
 const MAX_RESULTS = 8;
 
 // Версия ключа меняется только при несовместимом изменении структуры индекса.
-// Это автоматически отделяет старый формат кэша от нового без миграций.
+// Актуальность содержимого внутри этого формата проверяется отдельно по revision.
 export const SEARCH_INDEX_STORAGE_KEY = 'aih:search-index:v2';
 
 // В памяти страницы Promise нужен для дедупликации параллельных запросов: если
@@ -246,17 +247,20 @@ export function extractSearchPage(html, path) {
 }
 
 /**
- * Загружает все публичные страницы параллельно и строит индекс вида:
+ * Загружает публичные страницы параллельно и строит индекс вида:
  *
  * {
  *   "/commands/": { title, text, entries: [...] },
  *   "/faq/":      { title, text, entries: [...] }
  * }
+ *
+ * Ошибка одной страницы не обнуляет весь индекс: пригодные страницы сохраняются,
+ * а построение завершается ошибкой только если индексировать не удалось ничего.
  */
 export async function buildSearchIndex() {
   const paths = await getPublicPaths();
 
-  const pages = await Promise.all(paths.map(async (path) => {
+  const settledPages = await Promise.allSettled(paths.map(async (path) => {
     const response = await fetch(path, {
       credentials: 'same-origin',
       headers: { Accept: 'text/html' },
@@ -269,7 +273,15 @@ export async function buildSearchIndex() {
     return [path, extractSearchPage(await response.text(), path)];
   }));
 
-  return Object.fromEntries(pages.filter(([, page]) => page));
+  const pages = settledPages
+    .filter((result) => result.status === 'fulfilled' && result.value?.[1])
+    .map((result) => result.value);
+
+  if (!pages.length) {
+    throw new Error('Не удалось получить ни одной страницы для поискового индекса');
+  }
+
+  return Object.fromEntries(pages);
 }
 
 // -----------------------------------------------------------------------------
@@ -277,7 +289,7 @@ export async function buildSearchIndex() {
 // -----------------------------------------------------------------------------
 
 /**
- * Проверяет только структурные инварианты кэша.
+ * Проверяет только структурные инварианты индекса.
  *
  * Нам не нужна тяжёлая JSON-schema библиотека: достаточно убедиться, что объект
  * похож на текущий формат и содержит только поддерживаемые типы entries.
@@ -305,24 +317,39 @@ function isSearchIndex(value) {
   ));
 }
 
-/** Возвращает валидный индекс из sessionStorage или null. */
+/** Проверяет оболочку кэша и соответствие текущему revision клиентских ассетов. */
+function isSearchIndexCache(value) {
+  return Boolean(
+    value
+    && typeof value === 'object'
+    && !Array.isArray(value)
+    && typeof value.revision === 'string'
+    && value.revision === ASSET_REVISION
+    && isSearchIndex(value.index)
+  );
+}
+
+/** Возвращает актуальный валидный индекс из sessionStorage или null. */
 function readSessionIndex() {
   try {
     const cached = sessionStorage.getItem(SEARCH_INDEX_STORAGE_KEY);
     if (!cached) return null;
 
     const parsed = JSON.parse(cached);
-    return isSearchIndex(parsed) ? parsed : null;
+    return isSearchIndexCache(parsed) ? parsed.index : null;
   } catch {
     // JSON.parse, privacy mode и ограничения storage не должны ломать поиск.
     return null;
   }
 }
 
-/** Сохраняет индекс, но не делает sessionStorage обязательной зависимостью. */
+/** Сохраняет индекс с revision, но не делает sessionStorage обязательной зависимостью. */
 function writeSessionIndex(index) {
   try {
-    sessionStorage.setItem(SEARCH_INDEX_STORAGE_KEY, JSON.stringify(index));
+    sessionStorage.setItem(SEARCH_INDEX_STORAGE_KEY, JSON.stringify({
+      revision: ASSET_REVISION,
+      index,
+    }));
   } catch {
     // Если storage отключён или переполнен, текущая страница продолжит работать
     // с индексом из памяти. На следующей странице он просто построится заново.
@@ -512,7 +539,7 @@ function createSearchButton() {
   button.type = 'button';
   button.className = 'site-search-button';
   button.setAttribute('aria-label', 'Открыть поиск по сайту');
-  button.innerHTML = '<span class="site-search-button__icon" aria-hidden="true"></span><span class="site-search-button__label">Поиск</span><kbd>⌘K</kbd>';
+  button.innerHTML = '<span class="site-search-button__icon" aria-hidden="true"></span><span class="site-search-button__label">Поиск</span><kbd>/</kbd>';
   return button;
 }
 
@@ -774,16 +801,21 @@ export function initSiteSearch() {
     lastTrigger?.focus();
   });
 
-  // Глобальные shortcuts: Ctrl/Cmd+K и `/` вне редактируемых полей.
+  // Глобальные shortcuts. Ctrl+K сохраняем для совместимых браузеров, хотя Chrome
+  // на Windows/Linux резервирует его для адресной строки. Alt+K и `/` остаются
+  // браузерно-безопасными вариантами; event.code делает K и Slash независимыми
+  // от активной раскладки клавиатуры.
   document.addEventListener('keydown', (event) => {
-    const shortcut = (event.ctrlKey || event.metaKey)
-      && event.key.toLocaleLowerCase() === 'k';
-    const slash = event.key === '/'
+    const keyK = event.code === 'KeyK' || event.key.toLocaleLowerCase() === 'k';
+    const commandShortcut = (event.ctrlKey || event.metaKey) && !event.altKey && keyK;
+    const altShortcut = event.altKey && !event.ctrlKey && !event.metaKey && keyK;
+    const slashKey = event.key === '/' || event.code === 'Slash' || event.code === 'NumpadDivide';
+    const slash = slashKey
       && !event.ctrlKey
       && !event.metaKey
       && !event.altKey;
 
-    if (shortcut || (slash && !dialog.open && !isTypingTarget(event.target))) {
+    if (commandShortcut || altShortcut || (slash && !dialog.open && !isTypingTarget(event.target))) {
       event.preventDefault();
       openSearch(document.activeElement);
     }

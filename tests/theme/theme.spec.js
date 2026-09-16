@@ -47,11 +47,14 @@ test.describe('Тема — выбор и сохранение', () => {
     const button = page.locator('.theme-toggle');
     await expect(button).toBeVisible();
     await expect(button).toHaveAttribute('aria-label', 'Включить светлую тему');
+    await expect(button).toHaveAttribute('title', 'Включить светлую тему');
+    expect(await button.getAttribute('aria-pressed')).toBeNull();
     await button.click();
 
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
     await expect(button).toHaveAttribute('aria-label', 'Включить тёмную тему');
-    await expect(button).toHaveAttribute('aria-pressed', 'true');
+    await expect(button).toHaveAttribute('title', 'Включить тёмную тему');
+    expect(await button.getAttribute('aria-pressed')).toBeNull();
     expect(await page.evaluate((storageKey) => localStorage.getItem(storageKey), STORAGE_KEY)).toBe('light');
   });
 

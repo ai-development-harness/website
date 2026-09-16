@@ -72,15 +72,15 @@ test.describe('Инфраструктура — структура и верси
     expect([...revisions]).toHaveLength(1);
   });
 
-  test('main.js использует тот же revision для динамических стилей', async () => {
+  test('main.js получает revision из URL собственного script и использует его для copy.css', async () => {
     const { revisions } = collectHtmlRevisions();
     expect([...revisions]).toHaveLength(1);
-    const [revision] = [...revisions];
 
     const mainJs = readFileSync(join(WWW, 'js', 'main.js'), 'utf8');
-    const revisionMatch = mainJs.match(/const ASSET_REVISION = '([a-z0-9]+)'/i);
 
-    expect(revisionMatch?.[1]).toBe(revision);
+    expect(mainJs).toContain('const mainScript = document.currentScript;');
+    expect(mainJs).toContain("new URL(mainScript.src).searchParams.get('v')");
+    expect(mainJs).not.toMatch(/const ASSET_REVISION = ['"][a-z0-9]+['"]/i);
     expect(mainJs).toContain('/css/copy.css?v=${ASSET_REVISION}');
   });
 
