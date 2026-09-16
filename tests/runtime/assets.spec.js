@@ -13,7 +13,7 @@ const РЕСУРСЫ = [
   '/assets/social-card.svg',
 ];
 
-test.describe('Runtime — загрузка страницы и статических ресурсов', () => {
+test.describe('Выполнение страницы — загрузка и статические ресурсы', () => {
   test('основные статические ресурсы доступны', async ({ request }) => {
     for (const путь of РЕСУРСЫ) {
       const ответ = await request.get(путь);
@@ -38,7 +38,7 @@ test.describe('Runtime — загрузка страницы и статичес
       expect(ошибкиКонсоли).toEqual([]);
     });
 
-    test(`страница ${страница.path} не получает ошибочные same-origin ответы`, async ({ page }) => {
+    test(`страница ${страница.path} не получает ошибочные ответы со своего домена`, async ({ page }) => {
       const ошибки = [];
 
       page.on('response', (response) => {
