@@ -132,15 +132,15 @@
 <section class="section" id="example">
   <div class="container example-layout">
     <div class="example-copy"><div class="eyebrow">Практический пример</div><h2 class="section-title section-title--sm">Короткая просьба становится воспроизводимой задачей</h2><p><code>ADD STEP</code> не пишет production code. Сначала Harness создаёт durable task contract. Затем <code>RUN STEP</code> может пройти plan → implementation → verification → review и остановиться при blocker.</p><p><a class="text-link" href="/commands/">Посмотреть весь командный интерфейс →</a></p></div>
-    <div class="terminal-panel"><div class="panel-bar"><span class="dots">● ● ●</span><b>project session</b></div><pre><code><span class="prompt">YOU ›</span> ADD STEP: Добавить экспорт отчётов в PDF
+    <div class="terminal-panel" data-terminal-demo><div class="panel-bar"><span class="dots">● ● ●</span><b>project session</b></div><pre><code aria-label="Пример сессии Harness"><span class="prompt">YOU ›</span> <span data-terminal-command="ADD STEP: Добавить экспорт отчётов в PDF">ADD STEP: Добавить экспорт отчётов в PDF</span>
 
-<span class="muted">HARNESS › проверяю REQ / ADR / dependencies…</span>
-<span class="pass">CREATED › STEP-024</span>
-Scope · Out of scope · Acceptance · Verification
+<span class="muted" data-terminal-output="HARNESS › проверяю REQ / ADR / dependencies…">HARNESS › проверяю REQ / ADR / dependencies…</span>
+<span class="pass" data-terminal-output="CREATED › STEP-024">CREATED › STEP-024</span>
+<span data-terminal-output="Scope · Out of scope · Acceptance · Verification">Scope · Out of scope · Acceptance · Verification</span>
 
-<span class="prompt">YOU ›</span> RUN STEP-024
-<span class="command">PLAN → IMPLEMENT → VERIFY → REVIEW</span>
-<span class="pass">RESULT › durable evidence + review report</span></code></pre></div>
+<span class="prompt">YOU ›</span> <span data-terminal-command="RUN STEP-024">RUN STEP-024</span>
+<span class="command" data-terminal-output="PLAN → IMPLEMENT → VERIFY → REVIEW">PLAN → IMPLEMENT → VERIFY → REVIEW</span>
+<span class="pass" data-terminal-output="RESULT › durable evidence + review report">RESULT › durable evidence + review report</span></code></pre></div>
   </div>
 </section>
 
@@ -156,7 +156,25 @@ Scope · Out of scope · Acceptance · Verification
   <div class="container"><div class="section-intro"><div class="eyebrow">Разобраться подробнее</div><h2 class="section-title section-title--sm">Документация без пересказа Markdown один в один</h2></div><div class="docs-grid"><a class="doc-card" href="/getting-started/"><span class="meta">Старт</span><h3>Первый проект</h3><p>Требования к окружению, brief, INIT PROJECT и первый безопасный Git flow.</p></a><a class="doc-card" href="/workflow/"><span class="meta">Workflow</span><h3>Жизненный цикл работы</h3><p>Как связаны ADD, PLAN, IMPLEMENT, REVIEW, QUICK FIX и RECONCILE.</p></a><a class="doc-card" href="/commands/"><span class="meta">Reference</span><h3>Команды Harness</h3><p>Стабильный человеко-машинный интерфейс: от INIT до UPDATE HARNESS и PR.</p></a><a class="doc-card" href="/architecture/"><span class="meta">Модель</span><h3>Архитектура контекста</h3><p>Protocol, knowledge base, implementation, canonical sources и projections.</p></a><a class="doc-card" href="/repository/"><span class="meta">Git-native</span><h3>Репозиторий как память</h3><p>Почему новая сессия восстанавливает контекст из файлов и evidence.</p></a><a class="doc-card" href="/maintenance/"><span class="meta">Lifecycle</span><h3>Поддержка и обновление</h3><p>Drift, reconcile, micro-changes, release lock и безопасный self-update.</p></a></div></div>
 </section>
 
-<section class="cta-section"><div class="container"><div class="cta-box"><h2 class="cta-title">Начните с brief. Остальную структуру Harness соберёт в репозитории.</h2><p>Создайте проект из template, заполните локальный <code>PROJECT_BRIEF.local.md</code> и запустите <code>INIT PROJECT</code>.</p><a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a></div></div></section>
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-copy">
+        <h2 class="cta-title">Начните с brief. Остальную структуру Harness соберёт в репозитории.</h2>
+        <p>Создайте проект из template, заполните локальный <code>PROJECT_BRIEF.local.md</code> и запустите <code>INIT PROJECT</code>.</p>
+        <a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
+      </div>
+      <div class="cta-quickstart" aria-label="Три шага до старта">
+        <div class="cta-quickstart-kicker">3 шага до старта</div>
+        <ol class="cta-steps">
+          <li><span class="cta-step-no">01</span><div><strong>Создайте проект</strong><small>Используйте GitHub template как основу нового репозитория.</small></div></li>
+          <li><span class="cta-step-no">02</span><div><strong>Заполните brief</strong><small><code>PROJECT_BRIEF.local.md</code></small></div></li>
+          <li><span class="cta-step-no">03</span><div><strong>Запустите Harness</strong><small><code>INIT PROJECT</code></small></div></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
 <footer class="site-footer">
   <div class="container footer-inner">
