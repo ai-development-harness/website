@@ -29,6 +29,14 @@ function tokenize(value) {
     .filter((token) => token.length > 1);
 }
 
+export function commandAnchorFromTitle(value = '') {
+  const withoutArguments = value.replace(/<[^>]*>/g, ' ');
+  const slug = normalizeSearchText(withoutArguments)
+    .replace(/[^a-zа-я0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '');
+  return slug ? `command-${slug}` : '';
+}
+
 export async function getPublicPaths() {
   try {
     const response = await fetch('/sitemap.xml', { credentials: 'same-origin' });
@@ -107,7 +115,7 @@ export function extractSearchPage(html, path) {
 
     const section = command.closest('section[id]');
     page.entries.push(createEntry({
-      fragment: command.id || section?.id || '',
+      fragment: command.id || commandAnchorFromTitle(commandTitle) || section?.id || '',
       title: commandTitle,
       text: textOf(command),
       kind: 'command',
@@ -357,6 +365,30 @@ function installSearchStyles() {
   document.head.append(link);
 }
 
+function installCommandAnchors() {
+  let requestedId = location.hash.slice(1);
+  try {
+    requestedId = decodeURIComponent(requestedId);
+  } catch {
+    // Некорректно закодированный fragment просто не используем для автопрокрутки.
+  }
+
+  let requestedCommand = null;
+  for (const command of document.querySelectorAll('.command-item')) {
+    const code = command.querySelector('h3 code');
+    if (!code) continue;
+
+    const id = command.id || commandAnchorFromTitle(code.textContent?.trim() || '');
+    if (!id) continue;
+    command.id = id;
+    if (requestedId === id) requestedCommand = command;
+  }
+
+  if (requestedCommand) {
+    requestAnimationFrame(() => requestedCommand.scrollIntoView({ block: 'start' }));
+  }
+}
+
 function isTypingTarget(target) {
   return target instanceof HTMLElement && (
     target.matches('input, textarea, select')
@@ -371,6 +403,7 @@ function resultLabel(item) {
 }
 
 export function initSiteSearch() {
+  installCommandAnchors();
   if (document.querySelector('.site-search-button')) return;
 
   installSearchStyles();
