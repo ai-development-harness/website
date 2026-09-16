@@ -789,3 +789,7 @@ export function initSiteSearch() {
     }
   });
 }
+
+// search.js подключается на каждой странице отдельным <script type="module">.
+// Модуль сам устанавливает кнопку, диалог, shortcuts и якоря команд.
+initSiteSearch();
