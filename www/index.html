@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="/styles-site.css">
 <link rel="stylesheet" href="/styles-docs.css">
 <link rel="stylesheet" href="/styles-responsive.css">
+<link rel="stylesheet" href="/styles-hero-redesign.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "AI Development Harness", "description": "Repository-level protocol, agents, skills and policies for durable AI-assisted development workflows.", "codeRepository": "https://github.com/ai-development-harness/ai-development-harness-template", "url": "https://ai-development-harness.ru/"}</script>
 </head>
 <body>
@@ -67,32 +68,54 @@
 </header>
 <main id="content" tabindex="-1">
 <section class="hero" id="top">
-  <div class="container hero-layout">
-    <div class="hero-copy">
-      <div class="eyebrow">Репозиторий как память · AI как сопроцессор</div>
-      <h1>Ваш репозиторий становится <span class="gradient-text">долгосрочной памятью проекта</span></h1>
-      <p class="hero-lead">Воспроизводимый AI-workflow для разработки: от brief и требований до кода, доказательств, review и безопасной Git-истории.</p>
-      <div class="hero-actions">
-        <a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
-        <a class="button button--ghost" href="/workflow/">Как это работает <span>→</span></a>
+  <div class="container hero-shell">
+    <div class="hero-top">
+      <div class="hero-copy">
+        <div class="eyebrow">Репозиторий как память · AI как сопроцессор</div>
+        <h1>Ваш репозиторий становится <span class="gradient-text">долгосрочной памятью проекта</span></h1>
+        <p class="hero-lead">Воспроизводимый AI-workflow для разработки: от brief и требований до кода, доказательств, review и безопасной Git-истории.</p>
+        <div class="hero-actions">
+          <a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
+          <a class="button button--ghost" href="/workflow/">Как это работает <span>→</span></a>
+        </div>
       </div>
-      <div class="hero-facts" aria-label="Ключевые свойства">
-        <div class="hero-fact"><span class="hero-fact-icon">◇</span><b>Открытый template</b><span>Публичный repository template, который становится вашим проектом.</span></div>
-        <div class="hero-fact"><span class="hero-fact-icon">⌘</span><b>Git-native</b><span>Контекст, изменения и handoff живут рядом с кодом.</span></div>
-        <div class="hero-fact"><span class="hero-fact-icon">◎</span><b>Для solo и команд</b><span>Процесс читается человеком и восстанавливается новой AI-сессией.</span></div>
+      <div class="memory-map" aria-label="Как работает AI Development Harness">
+        <div class="timeline-kicker">Как работает AI Development Harness</div>
+        <div class="hero-timeline">
+          <div class="workflow-step"><span class="workflow-no">01</span><span class="workflow-icon">▧</span><div class="workflow-copy"><b>Brief</b><span>Опишите проект своими словами</span></div><div class="workflow-outcome">Идеи → цели → контекст</div></div>
+          <div class="workflow-step"><span class="workflow-no">02</span><span class="workflow-icon">□</span><div class="workflow-copy"><b>INIT PROJECT</b><span>Harness создаёт project knowledge base и roadmap</span></div><div class="workflow-outcome">Готовая основа проекта</div></div>
+          <div class="workflow-step"><span class="workflow-no">03</span><span class="workflow-icon">≡</span><div class="workflow-copy"><b>ADD STEP</b><span>Новая задача превращается в task contract</span></div><div class="workflow-outcome">Scope → критерии → зависимости</div></div>
+          <div class="workflow-step"><span class="workflow-no">04</span><span class="workflow-icon">▷</span><div class="workflow-copy"><b>RUN STEP</b><span>Plan, implementation и проверки идут по правилам проекта</span></div><div class="workflow-outcome">План → код → verification</div></div>
+          <div class="workflow-step"><span class="workflow-no">05</span><span class="workflow-icon">⌕</span><div class="workflow-copy"><b>Review &amp; Evidence</b><span>Независимый review сверяет task, реализацию и доказательства</span></div><div class="workflow-outcome">PASS / FAIL / BLOCKED</div></div>
+          <div class="workflow-step"><span class="workflow-no">06</span><span class="workflow-icon">⑂</span><div class="workflow-copy"><b>Git</b><span>Публикация изменений выполняется отдельными безопасными командами</span></div><div class="workflow-outcome">Commit → push → PR</div></div>
+        </div>
+        <div class="timeline-note"><strong>Стабильный процесс.</strong> Контекст остаётся в репозитории, а не в истории одного чата.</div>
       </div>
     </div>
-    <div class="memory-map" aria-label="Как работает AI Development Harness">
-      <div class="timeline-kicker">Как работает AI Development Harness</div>
-      <div class="hero-timeline">
-        <div class="workflow-step"><span class="workflow-no">01</span><span class="workflow-icon">▧</span><div class="workflow-copy"><b>Brief</b><span>Опишите проект своими словами</span></div><div class="workflow-outcome">Идеи → цели → контекст</div></div>
-        <div class="workflow-step"><span class="workflow-no">02</span><span class="workflow-icon">□</span><div class="workflow-copy"><b>INIT PROJECT</b><span>Harness создаёт project knowledge base и roadmap</span></div><div class="workflow-outcome">Готовая основа проекта</div></div>
-        <div class="workflow-step"><span class="workflow-no">03</span><span class="workflow-icon">≡</span><div class="workflow-copy"><b>ADD STEP</b><span>Новая задача превращается в task contract</span></div><div class="workflow-outcome">Scope → критерии → зависимости</div></div>
-        <div class="workflow-step"><span class="workflow-no">04</span><span class="workflow-icon">▷</span><div class="workflow-copy"><b>RUN STEP</b><span>Plan, implementation и проверки идут по правилам проекта</span></div><div class="workflow-outcome">План → код → verification</div></div>
-        <div class="workflow-step"><span class="workflow-no">05</span><span class="workflow-icon">⌕</span><div class="workflow-copy"><b>Review &amp; Evidence</b><span>Независимый review сверяет task, реализацию и доказательства</span></div><div class="workflow-outcome">PASS / FAIL / BLOCKED</div></div>
-        <div class="workflow-step"><span class="workflow-no">06</span><span class="workflow-icon">⑂</span><div class="workflow-copy"><b>Git</b><span>Публикация изменений выполняется отдельными безопасными командами</span></div><div class="workflow-outcome">Commit → push → PR</div></div>
+
+    <div class="hero-demo" id="example">
+      <div class="hero-demo-heading">
+        <div>
+          <div class="eyebrow">Практический пример</div>
+          <h2 class="hero-demo-title">Одна короткая команда превращается в проверяемый workflow</h2>
+        </div>
+        <p><code>ADD STEP</code> сначала создаёт durable task contract. Затем <code>RUN STEP</code> проходит plan → implementation → verification → review и оставляет evidence. <a class="text-link" href="/commands/">Все команды →</a></p>
       </div>
-      <div class="timeline-note"><strong>Стабильный процесс.</strong> Контекст остаётся в репозитории, а не в истории одного чата.</div>
+      <div class="terminal-panel" data-terminal-demo><div class="panel-bar"><span class="dots">● ● ●</span><b>project session</b></div><pre><code aria-label="Пример сессии Harness"><span class="prompt">YOU ›</span> <span data-terminal-command="ADD STEP: Добавить экспорт отчётов в PDF">ADD STEP: Добавить экспорт отчётов в PDF</span>
+
+<span class="muted" data-terminal-output="HARNESS › проверяю REQ / ADR / dependencies…">HARNESS › проверяю REQ / ADR / dependencies…</span>
+<span class="pass" data-terminal-output="CREATED › STEP-024">CREATED › STEP-024</span>
+<span data-terminal-output="Scope · Out of scope · Acceptance · Verification">Scope · Out of scope · Acceptance · Verification</span>
+
+<span class="prompt">YOU ›</span> <span data-terminal-command="RUN STEP-024">RUN STEP-024</span>
+<span class="command" data-terminal-output="PLAN → IMPLEMENT → VERIFY → REVIEW">PLAN → IMPLEMENT → VERIFY → REVIEW</span>
+<span class="pass" data-terminal-output="RESULT › durable evidence + review report">RESULT › durable evidence + review report</span></code></pre></div>
+    </div>
+
+    <div class="hero-facts" aria-label="Ключевые свойства">
+      <div class="hero-fact"><span class="hero-fact-icon">◇</span><b>Открытый template</b><span>Публичный repository template, который становится вашим проектом.</span></div>
+      <div class="hero-fact"><span class="hero-fact-icon">⌘</span><b>Git-native</b><span>Контекст, изменения и handoff живут рядом с кодом.</span></div>
+      <div class="hero-fact"><span class="hero-fact-icon">◎</span><b>Для solo и команд</b><span>Процесс читается человеком и восстанавливается новой AI-сессией.</span></div>
     </div>
   </div>
 </section>
@@ -126,21 +149,6 @@
   <div class="container trace-layout">
     <div class="trace-copy"><div class="eyebrow">Модель контекста</div><h2 class="section-title section-title--sm">Три слоя вместо одного огромного ТЗ</h2><p>Protocol определяет процесс. Project knowledge base хранит требования и решения. Реализация содержит фактический код, тесты и config. Между слоями остаются явные связи.</p><p><a class="text-link" href="/architecture/">Разобрать архитектуру Harness →</a></p></div>
     <div class="traceability-flow" aria-label="Три слоя AI Development Harness"><div class="flow-kicker">От процесса к фактическому состоянию</div><div class="flow-track"><div class="flow-card"><b>Protocol</b><small>AGENTS · commands · skills · policies</small></div><div class="flow-card"><b>Project</b><small>PROJECT · REQ · architecture</small></div><div class="flow-card"><b>Decisions</b><small>ADR · open questions</small></div><div class="flow-card"><b>Planning</b><small>STEP · PLAN · STATUS</small></div><div class="flow-card"><b>Reality</b><small>code · tests · evidence · review</small></div></div><div class="flow-footer">REQ ↔ STEP ↔ Evidence · ADR ограничивает реализацию · Git сохраняет историю</div></div>
-  </div>
-</section>
-
-<section class="section" id="example">
-  <div class="container example-layout">
-    <div class="example-copy"><div class="eyebrow">Практический пример</div><h2 class="section-title section-title--sm">Короткая просьба становится воспроизводимой задачей</h2><p><code>ADD STEP</code> не пишет production code. Сначала Harness создаёт durable task contract. Затем <code>RUN STEP</code> может пройти plan → implementation → verification → review и остановиться при blocker.</p><p><a class="text-link" href="/commands/">Посмотреть весь командный интерфейс →</a></p></div>
-    <div class="terminal-panel" data-terminal-demo><div class="panel-bar"><span class="dots">● ● ●</span><b>project session</b></div><pre><code aria-label="Пример сессии Harness"><span class="prompt">YOU ›</span> <span data-terminal-command="ADD STEP: Добавить экспорт отчётов в PDF">ADD STEP: Добавить экспорт отчётов в PDF</span>
-
-<span class="muted" data-terminal-output="HARNESS › проверяю REQ / ADR / dependencies…">HARNESS › проверяю REQ / ADR / dependencies…</span>
-<span class="pass" data-terminal-output="CREATED › STEP-024">CREATED › STEP-024</span>
-<span data-terminal-output="Scope · Out of scope · Acceptance · Verification">Scope · Out of scope · Acceptance · Verification</span>
-
-<span class="prompt">YOU ›</span> <span data-terminal-command="RUN STEP-024">RUN STEP-024</span>
-<span class="command" data-terminal-output="PLAN → IMPLEMENT → VERIFY → REVIEW">PLAN → IMPLEMENT → VERIFY → REVIEW</span>
-<span class="pass" data-terminal-output="RESULT › durable evidence + review report">RESULT › durable evidence + review report</span></code></pre></div>
   </div>
 </section>
 
