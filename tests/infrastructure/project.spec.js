@@ -40,6 +40,12 @@ test.describe('Инфраструктура — пакетный менедже�
     expect(ci).toContain('yarn playwright install-deps chromium webkit');
   });
 
+  test('CI отменяет устаревший прогон PR после появления нового head', async () => {
+    expect(ci).toContain('concurrency:');
+    expect(ci).toContain('github.event.pull_request.number || github.ref');
+    expect(ci).toContain('cancel-in-progress: true');
+  });
+
   test('CI запускает тесты через Yarn', async () => {
     expect(ci).toMatch(/yarn test/);
   });
