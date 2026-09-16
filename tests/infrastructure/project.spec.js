@@ -26,7 +26,7 @@ test.describe('Инфраструктура — пакетный менедже�
   test('CI кэширует браузеры Playwright по версии пакета', async () => {
     expect(ci).toContain('uses: actions/cache@v4');
     expect(ci).toContain('path: ~/.cache/ms-playwright');
-    expect(ci).toContain("require(\"@playwright/test/package.json\").version");
+    expect(ci).toContain('require("@playwright/test/package.json").version');
     expect(ci).toContain('runner.os }}-${{ runner.arch }}-playwright-${{ steps.playwright-version.outputs.version');
   });
 
@@ -45,7 +45,7 @@ test.describe('Инфраструктура — пакетный менедже�
   });
 
   test('Playwright preview запускается через Yarn', async () => {
-    const конфиг = readFileSync('playwright.config.js', 'utf8');
-    expect(конфиг).toContain("command: 'yarn preview'");
+    const config = readFileSync('playwright.config.js', 'utf8');
+    expect(config).toContain("command: 'yarn preview'");
   });
 });
