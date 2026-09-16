@@ -18,14 +18,14 @@ test.describe('Поиск — нормализация и ранжировани
     const результат = await page.evaluate(async () => {
       const { scoreSearchItem } = await import('/search.js');
       const base = {
-        normalizedPageTitle: 'команды harness',
-        normalizedKeywords: '',
-        normalizedText: 'add step создаёт новую задачу',
+        pageTitle: 'Команды Harness',
+        keywords: '',
+        text: 'ADD STEP создаёт новую задачу',
         kind: 'section',
       };
       return {
-        точное: scoreSearchItem({ ...base, normalizedTitle: 'add step' }, 'ADD STEP'),
-        толькоТекст: scoreSearchItem({ ...base, normalizedTitle: 'инициализация' }, 'ADD STEP'),
+        точное: scoreSearchItem({ ...base, title: 'ADD STEP' }, 'ADD STEP'),
+        толькоТекст: scoreSearchItem({ ...base, title: 'Инициализация' }, 'ADD STEP'),
       };
     });
 
@@ -35,23 +35,28 @@ test.describe('Поиск — нормализация и ранжировани
   test('отдельная запись команды получает приоритет перед обычным разделом', async ({ page }) => {
     const порядок = await page.evaluate(async () => {
       const { rankSearchResults } = await import('/search.js');
-      const item = (kind, title, keywords = '') => ({
-        kind,
-        title,
-        pageTitle: 'Команды Harness',
-        text: 'ADD STEP создаёт задачу',
-        href: '/commands/#bootstrap',
-        path: '/commands/',
-        normalizedTitle: title.toLowerCase(),
-        normalizedPageTitle: 'команды harness',
-        normalizedKeywords: keywords.toLowerCase(),
-        normalizedText: 'add step создаёт задачу',
-      });
+      const индекс = {
+        '/commands/': {
+          title: 'Команды Harness',
+          text: 'Справочник команд',
+          entries: [
+            {
+              fragment: 'bootstrap',
+              kind: 'section',
+              title: 'Инициализация',
+              text: 'ADD STEP создаёт задачу',
+            },
+            {
+              fragment: 'bootstrap',
+              kind: 'command',
+              title: 'ADD STEP',
+              text: 'ADD STEP создаёт задачу',
+            },
+          ],
+        },
+      };
 
-      return rankSearchResults([
-        item('section', 'Инициализация'),
-        item('command', 'ADD STEP', 'ADD STEP'),
-      ], 'ADD STEP').map((result) => result.kind);
+      return rankSearchResults(индекс, 'ADD STEP').map((result) => result.kind);
     });
 
     expect(порядок[0]).toBe('command');
@@ -60,18 +65,18 @@ test.describe('Поиск — нормализация и ранжировани
   test('результат отбрасывается если не содержит все значимые слова запроса', async ({ page }) => {
     const количество = await page.evaluate(async () => {
       const { rankSearchResults } = await import('/search.js');
-      return rankSearchResults([{
-        kind: 'section',
-        title: 'Обновление',
-        pageTitle: 'Поддержка',
-        text: 'UPDATE HARNESS',
-        href: '/maintenance/#updates',
-        path: '/maintenance/',
-        normalizedTitle: 'обновление',
-        normalizedPageTitle: 'поддержка',
-        normalizedKeywords: '',
-        normalizedText: 'update harness',
-      }], 'UPDATE HARNESS конфликт').length;
+      return rankSearchResults({
+        '/maintenance/': {
+          title: 'Поддержка',
+          text: '',
+          entries: [{
+            fragment: 'updates',
+            kind: 'section',
+            title: 'Обновление',
+            text: 'UPDATE HARNESS',
+          }],
+        },
+      }, 'UPDATE HARNESS конфликт').length;
     });
 
     expect(количество).toBe(0);
@@ -80,21 +85,39 @@ test.describe('Поиск — нормализация и ранжировани
   test('ранжирование соблюдает заданный лимит выдачи', async ({ page }) => {
     const количество = await page.evaluate(async () => {
       const { rankSearchResults } = await import('/search.js');
-      const индекс = Array.from({ length: 20 }, (_, index) => ({
-        kind: 'section',
-        title: `Проект ${index}`,
-        pageTitle: 'Документация',
-        text: 'проект',
-        href: `/page-${index}/`,
-        path: `/page-${index}/`,
-        normalizedTitle: `проект ${index}`,
-        normalizedPageTitle: 'документация',
-        normalizedKeywords: '',
-        normalizedText: 'проект',
-      }));
+      const индекс = Object.fromEntries(Array.from({ length: 20 }, (_, index) => [
+        `/page-${index}/`,
+        {
+          title: `Проект ${index}`,
+          text: 'проект',
+          entries: [],
+        },
+      ]));
       return rankSearchResults(индекс, 'проект', 5).length;
     });
 
     expect(количество).toBe(5);
+  });
+
+  test('href результата собирается из пути страницы и fragment только при выдаче', async ({ page }) => {
+    const href = await page.evaluate(async () => {
+      const { rankSearchResults } = await import('/search.js');
+      const индекс = {
+        '/commands/': {
+          title: 'Команды Harness',
+          text: '',
+          entries: [{
+            fragment: 'execution',
+            kind: 'command',
+            title: 'RUN STEP-NNN',
+            text: 'Оркестрирует выполнение шага',
+          }],
+        },
+      };
+
+      return rankSearchResults(индекс, 'RUN STEP-NNN')[0].href;
+    });
+
+    expect(href).toBe('/commands/#execution');
   });
 });
