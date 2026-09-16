@@ -72,26 +72,27 @@ test.describe('Инфраструктура — структура и верси
     expect([...revisions]).toHaveLength(1);
   });
 
-  test('main.js использует общий revision для зависимостей и динамических стилей', async () => {
+  test('main.js использует тот же revision для динамических подключений', async () => {
     const { revisions } = collectHtmlRevisions();
     expect([...revisions]).toHaveLength(1);
     const [revision] = [...revisions];
 
     const mainJs = readFileSync(join(WWW, 'js', 'main.js'), 'utf8');
     const revisionMatch = mainJs.match(/const ASSET_REVISION = '([a-z0-9]+)'/i);
-    const searchImportMatch = mainJs.match(/from '\.\/search\.js\?v=([a-z0-9]+)'/i);
 
     expect(revisionMatch?.[1]).toBe(revision);
-    expect(searchImportMatch?.[1]).toBe(revision);
     expect(mainJs).toContain('/css/copy.css?v=${ASSET_REVISION}');
+    expect(mainJs).toContain('/js/search.js?v=${ASSET_REVISION}');
   });
 
-  test('search.js является статической зависимостью main.js, чтобы shortcuts были готовы к событию load', async () => {
+  test('main.js не теряет ранний shortcut до готовности динамического модуля поиска', async () => {
     const mainJs = readFileSync(join(WWW, 'js', 'main.js'), 'utf8');
 
-    expect(mainJs).toMatch(/^import \{ initSiteSearch \} from '\.\/search\.js\?v=[a-z0-9]+';/m);
-    expect(mainJs).not.toContain('import(`/js/search.js');
-    expect(mainJs).toContain('initSiteSearch();');
+    expect(mainJs).toContain("document.addEventListener('keydown', bootstrapSearchShortcut)");
+    expect(mainJs).toContain('searchReady = import(`/js/search.js?v=${ASSET_REVISION}`)');
+    expect(mainJs).toContain("document.removeEventListener('keydown', bootstrapSearchShortcut)");
+    expect(mainJs).toContain("document.dispatchEvent(new KeyboardEvent('keydown'");
+    expect(mainJs).not.toMatch(/^import\s+.+\s+from\s+/m);
   });
 
   test('search.js наследует revision модуля для динамического search.css', async () => {
