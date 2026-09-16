@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050b14">
+<meta name="color-scheme" content="dark">
+<title>Команды AI Development Harness — полный справочник</title>
+<meta name="description" content="Справочник команд AI Development Harness: INIT PROJECT, ADD/RUN/REVIEW STEP, QUICK FIX, RECONCILE, skills, self-update и безопасные Git operations.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://ai-development-harness.ru/commands/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="AI Development Harness">
+<meta property="og:title" content="Команды AI Development Harness — полный справочник">
+<meta property="og:description" content="Справочник команд AI Development Harness: INIT PROJECT, ADD/RUN/REVIEW STEP, QUICK FIX, RECONCILE, skills, self-update и безопасные Git operations.">
+<meta property="og:url" content="https://ai-development-harness.ru/commands/">
+<meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Команды AI Development Harness — полный справочник">
+<meta name="twitter:description" content="Справочник команд AI Development Harness: INIT PROJECT, ADD/RUN/REVIEW STEP, QUICK FIX, RECONCILE, skills, self-update и безопасные Git operations.">
+<meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles-site.css">
+<link rel="stylesheet" href="/styles-docs.css">
+<link rel="stylesheet" href="/styles-responsive.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Команды Harness", "item": "https://ai-development-harness.ru/commands/"}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#content">К содержимому</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="AI Development Harness — на главную">
+      <img src="/assets/mark.svg" width="42" height="42" alt="">
+      <span class="brand-copy"><strong>AI Development</strong><span>Harness</span></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Основная навигация"><a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/" aria-current="page">Команды</a><a href="/architecture/">Архитектура</a></nav>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
+      <a class="button button--small button--primary desktop-cta" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
+      <button class="menu-button" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" hidden>
+    <a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a>
+    <a href="/repository/">Репозиторий как память</a>
+    <a href="/maintenance/">Поддержка</a>
+    <a href="/faq/">FAQ</a>
+    <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон</a>
+  </nav>
+</header>
+<main id="content" tabindex="-1">
+  <header class="docs-hero">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span>→</span><span>Команды Harness</span></nav>
+      <div class="eyebrow">Документация Harness</div>
+      <h1>Команды Harness</h1>
+      <p>Стабильный человеко-машинный интерфейс: короткие команды запускают предсказуемые repository-level workflow и оставляют durable artifacts.</p>
+    </div>
+  </header>
+  <div class="container docs-shell">
+    <article class="article"><section id="bootstrap"><h2>Bootstrap и планирование</h2><div class="command-list"><div class="command-item"><h3><code>INIT PROJECT</code></h3><p>Однократный bootstrap из PROJECT_BRIEF.local.md. Создаёт knowledge base и initial roadmap, но не production code.</p></div><div class="command-item"><h3><code>ADD STEP: &lt;описание&gt;</code></h3><p>Преобразует человеческую задачу в новый STEP с scope, dependencies, acceptance criteria и verification.</p></div><div class="command-item"><h3><code>PLAN STEP-NNN</code></h3><p>Проводит pre-implementation analysis и сохраняет Implementation plan внутрь task-файла.</p></div><div class="command-item"><h3><code>NEXT STEP</code></h3><p>Read-only рекомендует следующий unblocked STEP по dependencies, priority, risk и roadmap.</p></div><div class="command-item"><h3><code>STATUS PROJECT</code></h3><p>Проверяет status projections, blockers, unblocked work и drift indicators.</p></div></div></section><section id="execution"><h2>Выполнение и контроль</h2><div class="command-list"><div class="command-item"><h3><code>IMPLEMENT STEP-NNN</code></h3><p>Реализует сохранённый план в пределах task contract и запускает verification.</p></div><div class="command-item"><h3><code>REVIEW STEP-NNN</code></h3><p>Независимо проверяет task, implementation и evidence; создаёт immutable review report.</p></div><div class="command-item"><h3><code>FIX STEP-NNN</code></h3><p>Исправляет подтверждённые findings последнего применимого FAIL review.</p></div><div class="command-item"><h3><code>RUN STEP-NNN</code></h3><p>Оркестрирует PLAN → IMPLEMENT → verification → REVIEW → FIX/REVIEW → CLOSE.</p></div><div class="command-item"><h3><code>AUDIT STEP-NNN</code></h3><p>Read-only проверяет фактическое состояние; defects становятся findings/corrective work.</p></div><div class="command-item"><h3><code>RECONCILE PROJECT</code></h3><p>Ищет drift между code/tests/config и REQ/ADR/architecture/STEP/evidence.</p></div><div class="command-item"><h3><code>RELEASE CHECK</code></h3><p>Проверяет release gates: findings, requirements, migrations, tests/build, security, docs и deploy concerns.</p></div></div></section><section id="shortcuts"><h2>Мелкие изменения</h2><div class="command-list"><div class="command-item"><h3><code>QUICK FIX: &lt;описание&gt;</code></h3><p>Low-risk micro-change без искусственного REQ/ADR/STEP. При contract/risk change останавливается и предлагает ADD STEP.</p></div></div></section><section id="skills"><h2>Skills и GitHub templates</h2><div class="command-list"><div class="command-item"><h3><code>FIND SKILL: &lt;описание&gt;</code></h3><p>Ищет и инспектирует repository skills, сохраняет TOP-5, ничего не устанавливает.</p></div><div class="command-item"><h3><code>INSTALL SKILL: &lt;source | #N&gt;</code></h3><p>Повторно инспектирует выбранный skill и устанавливает его с provenance/registry/routing.</p></div><div class="command-item"><h3><code>CREATE SKILL: &lt;описание&gt;</code></h3><p>Создаёт project-native skill, если подходящего upstream нет.</p></div><div class="command-item"><h3><code>GENERATE GITHUB TEMPLATES</code></h3><p>Регенерирует managed Issue Forms и PR template по фактическому tooling проекта.</p></div></div></section><section id="updates"><h2>Обновление Harness</h2><div class="command-list"><div class="command-item"><h3><code>CHECK HARNESS UPDATE</code></h3><p>Read-only сравнивает BASE/OURS/THEIRS для allowlisted Harness paths и показывает blockers.</p></div><div class="command-item"><h3><code>UPDATE HARNESS</code></h3><p>После успешной проверки обновляет protocol layer по ownership policy; не делает STEP/commit/push/PR.</p></div></div></section><section id="git"><h2>Git operations</h2><div class="command-list"><div class="command-item"><h3><code>GIT CHECK</code></h3><p>Read-only preflight: branch, upstream, diff, integrity, policy и suspicious files.</p></div><div class="command-item"><h3><code>COMMIT / COMMIT: &lt;подсказка&gt;</code></h3><p>Создаёт только локальный безопасный Conventional Commit по git-policy.</p></div><div class="command-item"><h3><code>PUSH</code></h3><p>Публикует текущую ветку без force после divergence/safety checks.</p></div><div class="command-item"><h3><code>PR</code></h3><p>Создаёт или возвращает существующий Pull Request согласно policy.</p></div><div class="command-item"><h3><code>SYNC</code></h3><p>Fetch + ahead/behind; по умолчанию read-only, опционально только safe fast-forward.</p></div></div></section><nav class="prev-next" aria-label="Навигация по документации"><a href="/workflow/"><span>Назад</span>Процесс разработки</a><a href="/architecture/"><span>Далее</span>Архитектура</a></nav></article>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#bootstrap">Bootstrap и планирование</a><a href="#execution">Выполнение и контроль</a><a href="#shortcuts">Мелкие изменения</a><a href="#skills">Skills и GitHub templates</a><a href="#updates">Обновление Harness</a><a href="#git">Git operations</a></aside>
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <div class="footer-brand">AI Development Harness</div>
+      <div class="footer-note">Репозиторий как долговременная память AI-разработки.</div>
+      <div class="footer-note">ai-development-harness.ru</div>
+    </div>
+    <nav class="footer-links" aria-label="Навигация в подвале">
+      <a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
+      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/maintenance/">Поддержка</a><a href="/faq/">FAQ</a>
+      <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
+    </nav>
+  </div>
+</footer>
+<script src="/main.js"></script>
+</body>
+</html>
