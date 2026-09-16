@@ -22,29 +22,29 @@ test.describe('Навигация — шапка сайта', () => {
   test('мобильное меню открывается и закрывается повторным нажатием', async ({ page }, testInfo) => {
     test.skip(isDesktop(testInfo), 'Проверка относится к мобильной навигации');
 
-    const кнопка = page.locator('.menu-button');
-    const меню = page.locator('.mobile-nav');
+    const button = page.locator('.menu-button');
+    const menu = page.locator('.mobile-nav');
 
-    await кнопка.click();
-    await expect(кнопка).toHaveAttribute('aria-expanded', 'true');
-    await expect(меню).toBeVisible();
+    await button.click();
+    await expect(button).toHaveAttribute('aria-expanded', 'true');
+    await expect(menu).toBeVisible();
 
-    await кнопка.click();
-    await expect(кнопка).toHaveAttribute('aria-expanded', 'false');
-    await expect(меню).toBeHidden();
+    await button.click();
+    await expect(button).toHaveAttribute('aria-expanded', 'false');
+    await expect(menu).toBeHidden();
   });
 
   test('мобильное меню закрывается клавишей Escape', async ({ page }, testInfo) => {
     test.skip(isDesktop(testInfo), 'Проверка относится к мобильной навигации');
 
-    const кнопка = page.locator('.menu-button');
-    const меню = page.locator('.mobile-nav');
+    const button = page.locator('.menu-button');
+    const menu = page.locator('.mobile-nav');
 
-    await кнопка.click();
-    await expect(меню).toBeVisible();
+    await button.click();
+    await expect(menu).toBeVisible();
     await page.keyboard.press('Escape');
-    await expect(кнопка).toHaveAttribute('aria-expanded', 'false');
-    await expect(меню).toBeHidden();
+    await expect(button).toHaveAttribute('aria-expanded', 'false');
+    await expect(menu).toBeHidden();
   });
 
   test('мобильное меню закрывается после перехода по ссылке', async ({ page }, testInfo) => {
