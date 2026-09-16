@@ -1,67 +1,67 @@
 import { test, expect } from '@playwright/test';
 
-async function открытьИПодготовить(page, запрос = 'STEP') {
+async function openSearchWithQuery(page, query = 'STEP') {
   await page.goto('/');
   await page.keyboard.press('Control+K');
-  const поле = page.locator('.search-input');
-  await expect(поле).toBeEnabled();
-  await поле.fill(запрос);
+  const input = page.locator('.search-input');
+  await expect(input).toBeEnabled();
+  await input.fill(query);
   await expect(page.locator('.search-result').first()).toBeVisible();
-  return поле;
+  return input;
 }
 
 test.describe('Поиск — клавиатурная навигация', () => {
   test('после появления результатов выбирает первый результат', async ({ page }) => {
-    const поле = await открытьИПодготовить(page);
-    const activeId = await поле.getAttribute('aria-activedescendant');
+    const input = await openSearchWithQuery(page);
+    const activeId = await input.getAttribute('aria-activedescendant');
 
     expect(activeId).toBeTruthy();
     await expect(page.locator(`#${activeId}`)).toHaveClass(/is-active/);
   });
 
   test('стрелка вниз выбирает следующий результат', async ({ page }) => {
-    const поле = await открытьИПодготовить(page);
-    const первыйId = await поле.getAttribute('aria-activedescendant');
+    const input = await openSearchWithQuery(page);
+    const firstId = await input.getAttribute('aria-activedescendant');
 
     await page.keyboard.press('ArrowDown');
-    const второйId = await поле.getAttribute('aria-activedescendant');
+    const secondId = await input.getAttribute('aria-activedescendant');
 
-    expect(второйId).not.toBe(первыйId);
-    await expect(page.locator(`#${второйId}`)).toHaveClass(/is-active/);
+    expect(secondId).not.toBe(firstId);
+    await expect(page.locator(`#${secondId}`)).toHaveClass(/is-active/);
   });
 
   test('стрелка вверх циклически переходит к последнему результату', async ({ page }) => {
-    const поле = await открытьИПодготовить(page);
-    const количество = await page.locator('.search-result').count();
+    const input = await openSearchWithQuery(page);
+    const resultCount = await page.locator('.search-result').count();
 
     await page.keyboard.press('ArrowUp');
-    await expect(поле).toHaveAttribute('aria-activedescendant', `site-search-result-${количество - 1}`);
+    await expect(input).toHaveAttribute('aria-activedescendant', `site-search-result-${resultCount - 1}`);
   });
 
   test('Enter открывает активный результат', async ({ page }) => {
-    const поле = await открытьИПодготовить(page, 'ADD STEP');
+    const input = await openSearchWithQuery(page, 'ADD STEP');
     const href = await page.locator('.search-result.is-active').getAttribute('href');
 
-    await поле.press('Enter');
+    await input.press('Enter');
     await expect(page).toHaveURL(new RegExp(`${href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`));
   });
 
   test('после смены запроса выбор снова начинается с первого результата', async ({ page }) => {
-    const поле = await открытьИПодготовить(page, 'STEP');
+    const input = await openSearchWithQuery(page, 'STEP');
     await page.keyboard.press('ArrowDown');
-    await поле.fill('UPDATE HARNESS');
+    await input.fill('UPDATE HARNESS');
 
-    await expect(поле).toHaveAttribute('aria-activedescendant', 'site-search-result-0');
+    await expect(input).toHaveAttribute('aria-activedescendant', 'site-search-result-0');
   });
 
   test('Escape закрывает поиск из поля ввода и возвращает фокус', async ({ page }) => {
     await page.goto('/');
-    const кнопка = page.getByRole('button', { name: 'Открыть поиск по сайту' });
-    await кнопка.click();
+    const button = page.getByRole('button', { name: 'Открыть поиск по сайту' });
+    await button.click();
     await expect(page.locator('.search-input')).toBeFocused();
 
     await page.locator('.search-input').press('Escape');
     await expect(page.locator('.search-dialog')).not.toHaveAttribute('open', '');
-    await expect(кнопка).toBeFocused();
+    await expect(button).toBeFocused();
   });
 });
