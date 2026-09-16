@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://ai-development-harness.ru/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ai-development-harness.ru/</loc></url>
+  <url><loc>https://ai-development-harness.ru/getting-started/</loc></url>
+  <url><loc>https://ai-development-harness.ru/workflow/</loc></url>
+  <url><loc>https://ai-development-harness.ru/commands/</loc></url>
+  <url><loc>https://ai-development-harness.ru/architecture/</loc></url>
+  <url><loc>https://ai-development-harness.ru/repository/</loc></url>
+  <url><loc>https://ai-development-harness.ru/maintenance/</loc></url>
+  <url><loc>https://ai-development-harness.ru/faq/</loc></url>
 </urlset>

@@ -4,15 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 5173 --directory www",
-    "preview": "python3 -m http.server 4173 --directory www",
+    "dev": "concurrently --kill-others-on-fail --names server,browser \"yarn dev:server\" \"yarn dev:open\"",
+    "dev:server": "http-server www -p 5173 -c-1",
+    "dev:open": "node scripts/open-dev.mjs",
+    "preview": "http-server www -p 4173 -c-1",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:report": "playwright show-report"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0"
+    "@playwright/test": "^1.55.0",
+    "concurrently": "^9.2.4",
+    "http-server": "^14.1.1"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22"
 }

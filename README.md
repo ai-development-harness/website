@@ -4,47 +4,77 @@
 
 ## Локальная разработка
 
-Требования: Node.js 22+, npm, Python 3.
+Требования: Node.js 22+ и Yarn 1.22.22.
+
+Если Yarn ещё не активирован через Corepack:
 
 ```bash
-npm install
-npx playwright install chromium
-npm run dev
+corepack enable
+corepack prepare yarn@1.22.22 --activate
 ```
 
-Сайт будет доступен на `http://localhost:5173`.
+Установка зависимостей и запуск:
+
+```bash
+yarn install
+yarn playwright install chromium webkit
+yarn dev
+```
+
+`yarn dev` запускает статический сервер на `http://localhost:5173` и автоматически открывает сайт в браузере.
 
 ## Тесты
 
-Обычный прогон Playwright во всех поддерживаемых профилях устройств:
+Полный прогон Playwright:
 
 ```bash
-npm test
+yarn test
 ```
 
 Интерактивный UI runner:
 
 ```bash
-npm run test:ui
+yarn test:ui
 ```
 
 Запуск с видимым браузером:
 
 ```bash
-npm run test:headed
+yarn test:headed
 ```
 
 HTML-отчёт последнего прогона:
 
 ```bash
-npm run test:report
+yarn test:report
 ```
 
-Тесты запускаются для desktop Chromium, iPad Pro 11 и Pixel 7. Проверяются основной контент, адаптивная навигация, отсутствие горизонтального overflow, anchors, внешние ссылки и базовый accessibility contract.
+Тесты разбиты по смысловым каталогам в `tests/`:
+
+- `home/` — первый экран, ключевые секции и анимированный терминал;
+- `docs/` — структура и навигация документации;
+- `navigation/` — шапка, мобильное меню, внутренние и внешние ссылки;
+- `responsive/` — геометрия и отсутствие переполнения на разных размерах экрана;
+- `accessibility/` — семантика, основные области страницы и клавиатурная навигация;
+- `seo/` — канонические URL, метаданные, JSON-LD, sitemap и robots.txt;
+- `analytics/` — локальное отключение Яндекс Метрики;
+- `runtime/` — статические ресурсы, ошибки JavaScript и ошибочные HTTP-ответы;
+- `content/` — русская терминология и сохранение технических имён команд;
+- `infrastructure/` — Yarn, lockfile, Playwright и CI-инварианты.
+
+Все названия test case и test suite пишутся по-русски.
+
+Полный набор тестов запускается во всех трёх профилях:
+
+- `desktop-chromium` — Chromium, 1440×1000;
+- `tablet-webkit` — WebKit в профиле iPad Pro 11;
+- `mobile-chromium` — Chromium в профиле Pixel 7.
+
+Таким образом, одни и те же функциональные, SEO-, контентные и инфраструктурные инварианты проверяются вместе с реальной адаптивностью в разных браузерных движках и размерах экрана. Для намеренно различающегося поведения используются отдельные явные проверки, например скрытие пиктограмм процесса на узком мобильном экране.
 
 ## CI
 
-`.github/workflows/ci.yml` запускает Playwright на `push` в `main` и на каждый Pull Request. При любом результате HTML-report сохраняется как GitHub Actions artifact.
+`.github/workflows/ci.yml` использует Yarn 1.22.22, устанавливает зависимости через `yarn install --frozen-lockfile` и запускает Playwright на `push` в `main` и на каждый Pull Request. Для полного набора тестов job имеет лимит 25 минут. При любом результате HTML-report сохраняется как GitHub Actions artifact.
 
 ## Production
 

@@ -37,7 +37,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run preview',
+    command: 'yarn preview',
     port: 4173,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

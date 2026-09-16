@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050b14">
+<meta name="color-scheme" content="dark">
+<title>Команды AI Development Harness — полный справочник</title>
+<meta name="description" content="Справочник команд AI Development Harness: INIT PROJECT, ADD/RUN/REVIEW STEP, QUICK FIX, RECONCILE, навыки, самообновление и безопасные операции Git.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://ai-development-harness.ru/commands/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="AI Development Harness">
+<meta property="og:title" content="Команды AI Development Harness — полный справочник">
+<meta property="og:description" content="Справочник команд AI Development Harness: INIT PROJECT, ADD/RUN/REVIEW STEP, QUICK FIX, RECONCILE, навыки, самообновление и безопасные операции Git.">
+<meta property="og:url" content="https://ai-development-harness.ru/commands/">
+<meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Команды AI Development Harness — полный справочник">
+<meta name="twitter:description" content="Справочник команд AI Development Harness: INIT PROJECT, ADD/RUN/REVIEW STEP, QUICK FIX, RECONCILE, навыки, самообновление и безопасные операции Git.">
+<meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles-site.css">
+<link rel="stylesheet" href="/styles-docs.css">
+<link rel="stylesheet" href="/styles-responsive.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Команды Harness", "item": "https://ai-development-harness.ru/commands/"}]}</script>
+</head>
+<body>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    if (!['localhost', '127.0.0.1', '::1'].includes(location.hostname)) {
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=112703953', 'ym');
+
+        ym(112703953, 'init', {ssr:true, webvisor:true, clickmap:true, referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    }
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/112703953" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<a class="skip-link" href="#content">К содержимому</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="AI Development Harness — на главную">
+      <img src="/assets/mark.svg" width="42" height="42" alt="">
+      <span class="brand-copy"><strong>AI Development</strong><span>Harness</span></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Основная навигация"><a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/" aria-current="page">Команды</a><a href="/architecture/">Архитектура</a></nav>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
+      <a class="button button--small button--primary desktop-cta" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
+      <button class="menu-button" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" hidden>
+    <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a>
+    <a href="/repository/">Репозиторий как память</a>
+    <a href="/maintenance/">Поддержка</a>
+    <a href="/faq/">FAQ</a>
+    <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон</a>
+  </nav>
+</header>
+<main id="content" tabindex="-1">
+  <header class="docs-hero">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span>→</span><span>Команды Harness</span></nav>
+      <div class="eyebrow">Документация Harness</div>
+      <h1>Команды Harness</h1>
+      <p>Стабильный человеко-машинный интерфейс: короткие команды запускают предсказуемые процессы на уровне репозитория и оставляют сохраняемые артефакты.</p>
+    </div>
+  </header>
+  <div class="container docs-shell">
+    <article class="article"><section id="bootstrap"><h2>Инициализация и планирование</h2><div class="command-list"><div class="command-item"><h3><code>INIT PROJECT</code></h3><p>Однократная инициализация из <code>PROJECT_BRIEF.local.md</code>. Создаёт базу знаний проекта и начальную дорожную карту, но не код продукта.</p></div><div class="command-item"><h3><code>ADD STEP: &lt;описание&gt;</code></h3><p>Преобразует человеческую задачу в новый STEP с границами, зависимостями, критериями приёмки и проверками.</p></div><div class="command-item"><h3><code>PLAN STEP-NNN</code></h3><p>Проводит анализ до реализации и сохраняет Implementation plan внутрь файла задачи.</p></div><div class="command-item"><h3><code>NEXT STEP</code></h3><p>Без изменений рекомендует следующий незаблокированный STEP с учётом зависимостей, приоритета, риска и дорожной карты.</p></div><div class="command-item"><h3><code>STATUS PROJECT</code></h3><p>Проверяет представления состояния, блокирующие проблемы, доступную работу и признаки рассинхронизации.</p></div></div></section><section id="execution"><h2>Выполнение и контроль</h2><div class="command-list"><div class="command-item"><h3><code>IMPLEMENT STEP-NNN</code></h3><p>Реализует сохранённый план в пределах контракта задачи и запускает предусмотренные проверки.</p></div><div class="command-item"><h3><code>REVIEW STEP-NNN</code></h3><p>Независимо проверяет задачу, реализацию и доказательства выполнения; создаёт неизменяемый отчёт ревью.</p></div><div class="command-item"><h3><code>FIX STEP-NNN</code></h3><p>Исправляет подтверждённые замечания последнего применимого FAIL-review.</p></div><div class="command-item"><h3><code>RUN STEP-NNN</code></h3><p>Оркестрирует PLAN → IMPLEMENT → проверки → REVIEW → FIX/REVIEW → CLOSE.</p></div><div class="command-item"><h3><code>AUDIT STEP-NNN</code></h3><p>Без изменений проверяет фактическое состояние; найденные дефекты превращаются в замечания или корректирующие задачи.</p></div><div class="command-item"><h3><code>RECONCILE PROJECT</code></h3><p>Ищет расхождения между кодом, тестами и конфигурацией и REQ/ADR/архитектурой/STEP/доказательствами выполнения.</p></div><div class="command-item"><h3><code>RELEASE CHECK</code></h3><p>Проверяет условия выпуска: замечания, требования, миграции, тесты и сборку, безопасность, документацию и вопросы развёртывания.</p></div></div></section><section id="shortcuts"><h2>Мелкие изменения</h2><div class="command-list"><div class="command-item"><h3><code>QUICK FIX: &lt;описание&gt;</code></h3><p>Небольшая правка с низким риском без искусственного REQ/ADR/STEP. Если меняется контракт или уровень риска, команда останавливается и предлагает ADD STEP.</p></div></div></section><section id="skills"><h2>Навыки и шаблоны GitHub</h2><div class="command-list"><div class="command-item"><h3><code>FIND SKILL: &lt;описание&gt;</code></h3><p>Ищет и проверяет навыки репозитория, сохраняет TOP-5 и ничего не устанавливает.</p></div><div class="command-item"><h3><code>INSTALL SKILL: &lt;source | #N&gt;</code></h3><p>Повторно проверяет выбранный навык и устанавливает его с фиксацией происхождения, реестра и маршрутизации.</p></div><div class="command-item"><h3><code>CREATE SKILL: &lt;описание&gt;</code></h3><p>Создаёт собственный навык проекта, если подходящего готового варианта нет.</p></div><div class="command-item"><h3><code>GENERATE GITHUB TEMPLATES</code></h3><p>Перегенерирует управляемые Issue Forms и шаблон PR по фактическому набору инструментов проекта.</p></div></div></section><section id="updates"><h2>Обновление Harness</h2><div class="command-list"><div class="command-item"><h3><code>CHECK HARNESS UPDATE</code></h3><p>Без изменений сравнивает BASE/OURS/THEIRS для разрешённых путей Harness и показывает блокирующие проблемы.</p></div><div class="command-item"><h3><code>UPDATE HARNESS</code></h3><p>После успешной проверки обновляет служебный слой Harness по правилам владения файлами; не создаёт STEP и не выполняет commit/push/PR.</p></div></div></section><section id="git"><h2>Операции Git</h2><div class="command-list"><div class="command-item"><h3><code>GIT CHECK</code></h3><p>Предварительная проверка без изменений: ветка, upstream, diff, целостность, правила проекта и подозрительные файлы.</p></div><div class="command-item"><h3><code>COMMIT / COMMIT: &lt;подсказка&gt;</code></h3><p>Создаёт только локальный безопасный Conventional Commit по <code>git-policy</code>.</p></div><div class="command-item"><h3><code>PUSH</code></h3><p>Публикует текущую ветку без force после проверки расхождения и безопасности.</p></div><div class="command-item"><h3><code>PR</code></h3><p>Создаёт Pull Request или возвращает существующий согласно правилам проекта.</p></div><div class="command-item"><h3><code>SYNC</code></h3><p>Выполняет fetch и показывает ahead/behind; по умолчанию ничего не меняет, опционально допускает только безопасный fast-forward.</p></div></div></section><nav class="prev-next" aria-label="Навигация по документации"><a href="/workflow/"><span>Назад</span>Процесс разработки</a><a href="/architecture/"><span>Далее</span>Архитектура</a></nav></article>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#bootstrap">Инициализация</a><a href="#execution">Выполнение и контроль</a><a href="#shortcuts">Мелкие изменения</a><a href="#skills">Навыки и шаблоны</a><a href="#updates">Обновление Harness</a><a href="#git">Git</a></aside>
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <div class="footer-brand">AI Development Harness</div>
+      <div class="footer-note">Репозиторий как долговременная память AI-разработки.</div>
+      <div class="footer-note">ai-development-harness.ru</div>
+    </div>
+    <nav class="footer-links" aria-label="Навигация в подвале">
+      <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
+      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/maintenance/">Поддержка</a><a href="/faq/">FAQ</a>
+      <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
+    </nav>
+  </div>
+</footer>
+<script src="/main.js"></script>
+</body>
+</html>
