@@ -1,22 +1,24 @@
 import { test, expect } from '@playwright/test';
 
+const SEARCH_MODULE_URL = '/js/search.js';
+
 test.describe('Поиск — нормализация и ранжирование', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
   test('нормализует регистр, лишние пробелы и букву ё', async ({ page }) => {
-    const результат = await page.evaluate(async () => {
-      const { normalizeSearchText } = await import('/search.js');
+    const result = await page.evaluate(async (moduleUrl) => {
+      const { normalizeSearchText } = await import(moduleUrl);
       return normalizeSearchText('  ЁЛКА   ADD   STEP  ');
-    });
+    }, SEARCH_MODULE_URL);
 
-    expect(результат).toBe('елка add step');
+    expect(result).toBe('елка add step');
   });
 
   test('точное совпадение заголовка получает более высокий вес', async ({ page }) => {
-    const результат = await page.evaluate(async () => {
-      const { scoreSearchItem } = await import('/search.js');
+    const result = await page.evaluate(async (moduleUrl) => {
+      const { scoreSearchItem } = await import(moduleUrl);
       const base = {
         pageTitle: 'Команды Harness',
         keywords: '',
@@ -24,18 +26,18 @@ test.describe('Поиск — нормализация и ранжировани
         kind: 'section',
       };
       return {
-        точное: scoreSearchItem({ ...base, title: 'ADD STEP' }, 'ADD STEP'),
-        толькоТекст: scoreSearchItem({ ...base, title: 'Инициализация' }, 'ADD STEP'),
+        exact: scoreSearchItem({ ...base, title: 'ADD STEP' }, 'ADD STEP'),
+        textOnly: scoreSearchItem({ ...base, title: 'Инициализация' }, 'ADD STEP'),
       };
-    });
+    }, SEARCH_MODULE_URL);
 
-    expect(результат.точное).toBeGreaterThan(результат.толькоТекст);
+    expect(result.exact).toBeGreaterThan(result.textOnly);
   });
 
   test('отдельная запись команды получает приоритет перед обычным разделом', async ({ page }) => {
-    const порядок = await page.evaluate(async () => {
-      const { rankSearchResults } = await import('/search.js');
-      const индекс = {
+    const order = await page.evaluate(async (moduleUrl) => {
+      const { rankSearchResults } = await import(moduleUrl);
+      const index = {
         '/commands/': {
           title: 'Команды Harness',
           text: 'Справочник команд',
@@ -56,15 +58,15 @@ test.describe('Поиск — нормализация и ранжировани
         },
       };
 
-      return rankSearchResults(индекс, 'ADD STEP').map((result) => result.kind);
-    });
+      return rankSearchResults(index, 'ADD STEP').map((searchResult) => searchResult.kind);
+    }, SEARCH_MODULE_URL);
 
-    expect(порядок[0]).toBe('command');
+    expect(order[0]).toBe('command');
   });
 
   test('результат отбрасывается если не содержит все значимые слова запроса', async ({ page }) => {
-    const количество = await page.evaluate(async () => {
-      const { rankSearchResults } = await import('/search.js');
+    const count = await page.evaluate(async (moduleUrl) => {
+      const { rankSearchResults } = await import(moduleUrl);
       return rankSearchResults({
         '/maintenance/': {
           title: 'Поддержка',
@@ -77,32 +79,32 @@ test.describe('Поиск — нормализация и ранжировани
           }],
         },
       }, 'UPDATE HARNESS конфликт').length;
-    });
+    }, SEARCH_MODULE_URL);
 
-    expect(количество).toBe(0);
+    expect(count).toBe(0);
   });
 
   test('ранжирование соблюдает заданный лимит выдачи', async ({ page }) => {
-    const количество = await page.evaluate(async () => {
-      const { rankSearchResults } = await import('/search.js');
-      const индекс = Object.fromEntries(Array.from({ length: 20 }, (_, index) => [
-        `/page-${index}/`,
+    const count = await page.evaluate(async (moduleUrl) => {
+      const { rankSearchResults } = await import(moduleUrl);
+      const index = Object.fromEntries(Array.from({ length: 20 }, (_, itemIndex) => [
+        `/page-${itemIndex}/`,
         {
-          title: `Проект ${index}`,
+          title: `Проект ${itemIndex}`,
           text: 'проект',
           entries: [],
         },
       ]));
-      return rankSearchResults(индекс, 'проект', 5).length;
-    });
+      return rankSearchResults(index, 'проект', 5).length;
+    }, SEARCH_MODULE_URL);
 
-    expect(количество).toBe(5);
+    expect(count).toBe(5);
   });
 
   test('href результата собирается из пути страницы и fragment только при выдаче', async ({ page }) => {
-    const href = await page.evaluate(async () => {
-      const { rankSearchResults } = await import('/search.js');
-      const индекс = {
+    const href = await page.evaluate(async (moduleUrl) => {
+      const { rankSearchResults } = await import(moduleUrl);
+      const index = {
         '/commands/': {
           title: 'Команды Harness',
           text: '',
@@ -115,8 +117,8 @@ test.describe('Поиск — нормализация и ранжировани
         },
       };
 
-      return rankSearchResults(индекс, 'RUN STEP-NNN')[0].href;
-    });
+      return rankSearchResults(index, 'RUN STEP-NNN')[0].href;
+    }, SEARCH_MODULE_URL);
 
     expect(href).toBe('/commands/#execution');
   });
