@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { PUBLIC_PAGES } from '../helpers/site.js';
+import { PUBLIC_PAGES, productionUrl } from '../helpers/site.js';
 
 test.describe('SEO — обнаружение страниц', () => {
   test('все публичные маршруты отвечают кодом 200', async ({ request }) => {
@@ -15,7 +15,7 @@ test.describe('SEO — обнаружение страниц', () => {
     const xml = await response.text();
 
     for (const publicPage of PUBLIC_PAGES) {
-      expect(xml).toContain(`<loc>${publicPage.canonical}</loc>`);
+      expect(xml).toContain(`<loc>${productionUrl(publicPage.path)}</loc>`);
     }
 
     const foundUrls = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]);
