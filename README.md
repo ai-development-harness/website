@@ -88,7 +88,7 @@ yarn test:report
 
 ## CI
 
-`.github/workflows/ci.yml` использует Yarn 1.22.22, устанавливает зависимости через `yarn install --frozen-lockfile` и запускает Playwright на `push` в `main` и на каждый Pull Request. Для полного набора тестов job имеет лимит 25 минут. При любом результате HTML-report сохраняется как GitHub Actions artifact.
+`.github/workflows/ci.yml` использует Yarn 1.22.22, устанавливает зависимости через `yarn install --frozen-lockfile` и запускает Playwright на `push` в `main` и на каждый Pull Request. Бинарники Chromium и WebKit кэшируются через `actions/cache` в `~/.cache/ms-playwright`; ключ кэша зависит от ОС, архитектуры runner и фактической версии `@playwright/test`, поэтому браузеры повторно скачиваются только после изменения версии Playwright или при отсутствии кэша. Системные зависимости Playwright устанавливаются на каждом свежем GitHub-hosted runner. Для полного набора тестов job имеет лимит 25 минут. При любом результате HTML-report сохраняется как GitHub Actions artifact.
 
 ## Production
 
