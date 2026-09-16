@@ -3,14 +3,14 @@ import { PUBLIC_PAGES } from '../helpers/site.js';
 
 test.describe('SEO — метаданные публичных страниц', () => {
   for (const страница of PUBLIC_PAGES) {
-    test(`страница ${страница.path} содержит корректный canonical и robots`, async ({ page }) => {
+    test(`страница ${страница.path} содержит корректный канонический URL и директиву robots`, async ({ page }) => {
       await page.goto(страница.path);
 
       await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', страница.canonical);
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /index,follow/i);
     });
 
-    test(`страница ${страница.path} содержит заполненные title и description`, async ({ page }) => {
+    test(`страница ${страница.path} содержит заполненные заголовок и описание`, async ({ page }) => {
       await page.goto(страница.path);
 
       const title = await page.title();
@@ -22,7 +22,7 @@ test.describe('SEO — метаданные публичных страниц', 
       expect(description?.length ?? 0).toBeLessThanOrEqual(220);
     });
 
-    test(`страница ${страница.path} содержит Open Graph и Twitter Card метаданные`, async ({ page }) => {
+    test(`страница ${страница.path} содержит метаданные Open Graph и Twitter Card`, async ({ page }) => {
       await page.goto(страница.path);
 
       await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /.+/);
@@ -46,7 +46,7 @@ test.describe('SEO — метаданные публичных страниц', 
     });
   }
 
-  test('title и description не повторяются между публичными страницами', async ({ page }) => {
+  test('заголовки и описания не повторяются между публичными страницами', async ({ page }) => {
     const titles = [];
     const descriptions = [];
 
