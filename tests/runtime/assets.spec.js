@@ -1,13 +1,19 @@
 import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES } from '../helpers/site.js';
 
-const РЕСУРСЫ = [
-  '/styles.css',
-  '/styles-site.css',
-  '/styles-docs.css',
-  '/styles-responsive.css',
-  '/styles-hero-redesign.css',
-  '/main.js',
+const RESOURCES = [
+  '/css/styles.css',
+  '/css/styles-site.css',
+  '/css/styles-docs.css',
+  '/css/styles-responsive.css',
+  '/css/styles-hero-redesign.css',
+  '/css/search.css',
+  '/css/copy.css',
+  '/css/theme.css',
+  '/js/main.js',
+  '/js/search.js',
+  '/js/theme-init.js',
+  '/js/theme.js',
   '/assets/mark.svg',
   '/assets/favicon.svg',
   '/assets/social-card.svg',
@@ -15,42 +21,42 @@ const РЕСУРСЫ = [
 
 test.describe('Выполнение страницы — загрузка и статические ресурсы', () => {
   test('основные статические ресурсы доступны', async ({ request }) => {
-    for (const путь of РЕСУРСЫ) {
-      const ответ = await request.get(путь);
-      expect(ответ.status(), `Не загрузился ресурс ${путь}`).toBe(200);
+    for (const path of RESOURCES) {
+      const response = await request.get(path);
+      expect(response.status(), `Не загрузился ресурс ${path}`).toBe(200);
     }
   });
 
-  for (const страница of PUBLIC_PAGES) {
-    test(`страница ${страница.path} не создаёт ошибок JavaScript`, async ({ page }) => {
-      const ошибкиСтраницы = [];
-      const ошибкиКонсоли = [];
+  for (const publicPage of PUBLIC_PAGES) {
+    test(`страница ${publicPage.path} не создаёт ошибок JavaScript`, async ({ page }) => {
+      const pageErrors = [];
+      const consoleErrors = [];
 
-      page.on('pageerror', (ошибка) => ошибкиСтраницы.push(ошибка.message));
-      page.on('console', (сообщение) => {
-        if (сообщение.type() === 'error') ошибкиКонсоли.push(сообщение.text());
+      page.on('pageerror', (error) => pageErrors.push(error.message));
+      page.on('console', (message) => {
+        if (message.type() === 'error') consoleErrors.push(message.text());
       });
 
-      await page.goto(страница.path);
+      await page.goto(publicPage.path);
       await page.waitForTimeout(250);
 
-      expect(ошибкиСтраницы).toEqual([]);
-      expect(ошибкиКонсоли).toEqual([]);
+      expect(pageErrors).toEqual([]);
+      expect(consoleErrors).toEqual([]);
     });
 
-    test(`страница ${страница.path} не получает ошибочные ответы со своего домена`, async ({ page }) => {
-      const ошибки = [];
+    test(`страница ${publicPage.path} не получает ошибочные ответы со своего домена`, async ({ page }) => {
+      const failedResponses = [];
 
       page.on('response', (response) => {
         const url = new URL(response.url());
         if (url.origin === 'http://127.0.0.1:4173' && response.status() >= 400) {
-          ошибки.push({ url: response.url(), status: response.status() });
+          failedResponses.push({ url: response.url(), status: response.status() });
         }
       });
 
-      await page.goto(страница.path);
+      await page.goto(publicPage.path);
       await page.waitForLoadState('networkidle');
-      expect(ошибки).toEqual([]);
+      expect(failedResponses).toEqual([]);
     });
   }
 });

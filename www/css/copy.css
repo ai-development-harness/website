@@ -1,0 +1,75 @@
+/* Кнопки копирования команд и исполняемых code-block. */
+.copy-button {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border: 1px solid rgba(105, 155, 205, .32);
+  border-radius: 9px;
+  background: rgba(7, 18, 31, .9);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 760;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease;
+}
+
+.copy-button:hover {
+  border-color: var(--border-strong);
+  background: rgba(13, 31, 50, .96);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.copy-button.is-copied {
+  border-color: rgba(48, 216, 144, .48);
+  color: var(--success);
+}
+
+.copy-button.is-error {
+  border-color: rgba(255, 83, 100, .48);
+  color: var(--error);
+}
+
+.command-item h3.copyable-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.command-item h3.copyable-heading code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.code-block.is-copyable {
+  position: relative;
+}
+
+.code-block.is-copyable > .copy-button {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+}
+
+.code-block.is-copyable pre {
+  padding-top: 58px;
+}
+
+@media (max-width: 560px) {
+  .command-item h3.copyable-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .code-block.is-copyable > .copy-button {
+    top: 10px;
+    right: 10px;
+  }
+}

@@ -23,12 +23,43 @@ test.describe('Инфраструктура — пакетный менедже�
     expect(ci).not.toMatch(/npm (ci|install)/);
   });
 
+  test('CI кэширует браузеры Playwright по версии пакета', async () => {
+    expect(ci).toContain('uses: actions/cache@v4');
+    expect(ci).toContain('path: ~/.cache/ms-playwright');
+    expect(ci).toContain('require("@playwright/test/package.json").version');
+    expect(ci).toContain('runner.os }}-${{ runner.arch }}-playwright-${{ steps.playwright-version.outputs.version');
+  });
+
+  test('CI скачивает браузеры только при отсутствии кэша', async () => {
+    expect(ci).toContain("if: steps.playwright-cache.outputs.cache-hit != 'true'");
+    expect(ci).toContain('yarn playwright install chromium webkit');
+    expect(ci).not.toContain('yarn playwright install --with-deps chromium webkit');
+  });
+
+  test('CI устанавливает системные зависимости Playwright на каждом runner', async () => {
+    expect(ci).toContain('yarn playwright install-deps chromium webkit');
+  });
+
+  test('CI отменяет устаревший прогон PR после появления нового head', async () => {
+    expect(ci).toContain('concurrency:');
+    expect(ci).toContain('github.event.pull_request.number || github.ref');
+    expect(ci).toContain('cancel-in-progress: true');
+  });
+
+  test('CI запускает Playwright только при изменениях сайта, тестов или их инфраструктуры', async () => {
+    expect(ci).toContain('name: Detect test-relevant changes');
+    expect(ci).toContain('fetch-depth: 0');
+    expect(ci).toContain('www/|tests/|playwright\\.config\\.js$|package\\.json$|yarn\\.lock$|\\.github/workflows/ci\\.yml$');
+    expect(ci).toContain('needs: changes');
+    expect(ci).toContain("if: needs.changes.outputs.run_tests == 'true'");
+  });
+
   test('CI запускает тесты через Yarn', async () => {
     expect(ci).toMatch(/yarn test/);
   });
 
   test('Playwright preview запускается через Yarn', async () => {
-    const конфиг = readFileSync('playwright.config.js', 'utf8');
-    expect(конфиг).toContain("command: 'yarn preview'");
+    const config = readFileSync('playwright.config.js', 'utf8');
+    expect(config).toContain("command: 'yarn preview'");
   });
 });

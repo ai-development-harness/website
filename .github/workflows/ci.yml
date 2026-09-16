@@ -8,8 +8,53 @@ on:
 permissions:
   contents: read
 
+# Для одного PR нужен полный прогон только актуального head. Если во время CI
+# появляется новый commit, устаревший run отменяется, а новый запускает проверку
+# уже для нового head.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run_tests: ${{ steps.filter.outputs.run_tests }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect test-relevant changes
+        id: filter
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          TEST_RELEVANT_PATHS: '^(www/|tests/|playwright\.config\.js$|package\.json$|yarn\.lock$|\.github/workflows/ci\.yml$)'
+        run: |
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            echo "run_tests=true" >> "$GITHUB_OUTPUT"
+            echo "Playwright будет запущен: отсутствует корректный base SHA." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          CHANGED_FILES="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
+          printf '%s\n' "$CHANGED_FILES"
+
+          if printf '%s\n' "$CHANGED_FILES" | grep -Eq "$TEST_RELEVANT_PATHS"; then
+            echo "run_tests=true" >> "$GITHUB_OUTPUT"
+            echo "Playwright будет запущен: найдены изменения, влияющие на сайт или тесты." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "run_tests=false" >> "$GITHUB_OUTPUT"
+            echo "Playwright пропущен: изменены только файлы, не влияющие на сайт или тесты." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
   playwright:
+    needs: changes
+    if: needs.changes.outputs.run_tests == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
@@ -30,8 +75,25 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Get Playwright version
+        id: playwright-version
+        run: |
+          PLAYWRIGHT_VERSION="$(node -p 'require("@playwright/test/package.json").version')"
+          echo "version=${PLAYWRIGHT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-${{ runner.arch }}-playwright-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright system dependencies
+        run: yarn playwright install-deps chromium webkit
+
       - name: Install Playwright browsers
-        run: yarn playwright install --with-deps chromium webkit
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: yarn playwright install chromium webkit
 
       - name: Run Playwright tests
         run: yarn test

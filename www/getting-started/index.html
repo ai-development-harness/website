@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#050b14">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
 <title>Начало работы с AI Development Harness</title>
 <meta name="description" content="Начало работы с AI Development Harness: Git и Python 3.11+, PROJECT_BRIEF.local.md, INIT PROJECT, первый STEP и безопасная работа с Git.">
 <meta name="robots" content="index,follow">
@@ -21,10 +21,12 @@
 <meta name="twitter:title" content="Начало работы с AI Development Harness">
 <meta name="twitter:description" content="Начало работы с AI Development Harness: Git и Python 3.11+, PROJECT_BRIEF.local.md, INIT PROJECT, первый STEP и безопасная работа с Git.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<link rel="stylesheet" href="/styles.css">
-<link rel="stylesheet" href="/styles-site.css">
-<link rel="stylesheet" href="/styles-docs.css">
-<link rel="stylesheet" href="/styles-responsive.css">
+<script src="/js/theme-init.js?v=78b50649"></script>
+<link rel="stylesheet" href="/css/styles.css?v=78b50649">
+<link rel="stylesheet" href="/css/styles-site.css?v=78b50649">
+<link rel="stylesheet" href="/css/styles-docs.css?v=78b50649">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=78b50649">
+<link rel="stylesheet" href="/css/theme.css?v=78b50649">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Начало работы", "item": "https://ai-development-harness.ru/getting-started/"}]}</script>
 </head>
 <body>
@@ -77,7 +79,7 @@
   <div class="container docs-shell">
     <article class="article">
 <section id="prerequisites"><h2>Что понадобится</h2><p>Harness использует состояние Git, diff/index и Git-процесс как часть формальных проверок. Для штатного валидатора нужен <strong>Python 3.11+</strong>; это служебная зависимость Harness, а не зависимость самого приложения.</p><div class="article-grid"><div class="mini-card"><h3>Git</h3><p>Нужен для контроля состояния репозитория, безопасных commit/push-операций и прослеживаемости изменений.</p></div><div class="mini-card"><h3>Python 3.11+</h3><p>Нужен для <code>tools/harness/validate.py</code>, включая разбор TOML стандартным модулем <code>tomllib</code>.</p></div></div></section>
-<section id="create"><h2>1. Создайте репозиторий из шаблона</h2><p>Предпочтительный путь — GitHub <strong>Use this template</strong>. После этого клонируйте уже созданный репозиторий проекта.</p><div class="article-note"><strong>Не удаляйте <code>.project/harness.lock.json</code>.</strong> Он хранит известную базовую версию Harness и нужен будущим <code>CHECK HARNESS UPDATE</code> / <code>UPDATE HARNESS</code>. Основой обновления служит неизменяемый тег релиза, а не постоянно меняющаяся ветка <code>main</code>.</div></section>
+<section id="create"><h2>1. Создайте репозиторий из шаблона</h2><p>Создайте новый репозиторий на основе официального шаблона AI Development Harness: <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">открыть форму создания репозитория на GitHub</a>. GitHub создаст отдельный репозиторий вашего проекта с готовой структурой Harness. После этого клонируйте уже свой созданный репозиторий.</p><div class="article-note"><strong>Не удаляйте <code>.project/harness.lock.json</code>.</strong> Он хранит известную базовую версию Harness и нужен будущим <code>CHECK HARNESS UPDATE</code> / <code>UPDATE HARNESS</code>. Основой обновления служит неизменяемый тег релиза, а не постоянно меняющаяся ветка <code>main</code>.</div></section>
 <section id="brief"><h2>2. Опишите проект своими словами</h2><div class="code-block"><pre><code>cp PROJECT_BRIEF.example.md PROJECT_BRIEF.local.md</code></pre></div><p>Brief — локальное исходное описание проекта. Полезно указать цель, пользователей, сценарии, ограничения, обязательные или желательные технологии, то, что не входит в проект, и ссылки на примеры. Заранее оформлять REQ, ADR и STEP не требуется.</p></section>
 <section id="init"><h2>3. Запустите INIT PROJECT</h2><div class="code-block"><pre><code>INIT PROJECT</code></pre></div><p>Инициализатор читает brief и создаёт базу знаний проекта: <code>docs/PROJECT.md</code>, требования, базовую архитектуру, дорожную карту и полноценные <code>STEP-NNN</code>. Он связывает REQ ↔ ADR ↔ STEP и заполняет границы задачи, зависимости, критерии приёмки и проверки.</p><div class="article-note"><strong>INIT PROJECT не создаёт код продукта.</strong> Инициализация заканчивается только после проверки согласованности и установки <code>project.initialized: true</code>.</div></section>
 <section id="review-bootstrap"><h2>4. Проверьте результат инициализации</h2><p>Убедитесь, что требования не выдуманы, ADR не создаются «на всякий случай», зависимости не потеряны, а первые STEP действительно исполнимы.</p><div class="code-block"><pre><code>STATUS PROJECT
@@ -97,7 +99,7 @@ UPDATE HARNESS</code></pre></div><p>Самообновление относит�
     <div>
       <div class="footer-brand">AI Development Harness</div>
       <div class="footer-note">Репозиторий как долговременная память AI-разработки.</div>
-      <div class="footer-note">ai-development-harness.ru</div>
+      <div class="footer-note">© 2026 AI Development Harness</div>
     </div>
     <nav class="footer-links" aria-label="Навигация в подвале">
       <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
@@ -106,6 +108,8 @@ UPDATE HARNESS</code></pre></div><p>Самообновление относит�
     </nav>
   </div>
 </footer>
-<script src="/main.js"></script>
+<script src="/js/theme.js?v=78b50649"></script>
+<script src="/js/main.js?v=78b50649"></script>
+<script type="module" src="/js/search.js?v=78b50649"></script>
 </body>
 </html>
