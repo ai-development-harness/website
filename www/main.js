@@ -1,5 +1,6 @@
 const button = document.querySelector('.menu-button');
 const menu = document.querySelector('.mobile-nav');
+const desktopBreakpoint = 940;
 
 function closeMenu() {
   button?.setAttribute('aria-expanded', 'false');
@@ -13,6 +14,11 @@ button?.addEventListener('click', () => {
 });
 
 menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeMenu();
+});
+
 window.addEventListener('resize', () => {
-  if (window.innerWidth > 860) closeMenu();
+  if (window.innerWidth > desktopBreakpoint) closeMenu();
 });
