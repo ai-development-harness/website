@@ -3,7 +3,7 @@ import { PUBLIC_PAGES } from '../helpers/site.js';
 
 test.describe('Доступность — семантика публичных страниц', () => {
   for (const страница of PUBLIC_PAGES) {
-    test(`страница ${страница.path} имеет корректные язык и основные landmarks`, async ({ page }) => {
+    test(`страница ${страница.path} имеет корректный язык и основные области страницы`, async ({ page }) => {
       await page.goto(страница.path);
 
       await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
