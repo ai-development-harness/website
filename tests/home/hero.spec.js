@@ -44,6 +44,8 @@ test.describe('Главная страница — первый экран', () 
   });
 
   test('иконки шагов имеют крупный единый контейнер и заметную внутреннюю геометрию', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name === 'mobile-chromium', 'На узком мобильном экране пиктограммы намеренно скрыты');
+
     const размеры = await page.locator('.workflow-icon').evaluateAll((иконки) => иконки.map((иконка) => {
       const rect = иконка.getBoundingClientRect();
       const before = getComputedStyle(иконка, '::before');
@@ -56,10 +58,25 @@ test.describe('Главная страница — первый экран', () 
     }));
 
     for (const размер of размеры) {
-      const минимумКонтейнера = testInfo.project.name === 'mobile-chromium' ? 34 : 60;
-      expect(размер.width).toBeGreaterThanOrEqual(минимумКонтейнера);
-      expect(размер.height).toBeGreaterThanOrEqual(минимумКонтейнера);
+      expect(размер.width).toBeGreaterThanOrEqual(60);
+      expect(размер.height).toBeGreaterThanOrEqual(60);
       expect(Math.max(размер.beforeWidth, размер.beforeHeight)).toBeGreaterThanOrEqual(25);
+    }
+  });
+
+  test('на узком мобильном экране пиктограммы шагов скрываются, а текст процесса остаётся читаемым', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'Проверка относится только к узкому мобильному экрану');
+
+    const иконки = page.locator('.workflow-icon');
+    const описания = page.locator('.workflow-copy');
+
+    await expect(иконки).toHaveCount(6);
+    await expect(описания).toHaveCount(6);
+
+    for (let индекс = 0; индекс < 6; индекс += 1) {
+      await expect(иконки.nth(индекс)).toBeHidden();
+      await expect(описания.nth(индекс)).toBeVisible();
+      await expect(описания.nth(индекс).locator('b')).toHaveText(ожидаемыеШаги[индекс]);
     }
   });
 
