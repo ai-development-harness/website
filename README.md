@@ -4,7 +4,7 @@
 
 ## Локальная разработка
 
-Требования: Node.js 22+, npm, Python 3.
+Требования: Node.js 22+ и npm.
 
 ```bash
 npm install
@@ -12,7 +12,7 @@ npx playwright install chromium
 npm run dev
 ```
 
-Сайт будет доступен на `http://localhost:5173`.
+`npm run dev` запускает статический сервер на `http://localhost:5173` и автоматически открывает сайт в браузере.
 
 ## Тесты
 
