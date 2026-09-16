@@ -41,8 +41,12 @@ test.describe('Тема — выбор и сохранение', () => {
     await clearStoredTheme(page);
     await page.reload();
 
-    const button = page.getByRole('button', { name: 'Включить светлую тему' });
+    // Используем стабильный CSS-locator: доступное имя кнопки намеренно меняется
+    // после переключения темы, поэтому role-locator по старому aria-label перестал
+    // бы находить тот же DOM-элемент сразу после click().
+    const button = page.locator('.theme-toggle');
     await expect(button).toBeVisible();
+    await expect(button).toHaveAttribute('aria-label', 'Включить светлую тему');
     await button.click();
 
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
