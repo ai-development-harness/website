@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const ожидаемыеШаги = [
+const EXPECTED_STEPS = [
   'Описание проекта',
   'INIT PROJECT',
   'ADD STEP',
@@ -22,33 +22,33 @@ test.describe('Главная страница — первый экран', () 
   });
 
   test('показывает все шесть шагов процесса в правильном порядке', async ({ page }) => {
-    const шаги = page.locator('.workflow-step');
-    await expect(шаги).toHaveCount(6);
+    const steps = page.locator('.workflow-step');
+    await expect(steps).toHaveCount(6);
 
-    for (let индекс = 0; индекс < ожидаемыеШаги.length; индекс += 1) {
-      await expect(шаги.nth(индекс).locator('.workflow-no')).toHaveText(String(индекс + 1).padStart(2, '0'));
-      await expect(шаги.nth(индекс).locator('.workflow-copy b')).toHaveText(ожидаемыеШаги[индекс]);
+    for (let index = 0; index < EXPECTED_STEPS.length; index += 1) {
+      await expect(steps.nth(index).locator('.workflow-no')).toHaveText(String(index + 1).padStart(2, '0'));
+      await expect(steps.nth(index).locator('.workflow-copy b')).toHaveText(EXPECTED_STEPS[index]);
     }
   });
 
   test('не оставляет пустой хвост под содержимым панели процесса', async ({ page }) => {
-    const отступСнизу = await page.locator('.memory-map').evaluate((панель) => {
-      const заметка = панель.querySelector('.timeline-note');
-      const панельRect = панель.getBoundingClientRect();
-      const заметкаRect = заметка.getBoundingClientRect();
-      return панельRect.bottom - заметкаRect.bottom;
+    const bottomGap = await page.locator('.memory-map').evaluate((panel) => {
+      const note = panel.querySelector('.timeline-note');
+      const panelRect = panel.getBoundingClientRect();
+      const noteRect = note.getBoundingClientRect();
+      return panelRect.bottom - noteRect.bottom;
     });
 
-    expect(отступСнизу).toBeGreaterThanOrEqual(0);
-    expect(отступСнизу).toBeLessThanOrEqual(28);
+    expect(bottomGap).toBeGreaterThanOrEqual(0);
+    expect(bottomGap).toBeLessThanOrEqual(28);
   });
 
   test('иконки шагов имеют крупный единый контейнер и заметную внутреннюю геометрию', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name === 'mobile-chromium', 'На узком мобильном экране пиктограммы намеренно скрыты');
 
-    const размеры = await page.locator('.workflow-icon').evaluateAll((иконки) => иконки.map((иконка) => {
-      const rect = иконка.getBoundingClientRect();
-      const before = getComputedStyle(иконка, '::before');
+    const sizes = await page.locator('.workflow-icon').evaluateAll((icons) => icons.map((icon) => {
+      const rect = icon.getBoundingClientRect();
+      const before = getComputedStyle(icon, '::before');
       return {
         width: rect.width,
         height: rect.height,
@@ -57,54 +57,54 @@ test.describe('Главная страница — первый экран', () 
       };
     }));
 
-    for (const размер of размеры) {
-      expect(размер.width).toBeGreaterThanOrEqual(60);
-      expect(размер.height).toBeGreaterThanOrEqual(60);
-      expect(Math.max(размер.beforeWidth, размер.beforeHeight)).toBeGreaterThanOrEqual(25);
+    for (const size of sizes) {
+      expect(size.width).toBeGreaterThanOrEqual(60);
+      expect(size.height).toBeGreaterThanOrEqual(60);
+      expect(Math.max(size.beforeWidth, size.beforeHeight)).toBeGreaterThanOrEqual(25);
     }
   });
 
   test('на узком мобильном экране пиктограммы шагов скрываются, а текст процесса остаётся читаемым', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'mobile-chromium', 'Проверка относится только к узкому мобильному экрану');
 
-    const иконки = page.locator('.workflow-icon');
-    const описания = page.locator('.workflow-copy');
+    const icons = page.locator('.workflow-icon');
+    const descriptions = page.locator('.workflow-copy');
 
-    await expect(иконки).toHaveCount(6);
-    await expect(описания).toHaveCount(6);
+    await expect(icons).toHaveCount(6);
+    await expect(descriptions).toHaveCount(6);
 
-    for (let индекс = 0; индекс < 6; индекс += 1) {
-      await expect(иконки.nth(индекс)).toBeHidden();
-      await expect(описания.nth(индекс)).toBeVisible();
-      await expect(описания.nth(индекс).locator('b')).toHaveText(ожидаемыеШаги[индекс]);
+    for (let index = 0; index < 6; index += 1) {
+      await expect(icons.nth(index)).toBeHidden();
+      await expect(descriptions.nth(index)).toBeVisible();
+      await expect(descriptions.nth(index).locator('b')).toHaveText(EXPECTED_STEPS[index]);
     }
   });
 
   test('три карточки свойств имеют крупные самостоятельные иконки', async ({ page }) => {
-    const иконки = page.locator('.hero-fact-icon');
-    await expect(иконки).toHaveCount(3);
+    const icons = page.locator('.hero-fact-icon');
+    await expect(icons).toHaveCount(3);
 
-    const размеры = await иконки.evaluateAll((элементы) => элементы.map((элемент) => {
-      const rect = элемент.getBoundingClientRect();
+    const sizes = await icons.evaluateAll((elements) => elements.map((element) => {
+      const rect = element.getBoundingClientRect();
       return { width: rect.width, height: rect.height };
     }));
 
-    for (const размер of размеры) {
-      expect(размер.width).toBeGreaterThanOrEqual(35);
-      expect(размер.height).toBeGreaterThanOrEqual(35);
+    for (const size of sizes) {
+      expect(size.width).toBeGreaterThanOrEqual(35);
+      expect(size.height).toBeGreaterThanOrEqual(35);
     }
   });
 
   test('блок быстрого старта не растягивается пустой панелью', async ({ page }) => {
-    const список = page.locator('.cta-steps');
-    await expect(список.locator('li')).toHaveCount(3);
+    const list = page.locator('.cta-steps');
+    await expect(list.locator('li')).toHaveCount(3);
 
-    const метрики = await page.locator('.cta-quickstart').evaluate((блок) => {
-      const rect = блок.getBoundingClientRect();
-      const список = блок.querySelector('.cta-steps').getBoundingClientRect();
-      return { высотаБлока: rect.height, высотаСписка: список.height, разница: rect.height - список.height };
+    const metrics = await page.locator('.cta-quickstart').evaluate((block) => {
+      const rect = block.getBoundingClientRect();
+      const listRect = block.querySelector('.cta-steps').getBoundingClientRect();
+      return { blockHeight: rect.height, listHeight: listRect.height, difference: rect.height - listRect.height };
     });
 
-    expect(метрики.разница).toBeLessThanOrEqual(40);
+    expect(metrics.difference).toBeLessThanOrEqual(40);
   });
 });
