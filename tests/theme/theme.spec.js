@@ -78,4 +78,40 @@ test.describe('Тема — выбор и сохранение', () => {
       expect(firstStylesheetPosition, publicPage.path).toBeGreaterThan(themeInitPosition);
     }
   });
+
+  test('в светлой теме текст исполняемого блока кода имеет высокий контраст', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto('/workflow/');
+
+    const contrast = await page.locator('#run .code-block').evaluate((block) => {
+      const code = block.querySelector('pre code');
+      const blockStyle = getComputedStyle(block);
+      const codeStyle = getComputedStyle(code);
+
+      const parseRgb = (value) => (value.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+      const linearize = (channel) => {
+        const normalized = channel / 255;
+        return normalized <= 0.04045
+          ? normalized / 12.92
+          : ((normalized + 0.055) / 1.055) ** 2.4;
+      };
+      const luminance = (rgb) => (
+        0.2126 * linearize(rgb[0])
+        + 0.7152 * linearize(rgb[1])
+        + 0.0722 * linearize(rgb[2])
+      );
+      const foreground = luminance(parseRgb(codeStyle.color));
+      const background = luminance(parseRgb(blockStyle.backgroundColor));
+      const ratio = (Math.max(foreground, background) + 0.05)
+        / (Math.min(foreground, background) + 0.05);
+
+      return {
+        ratio,
+        codeBackground: codeStyle.backgroundColor,
+      };
+    });
+
+    expect(contrast.ratio).toBeGreaterThanOrEqual(7);
+    expect(contrast.codeBackground).toBe('rgba(0, 0, 0, 0)');
+  });
 });
