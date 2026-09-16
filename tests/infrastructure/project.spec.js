@@ -46,6 +46,14 @@ test.describe('Инфраструктура — пакетный менедже�
     expect(ci).toContain('cancel-in-progress: true');
   });
 
+  test('CI запускает Playwright только при изменениях сайта, тестов или их инфраструктуры', async () => {
+    expect(ci).toContain('name: Detect test-relevant changes');
+    expect(ci).toContain('fetch-depth: 0');
+    expect(ci).toContain('www/|tests/|playwright\\.config\\.js$|package\\.json$|yarn\\.lock$|\\.github/workflows/ci\\.yml$');
+    expect(ci).toContain('needs: changes');
+    expect(ci).toContain("if: needs.changes.outputs.run_tests == 'true'");
+  });
+
   test('CI запускает тесты через Yarn', async () => {
     expect(ci).toMatch(/yarn test/);
   });
