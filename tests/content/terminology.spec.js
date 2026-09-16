@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES } from '../helpers/site.js';
 
-const НЕЖЕЛАТЕЛЬНЫЕ_ФРАЗЫ = [
+const UNWANTED_PHRASES = [
   'руководство по старту',
   'Пошаговый старт',
   'Getting Started',
@@ -11,13 +11,13 @@ const НЕЖЕЛАТЕЛЬНЫЕ_ФРАЗЫ = [
 ];
 
 test.describe('Контент — русская терминология', () => {
-  for (const страница of PUBLIC_PAGES) {
-    test(`страница ${страница.path} не содержит ранее выявленных неудачных калек`, async ({ page }) => {
-      await page.goto(страница.path);
-      const текст = await page.locator('body').innerText();
+  for (const publicPage of PUBLIC_PAGES) {
+    test(`страница ${publicPage.path} не содержит ранее выявленных неудачных калек`, async ({ page }) => {
+      await page.goto(publicPage.path);
+      const text = await page.locator('body').innerText();
 
-      for (const фраза of НЕЖЕЛАТЕЛЬНЫЕ_ФРАЗЫ) {
-        expect(текст).not.toContain(фраза);
+      for (const phrase of UNWANTED_PHRASES) {
+        expect(text).not.toContain(phrase);
       }
     });
   }
@@ -36,10 +36,10 @@ test.describe('Контент — русская терминология', () =
 
   test('имена команд Harness остаются неизменными техническими идентификаторами', async ({ page }) => {
     await page.goto('/commands/');
-    const текст = await page.locator('article.article').innerText();
+    const text = await page.locator('article.article').innerText();
 
-    for (const команда of ['INIT PROJECT', 'ADD STEP:', 'RUN STEP-NNN', 'QUICK FIX:', 'CHECK HARNESS UPDATE', 'UPDATE HARNESS']) {
-      expect(текст).toContain(команда);
+    for (const command of ['INIT PROJECT', 'ADD STEP:', 'RUN STEP-NNN', 'QUICK FIX:', 'CHECK HARNESS UPDATE', 'UPDATE HARNESS']) {
+      expect(text).toContain(command);
     }
   });
 });
