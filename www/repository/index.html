@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050b14">
+<meta name="color-scheme" content="dark">
+<title>Git-репозиторий как память AI-проекта | AI Development Harness</title>
+<meta name="description" content="Как AI Development Harness превращает Git-репозиторий в долговременную память: requirements, ADR, STEP, durable handoff, evidence, review и reconciliation.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://ai-development-harness.ru/repository/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="AI Development Harness">
+<meta property="og:title" content="Git-репозиторий как память AI-проекта | AI Development Harness">
+<meta property="og:description" content="Как AI Development Harness превращает Git-репозиторий в долговременную память: requirements, ADR, STEP, durable handoff, evidence, review и reconciliation.">
+<meta property="og:url" content="https://ai-development-harness.ru/repository/">
+<meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Git-репозиторий как память AI-проекта | AI Development Harness">
+<meta name="twitter:description" content="Как AI Development Harness превращает Git-репозиторий в долговременную память: requirements, ADR, STEP, durable handoff, evidence, review и reconciliation.">
+<meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles-site.css">
+<link rel="stylesheet" href="/styles-docs.css">
+<link rel="stylesheet" href="/styles-responsive.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Репозиторий как долговременная память", "item": "https://ai-development-harness.ru/repository/"}]}</script>
+</head>
+<body>
+<a class="skip-link" href="#content">К содержимому</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="AI Development Harness — на главную">
+      <img src="/assets/mark.svg" width="42" height="42" alt="">
+      <span class="brand-copy"><strong>AI Development</strong><span>Harness</span></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Основная навигация"><a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a></nav>
+    <div class="header-actions">
+      <a class="github-link" href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
+      <a class="button button--small button--primary desktop-cta" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
+      <button class="menu-button" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-nav"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" hidden>
+    <a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a>
+    <a href="/repository/">Репозиторий как память</a>
+    <a href="/maintenance/">Поддержка</a>
+    <a href="/faq/">FAQ</a>
+    <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон</a>
+  </nav>
+</header>
+<main id="content" tabindex="-1">
+  <header class="docs-hero">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span>→</span><span>Репозиторий как долговременная память</span></nav>
+      <div class="eyebrow">Документация Harness</div>
+      <h1>Репозиторий как долговременная память</h1>
+      <p>Не «магическая память AI», а проверяемый проектный контекст в versioned artifacts, который можно прочитать, проверить и продолжить в новой сессии.</p>
+    </div>
+  </header>
+  <div class="container docs-shell">
+    <article class="article">
+<section id="memory"><h2>Память — это файлы, связи и фактическое состояние</h2><p>Harness специально не использует chat history как permanent knowledge base. Новая сессия восстанавливает контекст из versioned repository artifacts: requirements, ADR, STEP, saved plan, code, tests, evidence и review reports.</p></section>
+<section id="layout"><h2>Где живёт контекст</h2><div class="code-block"><pre><code>.project/                 policies, manifest, update lock
+.codex/                   role/model configuration
+.agents/skills/           workflow and technology skills
+docs/PROJECT.md           нормализованный проектный контекст
+docs/requirements/        REQ definitions + status projection
+docs/adr/                 immutable architecture decisions
+docs/architecture.md      current architecture baseline
+planning/tasks/           canonical STEP contracts
+planning/reviews/         immutable review reports
+planning/audits/          reconcile/audit reports
+planning/harness-updates/ self-update reports
+code / tests / config     фактическая реализация</code></pre></div></section>
+<section id="handoff"><h2>Durable handoff заменяет «помни наш прошлый чат»</h2><div class="code-block"><pre><code>ADD        → task contract
+PLAN       → Implementation plan внутри STEP
+IMPLEMENT  → code/tests + verification evidence
+REVIEW     → immutable review report
+FIX        → изменения по конкретным findings
+RECONCILE  → audit report / corrective STEP</code></pre></div><p>Каждый переход оставляет следующий агенту или новой сессии конкретный вход.</p></section>
+<section id="git-native"><h2>Git хранит историю, но Harness не сводится к commits</h2><p>Git показывает <em>что</em> изменилось и когда. REQ/ADR/STEP/evidence добавляют <em>зачем</em>, в каком scope, по каким критериям и с каким результатом review. Поэтому commit history и project knowledge base дополняют друг друга.</p></section>
+<section id="local"><h2>Локальный сырой контекст остаётся локальным</h2><p><code>PROJECT_BRIEF.local.md</code> предназначен для незрелых идей, приватных ссылок и временных заметок и заранее исключён из Git. После INIT нормализованный контекст переносится в tracked project documentation.</p></section>
+<section id="drift"><h2>Память требует reconciliation</h2><p>Ручные hotfix, stale status и documentation drift неизбежны. Поэтому <code>RECONCILE PROJECT</code> сравнивает repository truth layers и создаёт явный audit/corrective work вместо скрытого исправления.</p></section>
+<nav class="prev-next" aria-label="Навигация по документации"><a href="/architecture/"><span>Назад</span>Архитектура</a><a href="/maintenance/"><span>Далее</span>Поддержка</a></nav></article>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#memory">Что такое память</a><a href="#layout">Структура</a><a href="#handoff">Durable handoff</a><a href="#git-native">Роль Git</a><a href="#local">Локальный brief</a><a href="#drift">Reconciliation</a></aside>
+  </div>
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <div class="footer-brand">AI Development Harness</div>
+      <div class="footer-note">Репозиторий как долговременная память AI-разработки.</div>
+      <div class="footer-note">ai-development-harness.ru</div>
+    </div>
+    <nav class="footer-links" aria-label="Навигация в подвале">
+      <a href="/getting-started/">Как начать</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
+      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/maintenance/">Поддержка</a><a href="/faq/">FAQ</a>
+      <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
+    </nav>
+  </div>
+</footer>
+<script src="/main.js"></script>
+</body>
+</html>
