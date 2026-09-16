@@ -94,12 +94,12 @@ async function runTerminalDemo() {
     prefix: 'HARNESS ›',
     prefixClass: 'muted',
     textClass: 'muted',
-    text: 'проверяю REQ / ADR / dependencies…',
+    text: 'проверяю REQ / ADR / зависимости…',
     speed: 18,
   }, 520);
 
   await showTerminalLine({ textClass: 'pass', text: 'CREATED › STEP-024' }, 180);
-  await showTerminalLine({ text: 'Scope · Out of scope · Acceptance · Verification' }, 720);
+  await showTerminalLine({ text: 'Границы · Вне границ · Критерии приёмки · Проверки' }, 720);
 
   await typeTerminalLine({
     prefix: 'YOU ›',
@@ -115,7 +115,7 @@ async function runTerminalDemo() {
     speed: 24,
   }, 560);
 
-  await showTerminalLine({ textClass: 'pass', text: 'RESULT › durable evidence + review report' });
+  await showTerminalLine({ textClass: 'pass', text: 'RESULT › доказательства выполнения + отчёт ревью' });
   terminalPanel.classList.remove('is-running');
   terminalPanel.classList.add('is-complete');
 }
