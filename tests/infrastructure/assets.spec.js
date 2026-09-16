@@ -4,89 +4,91 @@ import { join, relative, sep } from 'node:path';
 
 const WWW = 'www';
 
-function файлыРекурсивно(каталог) {
-  return readdirSync(каталог).flatMap((имя) => {
-    const путь = join(каталог, имя);
-    return statSync(путь).isDirectory() ? файлыРекурсивно(путь) : [путь];
+function listFilesRecursively(directory) {
+  return readdirSync(directory).flatMap((name) => {
+    const path = join(directory, name);
+    return statSync(path).isDirectory() ? listFilesRecursively(path) : [path];
   });
 }
 
-const htmlФайлы = файлыРекурсивно(WWW).filter((путь) => путь.endsWith('.html'));
-const локальныеПодключения = /(?:src|href)="(\/(?:js|css)\/[^"?]+\.(?:js|css))(\?v=([a-z0-9]+))"/gi;
+const htmlFiles = listFilesRecursively(WWW).filter((path) => path.endsWith('.html'));
+const localAssetPattern = /(?:src|href)="(\/(?:js|css)\/[^"?]+\.(?:js|css))(\?v=([a-z0-9]+))"/gi;
+
+function collectHtmlRevisions() {
+  const revisions = new Set();
+  let assetCount = 0;
+
+  for (const path of htmlFiles) {
+    const html = readFileSync(path, 'utf8');
+    for (const match of html.matchAll(localAssetPattern)) {
+      assetCount += 1;
+      revisions.add(match[3]);
+    }
+  }
+
+  return { revisions, assetCount };
+}
 
 test.describe('Инфраструктура — структура и версионирование клиентских ассетов', () => {
   test('в корне www нет JavaScript и CSS файлов', async () => {
-    const лишниеФайлы = readdirSync(WWW)
-      .filter((имя) => /\.(?:js|css)$/i.test(имя));
+    const misplacedFiles = readdirSync(WWW)
+      .filter((name) => /\.(?:js|css)$/i.test(name));
 
-    expect(лишниеФайлы).toEqual([]);
+    expect(misplacedFiles).toEqual([]);
   });
 
   test('JavaScript хранится только в www/js, а CSS только в www/css', async () => {
-    const нарушения = файлыРекурсивно(WWW)
-      .filter((путь) => /\.(?:js|css)$/i.test(путь))
-      .filter((путь) => {
-        const unixПуть = relative(WWW, путь).split(sep).join('/');
-        return !(unixПуть.startsWith('js/') || unixПуть.startsWith('css/'));
+    const violations = listFilesRecursively(WWW)
+      .filter((path) => /\.(?:js|css)$/i.test(path))
+      .filter((path) => {
+        const unixPath = relative(WWW, path).split(sep).join('/');
+        return !(unixPath.startsWith('js/') || unixPath.startsWith('css/'));
       });
 
-    expect(нарушения).toEqual([]);
+    expect(violations).toEqual([]);
   });
 
   test('все HTML-страницы подключают локальные JS и CSS только из каталогов js и css', async () => {
-    for (const путь of htmlФайлы) {
-      const html = readFileSync(путь, 'utf8');
-      expect(html, путь).not.toMatch(/(?:src|href)="\/(?!js\/|css\/)[^"?]+\.(?:js|css)(?:\?[^" ]*)?"/i);
+    for (const path of htmlFiles) {
+      const html = readFileSync(path, 'utf8');
+      expect(html, path).not.toMatch(/(?:src|href)="\/(?!js\/|css\/)[^"?]+\.(?:js|css)(?:\?[^" ]*)?"/i);
     }
   });
 
   test('все локальные подключения JS и CSS в HTML имеют cache-busting параметр v', async () => {
-    for (const путь of htmlФайлы) {
-      const html = readFileSync(путь, 'utf8');
-      const подключенияБезВерсии = [...html.matchAll(/(?:src|href)="(\/(?:js|css)\/[^"?]+\.(?:js|css))"/gi)]
-        .map((совпадение) => совпадение[1]);
+    for (const path of htmlFiles) {
+      const html = readFileSync(path, 'utf8');
+      const unversionedAssets = [...html.matchAll(/(?:src|href)="(\/(?:js|css)\/[^"?]+\.(?:js|css))"/gi)]
+        .map((match) => match[1]);
 
-      expect(подключенияБезВерсии, путь).toEqual([]);
+      expect(unversionedAssets, path).toEqual([]);
     }
   });
 
   test('один revision-токен используется во всех HTML-страницах', async () => {
-    const revisions = new Set();
-    let количествоПодключений = 0;
+    const { revisions, assetCount } = collectHtmlRevisions();
 
-    for (const путь of htmlФайлы) {
-      const html = readFileSync(путь, 'utf8');
-      for (const совпадение of html.matchAll(локальныеПодключения)) {
-        количествоПодключений += 1;
-        revisions.add(совпадение[3]);
-      }
-    }
-
-    expect(количествоПодключений).toBeGreaterThan(0);
+    expect(assetCount).toBeGreaterThan(0);
     expect([...revisions]).toHaveLength(1);
   });
 
-  test('динамические подключения JS и CSS также используют общий revision-токен', async () => {
-    const revisionsИзHtml = new Set();
+  test('main.js использует тот же revision для динамических подключений', async () => {
+    const { revisions } = collectHtmlRevisions();
+    expect([...revisions]).toHaveLength(1);
+    const [revision] = [...revisions];
 
-    for (const путь of htmlФайлы) {
-      const html = readFileSync(путь, 'utf8');
-      for (const совпадение of html.matchAll(локальныеПодключения)) {
-        revisionsИзHtml.add(совпадение[3]);
-      }
-    }
+    const mainJs = readFileSync(join(WWW, 'js', 'main.js'), 'utf8');
+    const revisionMatch = mainJs.match(/const ASSET_REVISION = '([a-z0-9]+)'/i);
 
-    expect([...revisionsИзHtml]).toHaveLength(1);
-    const [revision] = [...revisionsИзHtml];
+    expect(revisionMatch?.[1]).toBe(revision);
+    expect(mainJs).toContain('/css/copy.css?v=${ASSET_REVISION}');
+    expect(mainJs).toContain('/js/search.js?v=${ASSET_REVISION}');
+  });
 
-    const js = файлыРекурсивно(join(WWW, 'js'))
-      .filter((путь) => путь.endsWith('.js'))
-      .map((путь) => readFileSync(путь, 'utf8'))
-      .join('\n');
+  test('search.js наследует revision модуля для динамического search.css', async () => {
+    const searchJs = readFileSync(join(WWW, 'js', 'search.js'), 'utf8');
 
-    const динамическиеПодключения = [...js.matchAll(/['"](\/(?:js|css)\/[^'"?]+\.(?:js|css))\?v=([a-z0-9]+)['"]/gi)];
-    for (const совпадение of динамическиеПодключения) {
-      expect(совпадение[2], совпадение[1]).toBe(revision);
-    }
+    expect(searchJs).toContain("new URL(import.meta.url).searchParams.get('v')");
+    expect(searchJs).toContain("versionedAsset('/css/search.css')");
   });
 });
