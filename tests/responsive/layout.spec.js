@@ -2,15 +2,15 @@ import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES, DOC_PAGES, isDesktop } from '../helpers/site.js';
 
 test.describe('Адаптивность — геометрия страниц', () => {
-  for (const страница of PUBLIC_PAGES) {
-    test(`страница ${страница.path} не имеет горизонтального переполнения`, async ({ page }) => {
-      await page.goto(страница.path);
+  for (const publicPage of PUBLIC_PAGES) {
+    test(`страница ${publicPage.path} не имеет горизонтального переполнения`, async ({ page }) => {
+      await page.goto(publicPage.path);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(1);
     });
 
-    test(`основной заголовок страницы ${страница.path} полностью помещается в области экрана`, async ({ page }) => {
-      await page.goto(страница.path);
+    test(`основной заголовок страницы ${publicPage.path} полностью помещается в области экрана`, async ({ page }) => {
+      await page.goto(publicPage.path);
       const box = await page.locator('h1').boundingBox();
       const viewport = page.viewportSize();
 
@@ -20,9 +20,9 @@ test.describe('Адаптивность — геометрия страниц', 
     });
   }
 
-  for (const страница of DOC_PAGES) {
-    test(`оглавление страницы ${страница.path} соответствует размеру экрана`, async ({ page }, testInfo) => {
-      await page.goto(страница.path);
+  for (const docPage of DOC_PAGES) {
+    test(`оглавление страницы ${docPage.path} соответствует размеру экрана`, async ({ page }, testInfo) => {
+      await page.goto(docPage.path);
 
       if (isDesktop(testInfo)) {
         await expect(page.locator('.toc')).toBeVisible();
@@ -34,17 +34,17 @@ test.describe('Адаптивность — геометрия страниц', 
 
   test('главный экран располагает текст и процесс рядом только на широком экране', async ({ page }, testInfo) => {
     await page.goto('/');
-    const текст = await page.locator('.hero-copy').boundingBox();
-    const процесс = await page.locator('.memory-map').boundingBox();
+    const heroCopy = await page.locator('.hero-copy').boundingBox();
+    const processPanel = await page.locator('.memory-map').boundingBox();
 
-    expect(текст).not.toBeNull();
-    expect(процесс).not.toBeNull();
+    expect(heroCopy).not.toBeNull();
+    expect(processPanel).not.toBeNull();
 
     if (isDesktop(testInfo)) {
-      expect(процесс.x).toBeGreaterThan(текст.x + текст.width - 20);
-      expect(Math.abs(процесс.y - текст.y)).toBeLessThan(80);
+      expect(processPanel.x).toBeGreaterThan(heroCopy.x + heroCopy.width - 20);
+      expect(Math.abs(processPanel.y - heroCopy.y)).toBeLessThan(80);
     } else {
-      expect(процесс.y).toBeGreaterThan(текст.y + текст.height - 10);
+      expect(processPanel.y).toBeGreaterThan(heroCopy.y + heroCopy.height - 10);
     }
   });
 
