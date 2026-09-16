@@ -23,7 +23,7 @@ test.describe('Доступность — семантика публичных 
 
     test(`на странице ${страница.path} нет скачков уровней заголовков`, async ({ page }) => {
       await page.goto(страница.path);
-      const уровни = await page.locator('h1, h2, h3, h4, h5, h6').evaluateAll((заголовки) => заголовки.map((заголовок) => Number(zаголовок.tagName.slice(1))));
+      const уровни = await page.locator('h1, h2, h3, h4, h5, h6').evaluateAll((заголовки) => заголовки.map((заголовок) => Number(заголовок.tagName.slice(1))));
 
       expect(уровни[0]).toBe(1);
       for (let индекс = 1; индекс < уровни.length; индекс += 1) {
