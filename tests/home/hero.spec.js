@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 const ожидаемыеШаги = [
-  'Brief',
+  'Описание проекта',
   'INIT PROJECT',
   'ADD STEP',
   'RUN STEP',
-  'Review & Evidence',
+  'Ревью и доказательства',
   'Git',
 ];
 
