@@ -72,7 +72,7 @@ test.describe('Инфраструктура — структура и верси
     expect([...revisions]).toHaveLength(1);
   });
 
-  test('main.js использует тот же revision для динамических подключений', async () => {
+  test('main.js использует тот же revision для динамических стилей', async () => {
     const { revisions } = collectHtmlRevisions();
     expect([...revisions]).toHaveLength(1);
     const [revision] = [...revisions];
@@ -82,23 +82,29 @@ test.describe('Инфраструктура — структура и верси
 
     expect(revisionMatch?.[1]).toBe(revision);
     expect(mainJs).toContain('/css/copy.css?v=${ASSET_REVISION}');
-    expect(mainJs).toContain('/js/search.js?v=${ASSET_REVISION}');
   });
 
-  test('main.js не теряет ранний shortcut до готовности динамического модуля поиска', async () => {
+  test('каждая HTML-страница подключает search.js напрямую как ES-модуль', async () => {
+    const { revisions } = collectHtmlRevisions();
+    expect([...revisions]).toHaveLength(1);
+    const [revision] = [...revisions];
+    const expectedTag = `<script type="module" src="/js/search.js?v=${revision}"></script>`;
+
+    for (const path of htmlFiles) {
+      const html = readFileSync(path, 'utf8');
+      expect(html, path).toContain(expectedTag);
+    }
+
     const mainJs = readFileSync(join(WWW, 'js', 'main.js'), 'utf8');
-
-    expect(mainJs).toContain("document.addEventListener('keydown', bootstrapSearchShortcut)");
-    expect(mainJs).toContain('searchReady = import(`/js/search.js?v=${ASSET_REVISION}`)');
-    expect(mainJs).toContain("document.removeEventListener('keydown', bootstrapSearchShortcut)");
-    expect(mainJs).toContain("document.dispatchEvent(new KeyboardEvent('keydown'");
-    expect(mainJs).not.toMatch(/^import\s+.+\s+from\s+/m);
+    expect(mainJs).not.toContain('/js/search.js');
+    expect(mainJs).not.toContain('bootstrapSearchShortcut');
   });
 
-  test('search.js наследует revision модуля для динамического search.css', async () => {
+  test('search.js наследует revision модуля для динамического search.css и сам инициализирует UI', async () => {
     const searchJs = readFileSync(join(WWW, 'js', 'search.js'), 'utf8');
 
     expect(searchJs).toContain("new URL(import.meta.url).searchParams.get('v')");
     expect(searchJs).toContain("versionedAsset('/css/search.css')");
+    expect(searchJs).toMatch(/\ninitSiteSearch\(\);\s*$/);
   });
 });
