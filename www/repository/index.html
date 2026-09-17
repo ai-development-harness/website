@@ -80,8 +80,9 @@
     <article class="article">
 <section id="memory"><h2>Память — это файлы, связи и фактическое состояние</h2><p>Harness специально не использует историю чата как постоянную базу знаний. Новая сессия восстанавливает контекст из версионируемых артефактов репозитория: требований, ADR, STEP, сохранённого плана, кода, тестов, доказательств выполнения и отчётов ревью.</p></section>
 <section id="layout"><h2>Где живёт контекст</h2><div class="code-block"><pre><code>.project/                 policies, manifest, update lock
-.codex/                   role/model configuration
-.agents/skills/           workflow and technology skills
+.codex/                   Codex role/model configuration
+CLAUDE.md + .claude/      Claude Code bridge and role configuration
+.agents/skills/           shared workflow and technology skills
 docs/PROJECT.md           нормализованный проектный контекст
 docs/requirements/        REQ definitions + status projection
 docs/adr/                 immutable architecture decisions
@@ -90,7 +91,7 @@ planning/tasks/           canonical STEP contracts
 planning/reviews/         immutable review reports
 planning/audits/          reconcile/audit reports
 planning/harness-updates/ self-update reports
-code / tests / config     фактическая реализация</code></pre></div></section>
+code / tests / config     фактическая реализация</code></pre></div><p>Runtime-specific конфигурация находится рядом с общим protocol layer, но сама память проекта не принадлежит ни Codex, ни Claude Code. Поэтому один и тот же REQ/ADR/STEP контекст может использоваться обеими интеграциями.</p></section>
 <section id="handoff"><h2>Сохраняемый контекст заменяет «помни наш прошлый чат»</h2><div class="code-block"><pre><code>ADD        → task contract
 PLAN       → Implementation plan внутри STEP
 IMPLEMENT  → code/tests + verification evidence
@@ -100,7 +101,7 @@ RECONCILE  → audit report / corrective STEP</code></pre></div><p>Каждый 
 <section id="git-native"><h2>Git хранит историю, но Harness не сводится к commits</h2><p>Git показывает <em>что</em> изменилось и когда. REQ, ADR, STEP и доказательства выполнения добавляют <em>зачем</em>, в каких границах, по каким критериям и с каким результатом ревью. Поэтому история Git и база знаний проекта дополняют друг друга.</p></section>
 <section id="local"><h2>Локальный исходный контекст остаётся локальным</h2><p><code>PROJECT_BRIEF.local.md</code> предназначен для незрелых идей, приватных ссылок и временных заметок и заранее исключён из Git. После INIT нормализованный контекст переносится в отслеживаемую документацию проекта.</p></section>
 <section id="drift"><h2>Память требует проверки согласованности</h2><p>Ручные hotfix, устаревшие статусы и расхождения документации неизбежны. Поэтому <code>RECONCILE PROJECT</code> сравнивает уровни истины репозитория и создаёт явный отчёт аудита или корректирующую работу вместо скрытого исправления.</p></section>
-<nav class="prev-next" aria-label="Навигация по документации"><a href="/architecture/"><span>Назад</span>Архитектура</a><a href="/maintenance/"><span>Далее</span>Поддержка</a></nav></article>
+<nav class="prev-next" aria-label="Навигация по документации"><a href="/runtimes/"><span>Назад</span>Codex и Claude Code</a><a href="/maintenance/"><span>Далее</span>Поддержка</a></nav></article>
     <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#memory">Что такое память</a><a href="#layout">Структура</a><a href="#handoff">Передача контекста</a><a href="#git-native">Роль Git</a><a href="#local">Локальный brief</a><a href="#drift">Согласованность</a></aside>
   </div>
 </main>
