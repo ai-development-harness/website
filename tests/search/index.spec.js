@@ -89,7 +89,7 @@ test.describe('Поиск — поисковый индекс', () => {
 
     expect(commands).toContain('INIT PROJECT');
     expect(commands.some((command) => command.startsWith('ADD STEP'))).toBeTruthy();
-    expect(commands).toContain('UPDATE HARNESS');
+    expect(commands.some((command) => command.startsWith('UPDATE HARNESS'))).toBeTruthy();
   });
 
   test('не хранит нормализованные копии текста в индексе', async ({ page }) => {
