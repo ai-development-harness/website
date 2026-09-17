@@ -6,6 +6,7 @@ export const PUBLIC_PAGES = [
   { path: '/workflow/', h1: 'Процесс разработки', docs: true },
   { path: '/commands/', h1: 'Команды Harness', docs: true },
   { path: '/architecture/', h1: 'Архитектура Harness', docs: true },
+  { path: '/runtimes/', h1: 'Codex и Claude Code', docs: true },
   { path: '/repository/', h1: 'Репозиторий как долговременная память', docs: true },
   { path: '/maintenance/', h1: 'Поддержка и обновление', docs: true },
   { path: '/faq/', h1: 'FAQ', docs: true },
