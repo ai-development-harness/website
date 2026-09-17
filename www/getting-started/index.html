@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark light">
 <title>Начало работы с AI Development Harness</title>
-<meta name="description" content="Начало работы с AI Development Harness: Git и Python 3.11+, PROJECT_BRIEF.local.md, INIT PROJECT, первый STEP и безопасная работа с Git.">
+<meta name="description" content="Начало работы с AI Development Harness: Git, Python 3.11+, Codex или Claude Code, PROJECT_BRIEF.local.md, INIT PROJECT, первый STEP и безопасная работа с Git.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/getting-started/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -14,12 +14,12 @@
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
 <meta property="og:title" content="Начало работы с AI Development Harness">
-<meta property="og:description" content="Начало работы с AI Development Harness: Git и Python 3.11+, PROJECT_BRIEF.local.md, INIT PROJECT, первый STEP и безопасная работа с Git.">
+<meta property="og:description" content="Начало работы с AI Development Harness: Git, Python 3.11+, Codex или Claude Code, PROJECT_BRIEF.local.md, INIT PROJECT, первый STEP и безопасная работа с Git.">
 <meta property="og:url" content="https://ai-development-harness.ru/getting-started/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Начало работы с AI Development Harness">
-<meta name="twitter:description" content="Начало работы с AI Development Harness: Git и Python 3.11+, PROJECT_BRIEF.local.md, INIT PROJECT, первый STEP и безопасная работа с Git.">
+<meta name="twitter:description" content="Начало работы с AI Development Harness: Git, Python 3.11+, Codex или Claude Code, PROJECT_BRIEF.local.md, INIT PROJECT, первый STEP и безопасная работа с Git.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <script src="/js/theme-init.js?v=78b50649"></script>
 <link rel="stylesheet" href="/css/styles.css?v=78b50649">
@@ -73,25 +73,26 @@
       <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span>→</span><span>Начало работы</span></nav>
       <div class="eyebrow">Документация Harness</div>
       <h1>Начало работы</h1>
-      <p>От пустого шаблона до базы знаний проекта и первого исполнимого STEP — без создания кода продукта во время инициализации.</p>
+      <p>От пустого шаблона до базы знаний проекта и первого исполнимого STEP — с Codex или Claude Code и без создания кода продукта во время инициализации.</p>
     </div>
   </header>
   <div class="container docs-shell">
     <article class="article">
-<section id="prerequisites"><h2>Что понадобится</h2><p>Harness использует состояние Git, diff/index и Git-процесс как часть формальных проверок. Для штатного валидатора нужен <strong>Python 3.11+</strong>; это служебная зависимость Harness, а не зависимость самого приложения.</p><div class="article-grid"><div class="mini-card"><h3>Git</h3><p>Нужен для контроля состояния репозитория, безопасных commit/push-операций и прослеживаемости изменений.</p></div><div class="mini-card"><h3>Python 3.11+</h3><p>Нужен для <code>tools/harness/validate.py</code>, включая разбор TOML стандартным модулем <code>tomllib</code>.</p></div></div></section>
+<section id="prerequisites"><h2>Что понадобится</h2><p>Harness использует состояние Git, diff/index и Git-процесс как часть формальных проверок. Для штатного валидатора нужен <strong>Python 3.11+</strong>; это служебная зависимость Harness, а не зависимость самого приложения. Для выполнения команд нужен один поддерживаемый AI runtime: <strong>Codex или Claude Code</strong>.</p><div class="article-grid"><div class="mini-card"><h3>Git</h3><p>Нужен для контроля состояния репозитория, безопасных commit/push-операций и прослеживаемости изменений.</p></div><div class="mini-card"><h3>Python 3.11+</h3><p>Нужен для <code>tools/harness/validate.py</code>, включая разбор TOML стандартным модулем <code>tomllib</code>.</p></div><div class="mini-card"><h3>Codex или Claude Code</h3><p>Оба runtime поддерживаются отдельными adapter-конфигурациями поверх общего Harness protocol.</p></div></div></section>
 <section id="create"><h2>1. Создайте репозиторий из шаблона</h2><p>Создайте новый репозиторий на основе официального шаблона AI Development Harness: <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">открыть форму создания репозитория на GitHub</a>. GitHub создаст отдельный репозиторий вашего проекта с готовой структурой Harness. После этого клонируйте уже свой созданный репозиторий.</p><div class="article-note"><strong>Не удаляйте <code>.project/harness.lock.json</code>.</strong> Он хранит известную базовую версию Harness и нужен будущим <code>CHECK HARNESS UPDATE</code> / <code>UPDATE HARNESS</code>. Основой обновления служит неизменяемый тег релиза, а не постоянно меняющаяся ветка <code>main</code>.</div></section>
 <section id="brief"><h2>2. Опишите проект своими словами</h2><div class="code-block"><pre><code>cp PROJECT_BRIEF.example.md PROJECT_BRIEF.local.md</code></pre></div><p>Brief — локальное исходное описание проекта. Полезно указать цель, пользователей, сценарии, ограничения, обязательные или желательные технологии, то, что не входит в проект, и ссылки на примеры. Заранее оформлять REQ, ADR и STEP не требуется.</p></section>
-<section id="init"><h2>3. Запустите INIT PROJECT</h2><div class="code-block"><pre><code>INIT PROJECT</code></pre></div><p>Инициализатор читает brief и создаёт базу знаний проекта: <code>docs/PROJECT.md</code>, требования, базовую архитектуру, дорожную карту и полноценные <code>STEP-NNN</code>. Он связывает REQ ↔ ADR ↔ STEP и заполняет границы задачи, зависимости, критерии приёмки и проверки.</p><div class="article-note"><strong>INIT PROJECT не создаёт код продукта.</strong> Инициализация заканчивается только после проверки согласованности и установки <code>project.initialized: true</code>.</div></section>
-<section id="review-bootstrap"><h2>4. Проверьте результат инициализации</h2><p>Убедитесь, что требования не выдуманы, ADR не создаются «на всякий случай», зависимости не потеряны, а первые STEP действительно исполнимы.</p><div class="code-block"><pre><code>STATUS PROJECT
+<section id="runtime"><h2>3. Откройте проект в Codex или Claude Code</h2><p>Выберите тот runtime, которым хотите пользоваться. Harness protocol остаётся одним и тем же, а runtime-specific настройки уже лежат в репозитории.</p><div class="article-grid"><div class="mini-card"><h3>Codex</h3><p><code>.codex/config.toml</code> регистрирует роли, а <code>.codex/agents/*.toml</code> задают model и reasoning effort для каждой роли.</p></div><div class="mini-card"><h3>Claude Code</h3><p><code>CLAUDE.md</code> импортирует <code>@AGENTS.md</code>; <code>.claude/settings.json</code> и <code>.claude/agents/*.md</code> задают root profile и роли.</p></div></div><p><a class="text-link" href="/runtimes/">Подробнее о runtime adapters →</a></p></section>
+<section id="init"><h2>4. Запустите INIT PROJECT</h2><div class="code-block"><pre><code>INIT PROJECT</code></pre></div><p>Инициализатор читает brief и создаёт базу знаний проекта: <code>docs/PROJECT.md</code>, требования, базовую архитектуру, дорожную карту и полноценные <code>STEP-NNN</code>. Он связывает REQ ↔ ADR ↔ STEP и заполняет границы задачи, зависимости, критерии приёмки и проверки.</p><div class="article-note"><strong>INIT PROJECT не создаёт код продукта.</strong> Инициализация заканчивается только после проверки согласованности и установки <code>project.initialized: true</code>.</div></section>
+<section id="review-bootstrap"><h2>5. Проверьте результат инициализации</h2><p>Убедитесь, что требования не выдуманы, ADR не создаются «на всякий случай», зависимости не потеряны, а первые STEP действительно исполнимы.</p><div class="code-block"><pre><code>STATUS PROJECT
 NEXT STEP</code></pre></div></section>
-<section id="git"><h2>5. Зафиксируйте основу</h2><div class="code-block"><pre><code>GIT CHECK
+<section id="git"><h2>6. Зафиксируйте основу</h2><div class="code-block"><pre><code>GIT CHECK
 COMMIT
 PUSH</code></pre></div><p>Правила работы с Git находятся в <code>.project/git-policy.toml</code>. COMMIT и PUSH разделены: Harness не публикует изменения автоматически только потому, что реализация завершена.</p></section>
-<section id="develop"><h2>6. Начните разработку</h2><p>Можно выполнять этапы вручную или запускать весь допустимый цикл одной командой.</p><div class="article-grid"><div class="mini-card"><h3>Ручной режим</h3><p><code>PLAN STEP-001</code><br><code>IMPLEMENT STEP-001</code><br><code>REVIEW STEP-001</code></p></div><div class="mini-card"><h3>Автоматический режим</h3><p><code>RUN STEP-001</code><br>Harness сам проходит допустимые стадии и останавливается при блокирующей проблеме.</p></div></div><p>Новая задача формулируется обычным языком через <code>ADD STEP: &lt;описание&gt;</code>.</p></section>
-<section id="updates"><h2>7. Обновляйте Harness отдельно</h2><div class="code-block"><pre><code>CHECK HARNESS UPDATE
-UPDATE HARNESS</code></pre></div><p>Самообновление относится к служебному слою Harness, а не к работе над продуктом. Оно не создаёт STEP и не делает commit/push/PR автоматически.</p></section>
+<section id="develop"><h2>7. Начните разработку</h2><p>Можно выполнять этапы вручную или запускать весь допустимый цикл одной командой.</p><div class="article-grid"><div class="mini-card"><h3>Ручной режим</h3><p><code>PLAN STEP-001</code><br><code>IMPLEMENT STEP-001</code><br><code>REVIEW STEP-001</code></p></div><div class="mini-card"><h3>Автоматический режим</h3><p><code>RUN STEP-001</code><br>Harness сам проходит допустимые стадии и останавливается при блокирующей проблеме.</p></div></div><p>Новая задача формулируется обычным языком через <code>ADD STEP: &lt;описание&gt;</code>.</p></section>
+<section id="updates"><h2>8. Обновляйте Harness отдельно</h2><div class="code-block"><pre><code>CHECK HARNESS UPDATE
+UPDATE HARNESS</code></pre></div><p>Самообновление относится к служебному слою Harness, а не к работе над продуктом. Оно не создаёт STEP и не делает commit/push/PR автоматически. Shared-конфигурации Codex и Claude сохраняют проектные настройки через трёхстороннее слияние.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><span></span><a href="/workflow/"><span>Далее</span>Процесс разработки</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#prerequisites">Требования</a><a href="#create">Создать репозиторий</a><a href="#brief">Описание проекта</a><a href="#init">INIT PROJECT</a><a href="#review-bootstrap">Проверить результат</a><a href="#git">Git</a><a href="#develop">Начать разработку</a><a href="#updates">Обновления</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#prerequisites">Требования</a><a href="#create">Создать репозиторий</a><a href="#brief">Описание проекта</a><a href="#runtime">Codex или Claude Code</a><a href="#init">INIT PROJECT</a><a href="#review-bootstrap">Проверить результат</a><a href="#git">Git</a><a href="#develop">Начать разработку</a><a href="#updates">Обновления</a></aside>
   </div>
 </main>
 <footer class="site-footer">
