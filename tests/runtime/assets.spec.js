@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES } from '../helpers/site.js';
 
+const LOCAL_ORIGIN = 'http://127.0.0.1:4173';
+const RELEASE_API_URL = 'https://api.github.com/repos/ai-development-harness/ai-development-harness-template/releases/latest';
+const MOCK_RELEASE_URL = 'https://github.com/ai-development-harness/ai-development-harness-template/releases/tag/v0.0.0-test';
+
 const RESOURCES = [
   '/css/styles.css',
   '/css/styles-site.css',
@@ -19,6 +23,34 @@ const RESOURCES = [
   '/assets/social-card.svg',
 ];
 
+async function isolateFromExternalNetwork(page) {
+  await page.route('**/*', async (route) => {
+    const requestUrl = new URL(route.request().url());
+
+    if (requestUrl.origin === LOCAL_ORIGIN) {
+      await route.continue();
+      return;
+    }
+
+    if (requestUrl.href === RELEASE_API_URL) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          tag_name: 'v0.0.0-test',
+          html_url: MOCK_RELEASE_URL,
+        }),
+      });
+      return;
+    }
+
+    // Smoke-тесты проверяют только наш runtime и локальные ресурсы. Любые
+    // сторонние скрипты, пиксели и API здесь изолируются, чтобы результат теста
+    // не зависел от сети, rate limits или доступности внешних сервисов.
+    await route.fulfill({ status: 204, body: '' });
+  });
+}
+
 test.describe('Выполнение страницы — загрузка и статические ресурсы', () => {
   test('основные статические ресурсы доступны', async ({ request }) => {
     for (const path of RESOURCES) {
@@ -31,6 +63,8 @@ test.describe('Выполнение страницы — загрузка и с�
     test(`страница ${publicPage.path} не создаёт ошибок JavaScript`, async ({ page }) => {
       const pageErrors = [];
       const consoleErrors = [];
+
+      await isolateFromExternalNetwork(page);
 
       page.on('pageerror', (error) => pageErrors.push(error.message));
       page.on('console', (message) => {
@@ -47,9 +81,11 @@ test.describe('Выполнение страницы — загрузка и с�
     test(`страница ${publicPage.path} не получает ошибочные ответы со своего домена`, async ({ page }) => {
       const failedResponses = [];
 
+      await isolateFromExternalNetwork(page);
+
       page.on('response', (response) => {
         const url = new URL(response.url());
-        if (url.origin === 'http://127.0.0.1:4173' && response.status() >= 400) {
+        if (url.origin === LOCAL_ORIGIN && response.status() >= 400) {
           failedResponses.push({ url: response.url(), status: response.status() });
         }
       });
