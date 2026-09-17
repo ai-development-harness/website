@@ -1,6 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES } from '../helpers/site.js';
 
+// Resource hints проверяются как стратегия, а не как наличие «всех возможных»
+// rel-значений: preload/prefetch/preconnect должны появляться только там, где
+// конкретный ресурс действительно нужен текущей или наиболее вероятной следующей
+// навигации. Это защищает сайт от регрессии «preload всего подряд».
 const NEXT_PAGE = new Map([
   ['/', '/getting-started/'],
   ['/getting-started/', '/workflow/'],
