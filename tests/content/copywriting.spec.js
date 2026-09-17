@@ -27,6 +27,16 @@ test.describe('Контент — согласованные формулиро�
     await expect(section.getByRole('link', { name: 'открыть форму создания репозитория на GitHub' })).toHaveAttribute('href', TEMPLATE_GENERATE_URL);
   });
 
+  test('справочник и раздел поддержки показывают optional target обновления Harness', async ({ page }) => {
+    for (const path of ['/commands/', '/maintenance/']) {
+      await page.goto(path);
+      const section = page.locator('#updates, #update').first();
+
+      await expect(section).toContainText('CHECK HARNESS UPDATE [TO <tag>]');
+      await expect(section).toContainText('UPDATE HARNESS [TO <tag>]');
+    }
+  });
+
   for (const publicPage of PUBLIC_PAGES) {
     test(`на странице ${publicPage.path} в футере указан копирайт вместо домена`, async ({ page }) => {
       await page.goto(publicPage.path);
