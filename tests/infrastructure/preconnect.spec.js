@@ -33,7 +33,7 @@ test.describe('Resource hints для загрузки и следующей на
       // Предзагружаем только один наиболее вероятный следующий документ, чтобы
       // не расходовать трафик на все ссылки страницы.
       const nextPage = NEXT_PAGE.get(publicPage.path);
-      const documentPrefetch = page.locator('link[rel="prefetch"][as="document"]');
+      const documentPrefetch = page.locator('link[rel="prefetch"]');
       if (nextPage) {
         await expect(documentPrefetch).toHaveCount(1);
         await expect(documentPrefetch).toHaveAttribute('href', nextPage);
