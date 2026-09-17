@@ -31,12 +31,14 @@ test.describe('Resource hints для загрузки и следующей на
       await expect(copyStylesPreload).toHaveCount(copyButtonCount > 0 ? 1 : 0);
 
       // Предзагружаем только один наиболее вероятный следующий документ, чтобы
-      // не расходовать трафик на все ссылки страницы.
+      // не расходовать трафик на все ссылки страницы. Для современного prefetch
+      // атрибут as не задаём: он предназначен прежде всего для preload.
       const nextPage = NEXT_PAGE.get(publicPage.path);
       const documentPrefetch = page.locator('link[rel="prefetch"]');
       if (nextPage) {
         await expect(documentPrefetch).toHaveCount(1);
         await expect(documentPrefetch).toHaveAttribute('href', nextPage);
+        expect(await documentPrefetch.getAttribute('as')).toBeNull();
       } else {
         await expect(documentPrefetch).toHaveCount(0);
       }
