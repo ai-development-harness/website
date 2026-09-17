@@ -38,6 +38,7 @@ const FALLBACK_PUBLIC_PATHS = [
   '/repository/',
   '/maintenance/',
   '/faq/',
+  '/runtimes/',
 ];
 
 const MAX_RESULTS = 8;

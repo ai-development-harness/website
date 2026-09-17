@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark light">
 <title>Поддержка и обновление AI Development Harness</title>
-<meta name="description" content="QUICK FIX, RECONCILE PROJECT и безопасное самообновление Harness: фиксация версии, неизменяемые теги релизов, правила владения файлами, BASE/OURS/THEIRS и подключение старых проектов.">
+<meta name="description" content="QUICK FIX, RECONCILE PROJECT и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами, BASE/OURS/THEIRS и подключение старых проектов.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/maintenance/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -14,12 +14,12 @@
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
 <meta property="og:title" content="Поддержка и обновление AI Development Harness">
-<meta property="og:description" content="QUICK FIX, RECONCILE PROJECT и безопасное самообновление Harness: фиксация версии, неизменяемые теги релизов, правила владения файлами, BASE/OURS/THEIRS и подключение старых проектов.">
+<meta property="og:description" content="QUICK FIX, RECONCILE PROJECT и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами и BASE/OURS/THEIRS.">
 <meta property="og:url" content="https://ai-development-harness.ru/maintenance/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Поддержка и обновление AI Development Harness">
-<meta name="twitter:description" content="QUICK FIX, RECONCILE PROJECT и безопасное самообновление Harness: фиксация версии, неизменяемые теги релизов, правила владения файлами, BASE/OURS/THEIRS и подключение старых проектов.">
+<meta name="twitter:description" content="QUICK FIX, RECONCILE PROJECT и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами и BASE/OURS/THEIRS.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <script src="/js/theme-init.js?v=78b50649"></script>
 <link rel="stylesheet" href="/css/styles.css?v=78b50649">
@@ -78,22 +78,23 @@
   </header>
   <div class="container docs-shell">
     <article class="article">
-<section id="boundaries"><h2>Служебный слой Harness и код проекта обновляются по-разному</h2><p>К Harness относятся AGENTS, базовые навыки, протокол выполнения, <code>docs/harness</code>, политики, механизм обновления, валидатор и шаблоны. Проекту принадлежат REQ, ADR, архитектура, задачи, ревью, аудиты, код и тесты продукта, конфигурация и дополнительные навыки проекта или сторонних источников.</p></section>
+<section id="boundaries"><h2>Служебный слой Harness и код проекта обновляются по-разному</h2><p>К Harness относятся AGENTS, runtime adapters, базовые навыки, протокол выполнения, <code>docs/harness</code>, политики, механизм обновления, валидатор и шаблоны. Проекту принадлежат REQ, ADR, архитектура, задачи, ревью, аудиты, код и тесты продукта, конфигурация и дополнительные навыки проекта или сторонних источников.</p></section>
 <section id="quick"><h2>Для мелкой правки не нужен искусственный STEP</h2><p>Опечатка, пунктуация, безопасный комментарий или локальное форматирование могут идти через <code>QUICK FIX</code> или ручную правку. Git diff и commit — достаточная история такой мелочи.</p><div class="article-note"><strong>Короткий путь запрещён</strong> при изменении поведения, API, схемы или миграций, аутентификации и безопасности, зависимостей, архитектурных границ, существенной стратегии тестирования либо требований и критериев приёмки.</div></section>
 <section id="reconcile"><h2>RECONCILE восстанавливает согласованность</h2><p>Расхождения архитектуры, документации и статусов фиксируются явно. <code>RECONCILE PROJECT</code> создаёт отчёт аудита и корректирующий STEP там, где изменение нельзя безопасно спрятать в текущую задачу.</p></section>
-<section id="update"><h2>Самообновление Harness — отдельный процесс</h2><div class="code-block"><pre><code>CHECK HARNESS UPDATE   # read-only
-UPDATE HARNESS         # mutation после успешной проверки
+<section id="update"><h2>Обновление Harness — отдельный процесс</h2><div class="code-block"><pre><code>CHECK HARNESS UPDATE [TO &lt;tag&gt;]   # read-only
+UPDATE HARNESS [TO &lt;tag&gt;]         # mutation после успешной проверки того же target
 
 inspect diff
 GIT CHECK
 COMMIT
 PUSH
-PR</code></pre></div><p>Постоянно меняющаяся ветка <code>main</code> не используется как база обновления. Допустимой целевой версией считается неизменяемый тег релиза <code>vMAJOR.MINOR.PATCH</code>.</p></section>
-<section id="ownership"><h2>BASE / OURS / THEIRS и правила владения файлами</h2><div class="article-grid"><div class="mini-card"><h3>harness_owned</h3><p>Локальное отличие от BASE блокирует скрытую перезапись.</p></div><div class="mini-card"><h3>shared</h3><p>Для настраиваемых файлов выполняется трёхстороннее слияние.</p></div><div class="mini-card"><h3>marker_merge</h3><p>README и AGENTS объединяются с сохранением сгенерированных блоков проекта.</p></div><div class="mini-card"><h3>unknown</h3><p>По умолчанию файл считается принадлежащим проекту, и механизм обновления его не меняет.</p></div></div></section>
-<section id="legacy"><h2>Старый проект без lock-файла требует явного подключения</h2><p>Если <code>.project/harness.lock.json</code> отсутствует, доказуемой BASE-версии нет. Harness не угадывает её по похожести файлов: нужен явно известный неизменяемый тег релиза или ручное восстановление согласованности.</p></section>
+PR</code></pre></div><p>Без <code>TO &lt;tag&gt;</code> выбирается последний допустимый неизменяемый релиз. Явный target фиксирует конкретную версию и имеет приоритет над latest. <code>CHECK</code> и <code>UPDATE</code> обязаны использовать один и тот же target.</p><div class="code-block"><pre><code>CHECK HARNESS UPDATE TO v0.1.2
+UPDATE HARNESS TO v0.1.2</code></pre></div><p>Постоянно меняющаяся ветка <code>main</code> не используется как база обновления. Допустимой целевой версией считается неизменяемый тег релиза <code>vMAJOR.MINOR.PATCH</code>.</p></section>
+<section id="ownership"><h2>BASE / OURS / THEIRS и правила владения файлами</h2><div class="article-grid"><div class="mini-card"><h3>harness_owned</h3><p>Локальное отличие от BASE блокирует скрытую перезапись.</p></div><div class="mini-card"><h3>shared</h3><p>Для настраиваемых файлов выполняется трёхстороннее слияние. Сюда входят tracked role/config files Codex и Claude Code.</p></div><div class="mini-card"><h3>marker_merge</h3><p>README и AGENTS объединяются с сохранением сгенерированных блоков проекта.</p></div><div class="mini-card"><h3>unknown</h3><p>По умолчанию файл считается принадлежащим проекту, и механизм обновления его не меняет.</p></div></div></section>
+<section id="legacy"><h2>Старые проекты обновляются через явный compatibility bridge</h2><p>Если <code>.project/harness.lock.json</code> отсутствует, доказуемой BASE-версии нет. Harness не угадывает её по похожести файлов: нужен явно известный неизменяемый тег релиза или ручное восстановление согласованности.</p><div class="article-note"><strong>Для <code>v0.1.1</code> есть отдельное правило.</strong> Первый переход выполняется явно: <code>CHECK HARNESS UPDATE TO v0.1.2</code> → <code>UPDATE HARNESS TO v0.1.2</code>. После bridge можно снова проверять и применять обычный актуальный релиз.</div></section>
 <section id="security"><h2>Целевой релиз читается как данные, а не исполняется</h2><p>Механизм обновления читает только разрешённые UTF-8 текстовые файлы из канонического исходного репозитория. Скрипты миграции, установки и инициализации из целевого релиза автоматически не запускаются. Новые инструменты проверяются уже после просмотра diff.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/repository/"><span>Назад</span>Репозиторий как память</a><a href="/faq/"><span>Далее</span>FAQ</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#boundaries">Границы владения</a><a href="#quick">QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#update">Самообновление</a><a href="#ownership">3-way merge</a><a href="#legacy">Старые проекты</a><a href="#security">Граница безопасности</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#boundaries">Границы владения</a><a href="#quick">QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#update">Обновление Harness</a><a href="#ownership">3-way merge</a><a href="#legacy">Старые проекты</a><a href="#security">Граница безопасности</a></aside>
   </div>
 </main>
 <footer class="site-footer">

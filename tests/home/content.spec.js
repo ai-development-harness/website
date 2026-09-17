@@ -25,6 +25,15 @@ test.describe('Главная страница — основные секции
     await expect(page.locator('.flow-card')).toHaveCount(5);
   });
 
+  test('показывает оба поддерживаемых runtime adapter', async ({ page }) => {
+    const section = page.locator('#runtimes');
+
+    await expect(section).toBeVisible();
+    await expect(section).toContainText('Codex');
+    await expect(section).toContainText('Claude Code');
+    await expect(section.getByRole('link', { name: /runtime adapters/ })).toHaveAttribute('href', '/runtimes/');
+  });
+
   test('показывает три сценария аудитории', async ({ page }) => {
     await expect(page.locator('.audience-card')).toHaveCount(3);
   });
