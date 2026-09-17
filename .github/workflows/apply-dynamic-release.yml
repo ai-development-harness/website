@@ -1,0 +1,33 @@
+name: Apply dynamic release update
+
+on:
+  push:
+    branches:
+      - feat/dynamic-latest-release
+    paths:
+      - scripts/apply-dynamic-release.mjs
+      - .github/workflows/apply-dynamic-release.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/dynamic-latest-release
+
+      - name: Apply repository-safe transformations
+        run: node scripts/apply-dynamic-release.mjs
+
+      - name: Commit transformed files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "feat: показывать актуальный релиз без хардкода"
+          git push origin HEAD:feat/dynamic-latest-release
