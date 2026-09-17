@@ -14,7 +14,7 @@ export const PUBLIC_PAGES = [
 
 export const DOC_PAGES = PUBLIC_PAGES.filter((page) => page.docs);
 
-export const INTERNAL_ANCHORS = ['problem', 'workflow', 'traceability', 'example', 'audience'];
+export const INTERNAL_ANCHORS = ['problem', 'workflow', 'traceability', 'runtimes', 'example', 'audience'];
 
 /**
  * Возвращает production canonical URL для SEO-проверок.
