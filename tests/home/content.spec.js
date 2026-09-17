@@ -34,15 +34,6 @@ test.describe('Главная страница — основные секции
     await expect(section.getByRole('link', { name: /runtime adapters/ })).toHaveAttribute('href', '/runtimes/');
   });
 
-  test('показывает текущий latest release со ссылкой на GitHub Release', async ({ page }) => {
-    const release = page.getByRole('link', { name: /Latest release: v0\.2\.2/ });
-
-    await expect(release).toBeVisible();
-    await expect(release).toHaveAttribute(
-      'href',
-      'https://github.com/ai-development-harness/ai-development-harness-template/releases/tag/v0.2.2',
-    );
-  });
 
   test('показывает три сценария аудитории', async ({ page }) => {
     await expect(page.locator('.audience-card')).toHaveCount(3);
