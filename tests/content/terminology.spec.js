@@ -10,6 +10,8 @@ const UNWANTED_PHRASES = [
   'Self-update',
 ];
 
+const OBSOLETE_HARNESS_RELEASE_REFERENCES = ['v0.1.1', 'v0.1.2'];
+
 test.describe('Контент — русская терминология', () => {
   for (const publicPage of PUBLIC_PAGES) {
     test(`страница ${publicPage.path} не содержит ранее выявленных неудачных калек`, async ({ page }) => {
@@ -32,6 +34,19 @@ test.describe('Контент — русская терминология', () =
     await page.goto('/');
     await expect(page.locator('.desktop-nav a[href="/getting-started/"]')).toHaveText('Начало работы');
     await expect(page.locator('.mobile-nav a[href="/getting-started/"]')).toHaveText('Начало работы');
+  });
+
+
+
+  test('публичные страницы не содержат одноразовые исторические release-переходы Harness', async ({ request }) => {
+    for (const publicPage of PUBLIC_PAGES) {
+      const response = await request.get(publicPage.path);
+      const html = await response.text();
+
+      for (const release of OBSOLETE_HARNESS_RELEASE_REFERENCES) {
+        expect(html, `Устаревшая release-ссылка ${release} найдена на ${publicPage.path}`).not.toContain(release);
+      }
+    }
   });
 
   test('имена команд Harness остаются неизменными техническими идентификаторами', async ({ page }) => {
