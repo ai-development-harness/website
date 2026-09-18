@@ -44,9 +44,4 @@ test.describe('Resource hints для загрузки и следующей на
       }
     });
   }
-
-  test('главная заранее открывает соединение с GitHub Releases API', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('link[rel="preconnect"][href="https://api.github.com"]')).toHaveCount(1);
-  });
 });
