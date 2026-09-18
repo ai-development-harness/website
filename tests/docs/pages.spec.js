@@ -43,6 +43,27 @@ test.describe('Документация — структура страниц', 
     }
   });
 
+  test('документация разделяет REQ definition и lifecycle status', async ({ page }) => {
+    await page.goto('/architecture/');
+    const article = page.locator('article.article');
+
+    await expect(article).toContainText('docs/requirements/SPEC.md');
+    await expect(article).toContainText('docs/requirements/STATUS.md');
+  });
+
+  test('workflow описывает проверяемое Evidence без подмены output пересказом', async ({ page }) => {
+    await page.goto('/workflow/');
+    const article = page.locator('article.article');
+
+    await expect(article).toContainText('exit code');
+    await expect(article).toContainText('Observed');
+  });
+
+  test('FAQ описывает BLOCKED при недоступном Git metadata', async ({ page }) => {
+    await page.goto('/faq/');
+    await expect(page.locator('article.article')).toContainText('HARNESS VALIDATION: BLOCKED');
+  });
+
   test('страница FAQ содержит раскрываемые ответы на частые вопросы', async ({ page }) => {
     await page.goto('/faq/');
     const questions = page.locator('.faq-item');
