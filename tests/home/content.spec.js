@@ -42,4 +42,9 @@ test.describe('Главная страница — основные секции
   test('показывает шесть карточек документации', async ({ page }) => {
     await expect(page.locator('.docs-grid .doc-card')).toHaveCount(6);
   });
+
+  test('финальный призыв к действию содержит три шага запуска и ссылку на шаблон', async ({ page }) => {
+    await expect(page.locator('.cta-steps li')).toHaveCount(3);
+    await expect(page.locator('.cta-box').getByRole('link', { name: 'Использовать шаблон' })).toBeVisible();
+  });
 });
