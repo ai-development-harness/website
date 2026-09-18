@@ -2,8 +2,6 @@ import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES } from '../helpers/site.js';
 
 const LOCAL_ORIGIN = 'http://127.0.0.1:4173';
-const RELEASE_API_URL = 'https://api.github.com/repos/ai-development-harness/ai-development-harness-template/releases/latest';
-const MOCK_RELEASE_URL = 'https://github.com/ai-development-harness/ai-development-harness-template/releases/tag/v0.0.0-test';
 
 const RESOURCES = [
   '/css/styles.css',
@@ -29,18 +27,6 @@ async function isolateFromExternalNetwork(page) {
 
     if (requestUrl.origin === LOCAL_ORIGIN) {
       await route.continue();
-      return;
-    }
-
-    if (requestUrl.href === RELEASE_API_URL) {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          tag_name: 'v0.0.0-test',
-          html_url: MOCK_RELEASE_URL,
-        }),
-      });
       return;
     }
 
