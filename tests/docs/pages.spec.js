@@ -36,6 +36,13 @@ test.describe('Документация — структура страниц', 
     });
   }
 
+  test('документация обновления описывает маршрут через harness-update-graph.json', async ({ page }) => {
+    for (const path of ['/getting-started/', '/commands/', '/maintenance/']) {
+      await page.goto(path);
+      await expect(page.locator('article.article')).toContainText('.project/harness-update-graph.json');
+    }
+  });
+
   test('страница FAQ содержит раскрываемые ответы на частые вопросы', async ({ page }) => {
     await page.goto('/faq/');
     const questions = page.locator('.faq-item');

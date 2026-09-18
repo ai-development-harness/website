@@ -66,7 +66,7 @@ test.describe('Копирование — исполняемые блоки ко
 
   test('копирует многострочный блок без изменения содержимого', async ({ page }) => {
     await page.goto('/getting-started/');
-    const block = page.locator('.code-block').filter({ hasText: 'GIT CHECK' });
+    const block = page.locator('#git .code-block');
     const expectedText = (await block.locator('pre code').innerText()).trim();
 
     await block.locator(':scope > .copy-button').click();
