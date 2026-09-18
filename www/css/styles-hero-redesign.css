@@ -267,42 +267,6 @@
   margin: 0 0 2px;
 }
 
-/* CTA: список шагов не растягивается в пустую высокую панель. */
-.cta-box {
-  align-items: start;
-}
-
-.cta-copy {
-  align-self: center;
-}
-
-.cta-quickstart {
-  align-self: start;
-  height: auto;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
-}
-
-.cta-quickstart-kicker {
-  margin-bottom: 12px;
-}
-
-.cta-steps {
-  display: grid;
-  gap: 10px;
-}
-
-.cta-steps li,
-.cta-steps li:first-child {
-  padding: 12px 14px;
-  border: 1px solid rgba(126, 167, 214, .22);
-  border-radius: 12px;
-  background: rgba(4, 13, 27, .48);
-}
-
 @media (max-width: 1180px) {
   .hero-top {
     grid-template-columns: 1fr;
