@@ -81,19 +81,22 @@
   <div class="container docs-shell">
     <article class="article">
 <section id="memory"><h2>Память — это файлы, связи и фактическое состояние</h2><p>Harness специально не использует историю чата как постоянную базу знаний. Новая сессия восстанавливает контекст из версионируемых артефактов репозитория: требований, ADR, STEP, сохранённого плана, кода, тестов, доказательств выполнения и отчётов ревью.</p></section>
-<section id="layout"><h2>Где живёт контекст</h2><div class="code-block"><pre><code>.project/                 policies, manifest, update lock
-.codex/                   Codex role/model configuration
-CLAUDE.md + .claude/      Claude Code bridge and role configuration
-.agents/skills/           shared workflow and technology skills
-docs/PROJECT.md           нормализованный проектный контекст
-docs/requirements/        REQ definitions + status projection
-docs/adr/                 immutable architecture decisions
-docs/architecture.md      current architecture baseline
-planning/tasks/           canonical STEP contracts
-planning/reviews/         immutable review reports
-planning/audits/          reconcile/audit reports
-planning/harness-updates/ self-update reports
-code / tests / config     фактическая реализация</code></pre></div><p>Runtime-specific конфигурация находится рядом с общим protocol layer, но сама память проекта не принадлежит ни Codex, ни Claude Code. Поэтому один и тот же REQ/ADR/STEP контекст может использоваться обеими интеграциями.</p></section>
+<section id="layout"><h2>Где живёт контекст</h2><div class="code-block"><pre><code>.project/manifest.yaml              protocol release + project state
+.project/harness.lock.json          known BASE текущего Harness release
+.project/harness-update-graph.json  допустимый route обновления + latest
+.project/*.toml                     update/integrity/Git policies
+.codex/                             Codex role/model configuration
+CLAUDE.md + .claude/                Claude Code bridge and role configuration
+.agents/skills/                     shared workflow and technology skills
+docs/PROJECT.md                     нормализованный проектный контекст
+docs/requirements/                  REQ definitions + status projection
+docs/adr/                           immutable architecture decisions
+docs/architecture.md                current architecture baseline
+planning/tasks/                     canonical STEP contracts
+planning/reviews/                   immutable review reports
+planning/audits/                    reconcile/audit reports
+planning/harness-updates/           self-update reports
+code / tests / config               фактическая реализация</code></pre></div><p>Runtime-specific конфигурация находится рядом с общим protocol layer, но сама память проекта не принадлежит ни Codex, ни Claude Code. Update graph тоже не является baseline или исполняемой миграцией: он только задаёт допустимый маршрут между release tags, тогда как содержимое Harness для каждого hop читается из immutable release.</p></section>
 <section id="handoff"><h2>Сохраняемый контекст заменяет «помни наш прошлый чат»</h2><div class="code-block"><pre><code>ADD        → task contract
 PLAN       → Implementation plan внутри STEP
 IMPLEMENT  → code/tests + verification evidence
