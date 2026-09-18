@@ -43,7 +43,6 @@ test.describe('Документация — структура страниц', 
     }
   });
 
-
   test('документация разделяет REQ definition и lifecycle status', async ({ page }) => {
     await page.goto('/architecture/');
     const article = page.locator('article.article');
@@ -64,6 +63,7 @@ test.describe('Документация — структура страниц', 
     await page.goto('/faq/');
     await expect(page.locator('article.article')).toContainText('HARNESS VALIDATION: BLOCKED');
   });
+
   test('страница FAQ содержит раскрываемые ответы на частые вопросы', async ({ page }) => {
     await page.goto('/faq/');
     const questions = page.locator('.faq-item');
