@@ -44,7 +44,7 @@ test.describe('Копирование — команды Harness', () => {
   });
 
   test('кнопка не ломает стабильный якорь команды', async ({ page }) => {
-    const item = page.locator('#command-add-step');
+    const item = page.locator('#command-step-add');
 
     await expect(item).toBeVisible();
     await expect(item.locator('code')).toContainText('STEP ADD');
