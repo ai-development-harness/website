@@ -32,8 +32,8 @@ test.describe('Контент — согласованные формулиро�
       await page.goto(path);
       const section = page.locator('#updates, #update').first();
 
-      await expect(section).toContainText('CHECK HARNESS UPDATE [TO <tag>]');
-      await expect(section).toContainText('UPDATE HARNESS [TO <tag>]');
+      await expect(section).toContainText('HARNESS UPDATE CHECK [TO <tag>]');
+      await expect(section).toContainText('HARNESS UPDATE APPLY [TO <tag>]');
     }
   });
 
