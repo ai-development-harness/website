@@ -12,12 +12,12 @@ test.describe('Команды — диаграммы цепочек выполн
     }
   });
 
-  test('RUN STEP-NNN показывает PLAN, implementation, review и все verdict-ветки', async ({ page }) => {
+  test('STEP RUN STEP-NNN показывает PLAN, implementation, review и все verdict-ветки', async ({ page }) => {
     await page.goto('/commands/');
-    const runCommand = page.locator('.command-item').filter({ hasText: 'RUN STEP-NNN' });
+    const runCommand = page.locator('.command-item').filter({ hasText: 'STEP RUN STEP-NNN' });
 
-    await expect(runCommand).toContainText('PLAN STEP-NNN');
-    await expect(runCommand).toContainText('IMPLEMENT');
+    await expect(runCommand).toContainText('STEP PLAN STEP-NNN');
+    await expect(runCommand).toContainText('STEP IMPLEMENT');
     await expect(runCommand).toContainText('Verification');
     await expect(runCommand).toContainText('Independent REVIEW');
     await expect(runCommand).toContainText('FAIL');
@@ -25,7 +25,15 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(runCommand).toContainText('PASS');
     await expect(runCommand).toContainText('CLOSE STEP');
     await expect(runCommand).toContainText('BLOCKED');
-    await expect(runCommand).toContainText('максимум 3 раза');
+    await expect(runCommand).toContainText('execution.maxFixReviewCycles');
+  });
+
+  test('страница описывает CTS, цепочки и восстановление выполнения', async ({ page }) => {
+    await page.goto('/commands/');
+    await expect(page.locator('#syntax')).toContainText('INVALID_CHAIN');
+    await expect(page.locator('#syntax')).toContainText('GIT CHECK > COMMIT > PUSH > PR');
+    await expect(page.locator('#execution-status')).toContainText('RESUME');
+    await expect(page.locator('#execution-status')).toContainText('execution-status.json');
   });
 
   test('диаграммы не создают горизонтальное переполнение страницы', async ({ page }) => {
