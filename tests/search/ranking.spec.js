@@ -10,10 +10,10 @@ test.describe('Поиск — нормализация и ранжировани
   test('нормализует регистр, лишние пробелы и букву ё', async ({ page }) => {
     const result = await page.evaluate(async (moduleUrl) => {
       const { normalizeSearchText } = await import(moduleUrl);
-      return normalizeSearchText('  ЁЛКА   ADD   STEP  ');
+      return normalizeSearchText('  ЁЛКА   STEP   ADD  ');
     }, SEARCH_MODULE_URL);
 
-    expect(result).toBe('елка add step');
+    expect(result).toBe('елка step add');
   });
 
   test('точное совпадение заголовка получает более высокий вес', async ({ page }) => {
