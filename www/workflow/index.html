@@ -6,30 +6,30 @@
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark light">
 <title>Процесс AI-разработки: от задачи до ревью и Git | AI Development Harness</title>
-<meta name="description" content="Как AI Development Harness организует ADD STEP, PLAN, IMPLEMENT, проверки, REVIEW, FIX, QUICK FIX, RECONCILE и безопасную работу с Git.">
+<meta name="description" content="Как AI Development Harness организует STEP ADD, PLAN, IMPLEMENT, проверки, REVIEW, FIX, PROJECT QUICK FIX, RECONCILE и безопасную работу с Git.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/workflow/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://mc.yandex.ru">
 <link rel="prefetch" href="/commands/">
-<link rel="preload" href="/css/copy.css?v=b6d4f2a9" as="style">
+<link rel="preload" href="/css/copy.css?v=d4c7a901" as="style">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
 <meta property="og:title" content="Процесс AI-разработки: от задачи до ревью и Git | AI Development Harness">
-<meta property="og:description" content="Как AI Development Harness организует ADD STEP, PLAN, IMPLEMENT, проверки, REVIEW, FIX, QUICK FIX, RECONCILE и безопасную работу с Git.">
+<meta property="og:description" content="Как AI Development Harness организует STEP ADD, PLAN, IMPLEMENT, проверки, REVIEW, FIX, PROJECT QUICK FIX, RECONCILE и безопасную работу с Git.">
 <meta property="og:url" content="https://ai-development-harness.ru/workflow/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Процесс AI-разработки: от задачи до ревью и Git | AI Development Harness">
-<meta name="twitter:description" content="Как AI Development Harness организует ADD STEP, PLAN, IMPLEMENT, проверки, REVIEW, FIX, QUICK FIX, RECONCILE и безопасную работу с Git.">
+<meta name="twitter:description" content="Как AI Development Harness организует STEP ADD, PLAN, IMPLEMENT, проверки, REVIEW, FIX, PROJECT QUICK FIX, RECONCILE и безопасную работу с Git.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=b6d4f2a9"></script>
-<link rel="stylesheet" href="/css/styles.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-site.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-docs.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/theme.css?v=b6d4f2a9">
+<script src="/js/theme-init.js?v=d4c7a901"></script>
+<link rel="stylesheet" href="/css/styles.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-site.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-docs.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/theme.css?v=d4c7a901">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Процесс разработки", "item": "https://ai-development-harness.ru/workflow/"}]}</script>
 </head>
 <body>
@@ -82,26 +82,26 @@
   <div class="container docs-shell">
     <article class="article">
 <section id="layers"><h2>Каждый этап сохраняет контекст для следующего</h2><p>История чата не является базой знаний. Каждая стадия сохраняет результат в репозитории: PLAN — в задаче, REVIEW — в неизменяемом отчёте, RECONCILE — в отчёте аудита, завершение — в доказательствах выполнения и представлениях состояния.</p><div class="article-note"><strong>Evidence должно оставаться проверяемым.</strong> Буквально захваченный output нельзя подменять пересказом. Если полный output не сохраняется, Harness фиксирует как минимум выполненную команду, exit code и нормализованное <code>Observed</code> с проверяемыми фактами.</div><div class="article-note"><strong>Главная идея:</strong> следующая сессия должна продолжить работу из состояния репозитория, не требуя пересказа предыдущего разговора.</div></section>
-<section id="task"><h2>От запроса к контракту задачи</h2><p><code>ADD STEP: &lt;описание&gt;</code> проверяет дубликаты, выбирает стабильный ID, связывает REQ/ADR, вычисляет зависимости и формирует Goal, Context, Scope, Mutation policy, Out of scope, Acceptance, Verification и Deliverables.</p><p>Код продукта на этом этапе не меняется.</p></section>
+<section id="task"><h2>От запроса к контракту задачи</h2><p><code>STEP ADD: &lt;описание&gt;</code> проверяет дубликаты, выбирает стабильный ID, связывает REQ/ADR, вычисляет зависимости и формирует Goal, Context, Scope, Mutation policy, Out of scope, Acceptance, Verification и Deliverables.</p><p>Код продукта на этом этапе не меняется.</p></section>
 <section id="run"><h2>RUN STEP: автоматический цикл</h2><div class="code-block"><pre><code>PLAN (если нет актуального плана)
   → IMPLEMENT
   → deterministic verification
   → REVIEW
   → [условно security/test review]
-  → FIX ↔ REVIEW (максимум 3 цикла)
+  → FIX ↔ REVIEW (лимит задаёт execution.maxFixReviewCycles, допустимо 1–5, по умолчанию 3)
   → CLOSE</code></pre></div><p>Блокирующая проблема или исчерпание циклов останавливает процесс. Harness не должен скрывать неуспешный результат.</p></section>
-<section id="manual"><h2>Тот же процесс можно запускать вручную</h2><p><code>PLAN STEP-NNN</code> сохраняет технический контекст прямо в задаче. <code>IMPLEMENT</code> работает по сохранённому плану. <code>REVIEW</code> выполняется независимо и выдаёт один из итогов: <strong>PASS</strong>, <strong>FAIL</strong> или <strong>BLOCKED</strong>.</p></section>
-<section id="micro"><h2>Небольшая правка идёт по короткому пути</h2><div class="code-block"><pre><code>QUICK FIX: исправь опечатку…
+<section id="manual"><h2>Тот же процесс можно запускать вручную</h2><p><code>STEP PLAN STEP-NNN</code> сохраняет технический контекст прямо в задаче. <code>IMPLEMENT</code> работает по сохранённому плану. <code>REVIEW</code> выполняется независимо и выдаёт один из итогов: <strong>PASS</strong>, <strong>FAIL</strong> или <strong>BLOCKED</strong>.</p></section>
+<section id="micro"><h2>Небольшая правка идёт по короткому пути</h2><div class="code-block"><pre><code>PROJECT QUICK FIX: исправь опечатку…
         ↓
 proportional check
         ↓
 GIT CHECK
         ↓
-COMMIT</code></pre></div><p>QUICK FIX допустим только без изменения поведения продукта, API, данных, безопасности, архитектуры и зависимостей. Если фактические границы правки шире — Harness останавливает короткий путь и предлагает <code>ADD STEP:</code>.</p></section>
-<section id="reconcile"><h2>Расхождения не скрываются — согласованность восстанавливается явно</h2><p><code>RECONCILE PROJECT</code> сравнивает код, тесты и конфигурацию с REQ, ADR, архитектурой, STEP и доказательствами выполнения. Результат — отчёт аудита и при необходимости корректирующий STEP. Код продукта молча не переписывается.</p></section>
-<section id="git-flow"><h2>Публикация отделена от реализации</h2><div class="code-block"><pre><code>GIT CHECK → COMMIT → PUSH → PR</code></pre></div><p>IMPLEMENT/REVIEW сами не создают commits. Git-операции имеют отдельные правила и проверки безопасности, а force push, hard reset и автоматические merge/rebase не являются поведением Harness по умолчанию.</p></section>
+COMMIT</code></pre></div><p>PROJECT QUICK FIX допустим только без изменения поведения продукта, API, данных, безопасности, архитектуры и зависимостей. Если фактические границы правки шире — Harness останавливает короткий путь и предлагает <code>STEP ADD:</code>.</p></section>
+<section id="reconcile"><h2>Расхождения не скрываются — согласованность восстанавливается явно</h2><p><code>PROJECT RECONCILE</code> сравнивает код, тесты и конфигурацию с REQ, ADR, архитектурой, STEP и доказательствами выполнения. Результат — отчёт аудита и при необходимости корректирующий STEP. Код продукта молча не переписывается.</p></section>
+<section id="git-flow"><h2>Публикация отделена от реализации</h2><div class="code-block"><pre><code>GIT CHECK > COMMIT > PUSH > PR</code></pre></div><p>IMPLEMENT/REVIEW сами не создают commits. Git-операции имеют отдельные правила и проверки безопасности, а force push, hard reset и автоматические merge/rebase не являются поведением Harness по умолчанию.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/getting-started/"><span>Назад</span>Начало работы</a><a href="/commands/"><span>Далее</span>Команды</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#layers">Передача контекста</a><a href="#task">ADD STEP</a><a href="#run">RUN STEP</a><a href="#manual">Ручной режим</a><a href="#micro">QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#git-flow">Git</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#layers">Передача контекста</a><a href="#task">STEP ADD</a><a href="#run">RUN STEP</a><a href="#manual">Ручной режим</a><a href="#micro">PROJECT QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#git-flow">Git</a></aside>
   </div>
 </main>
 <footer class="site-footer">
@@ -118,8 +118,8 @@ COMMIT</code></pre></div><p>QUICK FIX допустим только без из�
     </nav>
   </div>
 </footer>
-<script src="/js/theme.js?v=b6d4f2a9"></script>
-<script src="/js/main.js?v=b6d4f2a9"></script>
-<script type="module" src="/js/search.js?v=b6d4f2a9"></script>
+<script src="/js/theme.js?v=d4c7a901"></script>
+<script src="/js/main.js?v=d4c7a901"></script>
+<script type="module" src="/js/search.js?v=d4c7a901"></script>
 </body>
 </html>
