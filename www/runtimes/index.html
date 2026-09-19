@@ -23,12 +23,12 @@
 <meta name="twitter:title" content="Codex и Claude Code в AI Development Harness">
 <meta name="twitter:description" content="Один протокол AI-разработки, два поддерживаемых runtime adapter: Codex и Claude Code. Модели и effort настраиваются отдельно для специализированных ролей.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=b6d4f2a9"></script>
-<link rel="stylesheet" href="/css/styles.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-site.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-docs.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/theme.css?v=b6d4f2a9">
+<script src="/js/theme-init.js?v=d4c7a901"></script>
+<link rel="stylesheet" href="/css/styles.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-site.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-docs.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/theme.css?v=d4c7a901">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Codex и Claude Code", "item": "https://ai-development-harness.ru/runtimes/"}]}</script>
 </head>
 <body>
@@ -92,8 +92,8 @@ AGENTS.md · REQ · ADR · STEP · skills · policies
 reviewer · security-reviewer · test-reviewer · docs
 mechanic · skill-curator · git-operator · harness-updater</code></pre></div><p>В базовом профиле reasoning-heavy роли получают более сильную модель и высокий effort, implementer — сбалансированный профиль, а механические роли — более дешёвый. Проект может менять эти defaults под собственные ограничения.</p></section>
 <section id="skills"><h2>Skills остаются общими</h2><p>Канонические Harness skills находятся в <code>.agents/skills/&lt;name&gt;/SKILL.md</code>. Claude adapter не создаёт зеркальную копию core skills в <code>.claude/skills/</code>: это избегает расхождения двух версий одного workflow. Project-specific Claude-native skills при необходимости можно добавлять отдельно.</p></section>
-<section id="updates"><h2>Настройки проекта сохраняются при обновлении Harness</h2><p>Tracked role configs Codex и Claude относятся к shared-файлам. <code>UPDATE HARNESS</code> использует BASE / OURS / THEIRS merge и не должен молча перезаписывать локальный выбор model/effort. Неизвестные project-specific файлы внутри adapter-каталогов по умолчанию считаются принадлежащими проекту.</p></section>
-<section id="choose"><h2>Что выбрать</h2><p>Выбирайте тот runtime, которым хотите пользоваться в текущей рабочей среде. Harness не требует использовать оба одновременно: достаточно одного поддерживаемого runtime — Codex или Claude Code. После создания репозитория откройте его в выбранном инструменте и выполните <code>INIT PROJECT</code>.</p><p><a class="text-link" href="/getting-started/">Перейти к началу работы →</a></p></section>
+<section id="updates"><h2>Настройки проекта сохраняются при обновлении Harness</h2><p>Tracked role configs Codex и Claude относятся к shared-файлам. <code>HARNESS UPDATE APPLY</code> использует BASE / OURS / THEIRS merge и не должен молча перезаписывать локальный выбор model/effort. Неизвестные project-specific файлы внутри adapter-каталогов по умолчанию считаются принадлежащими проекту.</p></section>
+<section id="choose"><h2>Что выбрать</h2><p>Выбирайте тот runtime, которым хотите пользоваться в текущей рабочей среде. Harness не требует использовать оба одновременно: достаточно одного поддерживаемого runtime — Codex или Claude Code. После создания репозитория откройте его в выбранном инструменте и выполните <code>PROJECT INIT</code>.</p><p><a class="text-link" href="/getting-started/">Перейти к началу работы →</a></p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/architecture/"><span>Назад</span>Архитектура Harness</a><a href="/repository/"><span>Далее</span>Репозиторий как память</a></nav></article>
     <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#protocol">Общий протокол</a><a href="#codex">Codex</a><a href="#claude">Claude Code</a><a href="#roles">Роли</a><a href="#skills">Skills</a><a href="#updates">Обновления</a><a href="#choose">Что выбрать</a></aside>
   </div>
@@ -112,8 +112,8 @@ mechanic · skill-curator · git-operator · harness-updater</code></pre></div><
     </nav>
   </div>
 </footer>
-<script src="/js/theme.js?v=b6d4f2a9"></script>
-<script src="/js/main.js?v=b6d4f2a9"></script>
-<script type="module" src="/js/search.js?v=b6d4f2a9"></script>
+<script src="/js/theme.js?v=d4c7a901"></script>
+<script src="/js/main.js?v=d4c7a901"></script>
+<script type="module" src="/js/search.js?v=d4c7a901"></script>
 </body>
 </html>
