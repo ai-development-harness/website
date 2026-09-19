@@ -83,25 +83,25 @@
     <article class="article">
 <section id="layers"><h2>Каждый этап сохраняет контекст для следующего</h2><p>История чата не является базой знаний. Каждая стадия сохраняет результат в репозитории: PLAN — в задаче, REVIEW — в неизменяемом отчёте, RECONCILE — в отчёте аудита, завершение — в доказательствах выполнения и представлениях состояния.</p><div class="article-note"><strong>Evidence должно оставаться проверяемым.</strong> Буквально захваченный output нельзя подменять пересказом. Если полный output не сохраняется, Harness фиксирует как минимум выполненную команду, exit code и нормализованное <code>Observed</code> с проверяемыми фактами.</div><div class="article-note"><strong>Главная идея:</strong> следующая сессия должна продолжить работу из состояния репозитория, не требуя пересказа предыдущего разговора.</div></section>
 <section id="task"><h2>От запроса к контракту задачи</h2><p><code>STEP ADD: &lt;описание&gt;</code> проверяет дубликаты, выбирает стабильный ID, связывает REQ/ADR, вычисляет зависимости и формирует Goal, Context, Scope, Mutation policy, Out of scope, Acceptance, Verification и Deliverables.</p><p>Код продукта на этом этапе не меняется.</p></section>
-<section id="run"><h2>STEP RUN: автоматический цикл</h2><div class="code-block"><pre><code>PLAN (если нет актуального плана)
-  → IMPLEMENT
+<section id="run"><h2>STEP RUN: автоматический цикл</h2><div class="code-block"><pre><code>STEP PLAN (если нет актуального плана)
+  → STEP IMPLEMENT
   → deterministic verification
-  → REVIEW
+  → STEP REVIEW
   → [условно security/test review]
-  → FIX ↔ REVIEW (лимит задаёт execution.maxFixReviewCycles, допустимо 1–5, по умолчанию 3)
+  → STEP FIX ↔ STEP REVIEW (лимит задаёт execution.maxFixReviewCycles, допустимо 1–5, по умолчанию 3)
   → CLOSE</code></pre></div><p>Блокирующая проблема или исчерпание циклов останавливает процесс. Harness не должен скрывать неуспешный результат.</p></section>
-<section id="manual"><h2>Тот же процесс можно запускать вручную</h2><p><code>STEP PLAN STEP-NNN</code> сохраняет технический контекст прямо в задаче. <code>IMPLEMENT</code> работает по сохранённому плану. <code>REVIEW</code> выполняется независимо и выдаёт один из итогов: <strong>PASS</strong>, <strong>FAIL</strong> или <strong>BLOCKED</strong>.</p></section>
+<section id="manual"><h2>Тот же процесс можно запускать вручную</h2><p><code>STEP PLAN STEP-NNN</code> сохраняет технический контекст прямо в задаче. <code>STEP IMPLEMENT STEP-NNN</code> работает по сохранённому плану. <code>STEP REVIEW STEP-NNN</code> выполняется независимо и выдаёт один из итогов: <strong>PASS</strong>, <strong>FAIL</strong> или <strong>BLOCKED</strong>.</p></section>
 <section id="micro"><h2>Небольшая правка идёт по короткому пути</h2><div class="code-block"><pre><code>PROJECT QUICK FIX: исправь опечатку…
         ↓
 proportional check
         ↓
 GIT CHECK
         ↓
-COMMIT</code></pre></div><p>PROJECT QUICK FIX допустим только без изменения поведения продукта, API, данных, безопасности, архитектуры и зависимостей. Если фактические границы правки шире — Harness останавливает короткий путь и предлагает <code>STEP ADD:</code>.</p></section>
+GIT COMMIT</code></pre></div><p>PROJECT QUICK FIX допустим только без изменения поведения продукта, API, данных, безопасности, архитектуры и зависимостей. Если фактические границы правки шире — Harness останавливает короткий путь и предлагает <code>STEP ADD:</code>.</p></section>
 <section id="reconcile"><h2>Расхождения не скрываются — согласованность восстанавливается явно</h2><p><code>PROJECT RECONCILE</code> сравнивает код, тесты и конфигурацию с REQ, ADR, архитектурой, STEP и доказательствами выполнения. Результат — отчёт аудита и при необходимости корректирующий STEP. Код продукта молча не переписывается.</p></section>
-<section id="git-flow"><h2>Публикация отделена от реализации</h2><div class="code-block"><pre><code>GIT CHECK > COMMIT > PUSH > PR</code></pre></div><p>IMPLEMENT/REVIEW сами не создают commits. Git-операции имеют отдельные правила и проверки безопасности, а force push, hard reset и автоматические merge/rebase не являются поведением Harness по умолчанию.</p></section>
+<section id="git-flow"><h2>Публикация отделена от реализации</h2><div class="code-block"><pre><code>GIT CHECK > COMMIT > PUSH > PR</code></pre></div><p>STEP IMPLEMENT / STEP REVIEW сами не создают commits. Git-операции имеют отдельные правила и проверки безопасности, а force push, hard reset и автоматические merge/rebase не являются поведением Harness по умолчанию.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/getting-started/"><span>Назад</span>Начало работы</a><a href="/commands/"><span>Далее</span>Команды</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#layers">Передача контекста</a><a href="#task">STEP ADD</a><a href="#run">STEP RUN</a><a href="#manual">Ручной режим</a><a href="#micro">PROJECT QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#git-flow">Git</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#layers">Передача контекста</a><a href="#task">STEP ADD</a><a href="#run">STEP RUN</a><a href="#manual">Ручной режим</a><a href="#micro">PROJECT QUICK FIX</a><a href="#reconcile">PROJECT RECONCILE</a><a href="#git-flow">Git</a></aside>
   </div>
 </main>
 <footer class="site-footer">
