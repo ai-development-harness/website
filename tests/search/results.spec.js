@@ -43,7 +43,7 @@ test.describe('Поиск — результаты', () => {
     const upperCaseResults = await searchFor(page, 'HARNESS UPDATE');
     const firstHref = await upperCaseResults.first().getAttribute('href');
 
-    const lowerCaseResults = await searchFor(page, 'update harness');
+    const lowerCaseResults = await searchFor(page, 'harness update');
     await expect(lowerCaseResults.first()).toHaveAttribute('href', firstHref);
   });
 
