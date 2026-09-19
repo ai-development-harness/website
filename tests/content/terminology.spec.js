@@ -48,10 +48,15 @@ test.describe('Контент — русская терминология', () =
   for (const publicPage of PUBLIC_PAGES) {
     test(`страница ${publicPage.path} не содержит устаревших форм команд Harness`, async ({ page }) => {
       await page.goto(publicPage.path);
-      const text = await page.locator('body').innerText();
+      const lines = (await page.locator('body').innerText())
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean);
 
-      for (const pattern of DEPRECATED_COMMAND_PATTERNS) {
-        expect(text).not.toMatch(pattern);
+      for (const line of lines) {
+        for (const pattern of DEPRECATED_COMMAND_PATTERNS) {
+          expect(line).not.toMatch(pattern);
+        }
       }
     });
   }
