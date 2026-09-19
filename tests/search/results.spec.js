@@ -83,7 +83,7 @@ test.describe('Поиск — результаты', () => {
     await openSearch(page);
     const results = await searchFor(page, 'STEP ADD');
 
-    await expect(results.first()).toHaveAttribute('href', '/commands/#command-add-step');
+    await expect(results.first()).toHaveAttribute('href', '/commands/#command-step-add');
   });
 
   test('переходит к конкретной команде и закрывает диалог', async ({ page }) => {
@@ -91,9 +91,9 @@ test.describe('Поиск — результаты', () => {
     const results = await searchFor(page, 'STEP ADD');
     await results.first().click();
 
-    await expect(page).toHaveURL(/\/commands\/#command-add-step$/);
-    await expect(page.locator('#command-add-step')).toBeVisible();
-    await expect(page.locator('#command-add-step code')).toContainText('STEP ADD');
+    await expect(page).toHaveURL(/\/commands\/#command-step-add$/);
+    await expect(page.locator('#command-step-add')).toBeVisible();
+    await expect(page.locator('#command-step-add code')).toContainText('STEP ADD');
     await expect(page.locator('.search-dialog')).not.toHaveAttribute('open', '');
   });
 
