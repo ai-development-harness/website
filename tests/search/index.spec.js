@@ -87,9 +87,9 @@ test.describe('Поиск — поисковый индекс', () => {
         .map((entry) => entry.title);
     }, SEARCH_MODULE_URL);
 
-    expect(commands).toContain('INIT PROJECT');
-    expect(commands.some((command) => command.startsWith('ADD STEP'))).toBeTruthy();
-    expect(commands.some((command) => command.startsWith('UPDATE HARNESS'))).toBeTruthy();
+    expect(commands).toContain('PROJECT INIT');
+    expect(commands.some((command) => command.startsWith('STEP ADD'))).toBeTruthy();
+    expect(commands.some((command) => command.startsWith('HARNESS UPDATE APPLY'))).toBeTruthy();
   });
 
   test('не хранит нормализованные копии текста в индексе', async ({ page }) => {

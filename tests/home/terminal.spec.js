@@ -20,16 +20,16 @@ test.describe('Главная страница — демонстрационн�
     await expect(terminal.locator('pre code')).toContainText('RESULT › доказательства выполнения + отчёт ревью');
   });
 
-  test('последовательно показывает создание STEP и запуск RUN STEP', async ({ page }) => {
+  test('последовательно показывает создание STEP и запуск STEP RUN', async ({ page }) => {
     await page.goto('/');
     const terminal = page.locator('.terminal-panel');
     await terminal.scrollIntoViewIfNeeded();
     await expect(terminal).toHaveClass(/is-complete/, { timeout: 12_000 });
 
     const text = await terminal.locator('pre code').innerText();
-    const addIndex = text.indexOf('ADD STEP: Добавить экспорт отчётов в PDF');
+    const addIndex = text.indexOf('STEP ADD: Добавить экспорт отчётов в PDF');
     const createdIndex = text.indexOf('CREATED › STEP-024');
-    const runIndex = text.indexOf('RUN STEP-024');
+    const runIndex = text.indexOf('STEP RUN STEP-024');
     const resultIndex = text.indexOf('RESULT › доказательства выполнения + отчёт ревью');
 
     expect(addIndex).toBeGreaterThanOrEqual(0);
@@ -47,8 +47,8 @@ test.describe('Главная страница — демонстрационн�
     await page.waitForTimeout(700);
 
     await expect(terminal).not.toHaveAttribute('data-animated', 'true');
-    await expect(terminal.locator('pre code')).toContainText('ADD STEP: Добавить экспорт отчётов в PDF');
-    await expect(terminal.locator('pre code')).toContainText('RUN STEP-024');
+    await expect(terminal.locator('pre code')).toContainText('STEP ADD: Добавить экспорт отчётов в PDF');
+    await expect(terminal.locator('pre code')).toContainText('STEP RUN STEP-024');
   });
 
   test('курсор анимации не остаётся после завершения сценария', async ({ page }) => {

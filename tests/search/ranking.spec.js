@@ -10,10 +10,10 @@ test.describe('Поиск — нормализация и ранжировани
   test('нормализует регистр, лишние пробелы и букву ё', async ({ page }) => {
     const result = await page.evaluate(async (moduleUrl) => {
       const { normalizeSearchText } = await import(moduleUrl);
-      return normalizeSearchText('  ЁЛКА   ADD   STEP  ');
+      return normalizeSearchText('  ЁЛКА   STEP   ADD  ');
     }, SEARCH_MODULE_URL);
 
-    expect(result).toBe('елка add step');
+    expect(result).toBe('елка step add');
   });
 
   test('точное совпадение заголовка получает более высокий вес', async ({ page }) => {
@@ -22,12 +22,12 @@ test.describe('Поиск — нормализация и ранжировани
       const base = {
         pageTitle: 'Команды Harness',
         keywords: '',
-        text: 'ADD STEP создаёт новую задачу',
+        text: 'STEP ADD создаёт новую задачу',
         kind: 'section',
       };
       return {
-        exact: scoreSearchItem({ ...base, title: 'ADD STEP' }, 'ADD STEP'),
-        textOnly: scoreSearchItem({ ...base, title: 'Инициализация' }, 'ADD STEP'),
+        exact: scoreSearchItem({ ...base, title: 'STEP ADD' }, 'STEP ADD'),
+        textOnly: scoreSearchItem({ ...base, title: 'Инициализация' }, 'STEP ADD'),
       };
     }, SEARCH_MODULE_URL);
 
@@ -46,19 +46,19 @@ test.describe('Поиск — нормализация и ранжировани
               fragment: 'bootstrap',
               kind: 'section',
               title: 'Инициализация',
-              text: 'ADD STEP создаёт задачу',
+              text: 'STEP ADD создаёт задачу',
             },
             {
               fragment: 'bootstrap',
               kind: 'command',
-              title: 'ADD STEP',
-              text: 'ADD STEP создаёт задачу',
+              title: 'STEP ADD',
+              text: 'STEP ADD создаёт задачу',
             },
           ],
         },
       };
 
-      return rankSearchResults(index, 'ADD STEP').map((searchResult) => searchResult.kind);
+      return rankSearchResults(index, 'STEP ADD').map((searchResult) => searchResult.kind);
     }, SEARCH_MODULE_URL);
 
     expect(order[0]).toBe('command');
@@ -75,10 +75,10 @@ test.describe('Поиск — нормализация и ранжировани
             fragment: 'updates',
             kind: 'section',
             title: 'Обновление',
-            text: 'UPDATE HARNESS',
+            text: 'HARNESS UPDATE',
           }],
         },
-      }, 'UPDATE HARNESS конфликт').length;
+      }, 'HARNESS UPDATE конфликт').length;
     }, SEARCH_MODULE_URL);
 
     expect(count).toBe(0);
@@ -111,13 +111,13 @@ test.describe('Поиск — нормализация и ранжировани
           entries: [{
             fragment: 'execution',
             kind: 'command',
-            title: 'RUN STEP-NNN',
+            title: 'STEP RUN STEP-NNN',
             text: 'Оркестрирует выполнение шага',
           }],
         },
       };
 
-      return rankSearchResults(index, 'RUN STEP-NNN')[0].href;
+      return rankSearchResults(index, 'STEP RUN STEP-NNN')[0].href;
     }, SEARCH_MODULE_URL);
 
     expect(href).toBe('/commands/#execution');

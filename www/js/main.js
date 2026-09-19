@@ -143,7 +143,7 @@ async function runTerminalDemo() {
   await typeTerminalLine({
     prefix: 'YOU ›',
     prefixClass: 'prompt',
-    text: 'ADD STEP: Добавить экспорт отчётов в PDF',
+    text: 'STEP ADD: Добавить экспорт отчётов в PDF',
     speed: 28,
   }, 420);
 
@@ -161,14 +161,14 @@ async function runTerminalDemo() {
   await typeTerminalLine({
     prefix: 'YOU ›',
     prefixClass: 'prompt',
-    text: 'RUN STEP-024',
+    text: 'STEP RUN STEP-024',
     speed: 34,
     gap: true,
   }, 460);
 
   await typeTerminalLine({
     textClass: 'command',
-    text: 'PLAN → IMPLEMENT → VERIFY → REVIEW',
+    text: 'STEP PLAN → STEP IMPLEMENT → STEP REVIEW',
     speed: 24,
   }, 560);
 
@@ -206,9 +206,9 @@ if (terminalPanel && !reduceMotion) {
 const COPY_RESET_DELAY = 1600;
 
 // Команды Harness распознаём отдельно от обычного кода. Это позволяет добавить
-// кнопку к блоку с INIT PROJECT / RUN STEP и не показывать её, например, рядом
+// кнопку к блоку с PROJECT INIT / STEP RUN и не показывать её, например, рядом
 // с архитектурной ASCII-схемой, которая не предназначена для выполнения.
-const HARNESS_COMMAND_PATTERN = /^(?:INIT PROJECT|ADD STEP|PLAN STEP|NEXT STEP|STATUS PROJECT|IMPLEMENT STEP|REVIEW STEP|FIX STEP|RUN STEP|AUDIT STEP|RECONCILE PROJECT|RELEASE CHECK|QUICK FIX|FIND SKILL|INSTALL SKILL|CREATE SKILL|GENERATE GITHUB TEMPLATES|CHECK HARNESS UPDATE|UPDATE HARNESS|GIT CHECK|COMMIT|PUSH|PR|SYNC)(?:\b|:|\s|$)/i;
+const HARNESS_COMMAND_PATTERN = /^(?:PROJECT (?:INIT|STATUS|RECONCILE|QUICK FIX)|STEP (?:ADD|NEXT|PLAN|IMPLEMENT|REVIEW|FIX|RUN|AUDIT)|SKILL (?:FIND|INSTALL|CREATE)|GITHUB GENERATE TEMPLATES|RELEASE CHECK|HARNESS UPDATE (?:CHECK|APPLY)|GIT (?:CHECK|COMMIT|PUSH|PR|SYNC))(?:\b|:|\s|$)/i;
 
 // Набор намеренно ограничен общеупотребимыми CLI-командами, которые реально
 // встречаются или могут появиться в документации сайта. Не пытаемся объявить

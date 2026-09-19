@@ -24,13 +24,13 @@
 <meta name="twitter:title" content="AI Development Harness — репозиторий как память AI-разработки">
 <meta name="twitter:description" content="Один воспроизводимый процесс для Codex и Claude Code: требования, ADR, STEP, доказательства, ревью и Git остаются в репозитории как устойчивый контекст проекта.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=b6d4f2a9"></script>
-<link rel="stylesheet" href="/css/styles.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-site.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-docs.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-hero-redesign.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/theme.css?v=b6d4f2a9">
+<script src="/js/theme-init.js?v=b7e20d64"></script>
+<link rel="stylesheet" href="/css/styles.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/styles-site.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/styles-docs.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/styles-hero-redesign.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/theme.css?v=b7e20d64">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareSourceCode", "name": "AI Development Harness", "description": "Runtime-neutral repository protocol with Codex and Claude Code adapters for durable AI-assisted development workflows.", "codeRepository": "https://github.com/ai-development-harness/ai-development-harness-template", "url": "https://ai-development-harness.ru/"}</script>
 </head>
 <body>
@@ -89,13 +89,13 @@
         <div class="timeline-kicker">Как работает AI Development Harness</div>
         <div class="hero-timeline">
           <div class="workflow-step"><span class="workflow-no">01</span><span class="workflow-icon">▧</span><div class="workflow-copy"><b>Описание проекта</b><span>Опишите проект своими словами</span></div><div class="workflow-outcome">Идеи → цели → контекст</div></div>
-          <div class="workflow-step"><span class="workflow-no">02</span><span class="workflow-icon">□</span><div class="workflow-copy"><b>INIT PROJECT</b><span>Harness создаёт базу знаний проекта и дорожную карту</span></div><div class="workflow-outcome">Готовая основа проекта</div></div>
-          <div class="workflow-step"><span class="workflow-no">03</span><span class="workflow-icon">≡</span><div class="workflow-copy"><b>ADD STEP</b><span>Новая задача превращается в контракт задачи</span></div><div class="workflow-outcome">Границы → критерии → зависимости</div></div>
-          <div class="workflow-step"><span class="workflow-no">04</span><span class="workflow-icon">▷</span><div class="workflow-copy"><b>RUN STEP</b><span>План, реализация и проверки идут по правилам проекта</span></div><div class="workflow-outcome">План → код → проверки</div></div>
+          <div class="workflow-step"><span class="workflow-no">02</span><span class="workflow-icon">□</span><div class="workflow-copy"><b>PROJECT INIT</b><span>Harness создаёт базу знаний проекта и дорожную карту</span></div><div class="workflow-outcome">Готовая основа проекта</div></div>
+          <div class="workflow-step"><span class="workflow-no">03</span><span class="workflow-icon">≡</span><div class="workflow-copy"><b>STEP ADD</b><span>Новая задача превращается в контракт задачи</span></div><div class="workflow-outcome">Границы → критерии → зависимости</div></div>
+          <div class="workflow-step"><span class="workflow-no">04</span><span class="workflow-icon">▷</span><div class="workflow-copy"><b>STEP RUN</b><span>План, реализация и проверки идут по правилам проекта</span></div><div class="workflow-outcome">План → код → проверки</div></div>
           <div class="workflow-step"><span class="workflow-no">05</span><span class="workflow-icon">⌕</span><div class="workflow-copy"><b>Ревью и доказательства</b><span>Независимое ревью сверяет задачу, реализацию и доказательства</span></div><div class="workflow-outcome">PASS / FAIL / BLOCKED</div></div>
-          <div class="workflow-step"><span class="workflow-no">06</span><span class="workflow-icon">⑂</span><div class="workflow-copy"><b>Git</b><span>Публикация изменений выполняется отдельными безопасными командами</span></div><div class="workflow-outcome">Commit → push → PR</div></div>
+          <div class="workflow-step"><span class="workflow-no">06</span><span class="workflow-icon">⑂</span><div class="workflow-copy"><b>Git</b><span>Публикация изменений выполняется отдельными безопасными командами</span></div><div class="workflow-outcome">check → commit → push → PR</div></div>
         </div>
-        <div class="timeline-note"><strong>Стабильный процесс.</strong> Контекст остаётся в репозитории, а не в истории одного чата.</div>
+        <div class="timeline-note"><strong>Стабильный процесс.</strong> Команды сначала проходят формальную проверку переходов, а незавершённое выполнение можно восстановить из локального Execution Status.</div>
       </div>
     </div>
 
@@ -105,22 +105,22 @@
           <div class="eyebrow">Практический пример</div>
           <h2 class="hero-demo-title">Одна короткая команда превращается в проверяемый процесс</h2>
         </div>
-        <p><code>ADD STEP</code> сначала создаёт сохраняемый контракт задачи. Затем <code>RUN STEP</code> проходит планирование → реализацию → проверку → ревью и оставляет доказательства выполнения. <a class="text-link" href="/commands/">Все команды →</a></p>
+        <p><code>STEP ADD</code> сначала создаёт сохраняемый контракт задачи. Затем <code>STEP RUN</code> проходит планирование → реализацию → проверку → ревью и оставляет доказательства выполнения. <a class="text-link" href="/commands/">Все команды →</a></p>
       </div>
-      <div class="terminal-panel" data-terminal-demo><div class="panel-bar"><span class="dots">● ● ●</span><b>сеанс проекта</b></div><pre><code aria-label="Пример сессии Harness"><span class="prompt">YOU ›</span> <span data-terminal-command="ADD STEP: Добавить экспорт отчётов в PDF">ADD STEP: Добавить экспорт отчётов в PDF</span>
+      <div class="terminal-panel" data-terminal-demo><div class="panel-bar"><span class="dots">● ● ●</span><b>сеанс проекта</b></div><pre><code aria-label="Пример сессии Harness"><span class="prompt">YOU ›</span> <span data-terminal-command="STEP ADD: Добавить экспорт отчётов в PDF">STEP ADD: Добавить экспорт отчётов в PDF</span>
 
 <span class="muted" data-terminal-output="HARNESS › проверяю REQ / ADR / dependencies…">HARNESS › проверяю REQ / ADR / dependencies…</span>
 <span class="pass" data-terminal-output="CREATED › STEP-024">CREATED › STEP-024</span>
 <span data-terminal-output="Scope · Out of scope · Acceptance · Verification">Scope · Out of scope · Acceptance · Verification</span>
 
-<span class="prompt">YOU ›</span> <span data-terminal-command="RUN STEP-024">RUN STEP-024</span>
-<span class="command" data-terminal-output="PLAN → IMPLEMENT → VERIFY → REVIEW">PLAN → IMPLEMENT → VERIFY → REVIEW</span>
+<span class="prompt">YOU ›</span> <span data-terminal-command="STEP RUN STEP-024">STEP RUN STEP-024</span>
+<span class="command" data-terminal-output="STEP PLAN → STEP IMPLEMENT → STEP REVIEW">STEP PLAN → STEP IMPLEMENT → STEP REVIEW</span>
 <span class="pass" data-terminal-output="RESULT › durable evidence + review report">RESULT › durable evidence + review report</span></code></pre></div>
     </div>
 
     <div class="hero-facts" aria-label="Ключевые свойства">
       <div class="hero-fact"><span class="hero-fact-icon">◇</span><b>Открытый шаблон</b><span>Публичный шаблон репозитория, который становится вашим проектом.</span></div>
-      <div class="hero-fact"><span class="hero-fact-icon">⌘</span><b>Основан на Git</b><span>Контекст, изменения и передача работы живут рядом с кодом.</span></div>
+      <div class="hero-fact"><span class="hero-fact-icon">⌘</span><b>Проверяемые переходы</b><span>Цепочки команд проходят формальную проверку по канонической таблице переходов до запуска runtime.</span></div>
       <div class="hero-fact"><span class="hero-fact-icon">⇄</span><b>Codex и Claude Code</b><span>Два runtime adapter используют один Harness protocol и общую память проекта.</span></div>
     </div>
   </div>
@@ -170,7 +170,7 @@
 </section>
 
 <section class="section section--soft">
-  <div class="container"><div class="section-intro"><div class="eyebrow">Не всё требует STEP</div><h2 class="section-title section-title--sm">Опечатка не должна превращаться в церемонию</h2><p class="section-lead">Для небольших изменений с низким риском Harness оставляет короткий путь. Если правка меняет поведение, API, данные, безопасность, архитектуру или зависимости — выполнение прекращается.</p></div><div class="split-cards"><div class="callout callout--success"><strong>Мелкая правка</strong><p><code>QUICK FIX: исправь опечатку…</code><br>или ручная правка → <code>GIT CHECK</code> → <code>COMMIT</code>.</p></div><div class="callout callout--warning"><strong>Изменение контракта или риска</strong><p>Новая возможность или риск → <code>ADD STEP:</code> → контракт задачи → обычный цикл ревью и доказательств.</p></div></div></div>
+  <div class="container"><div class="section-intro"><div class="eyebrow">Не всё требует STEP</div><h2 class="section-title section-title--sm">Опечатка не должна превращаться в церемонию</h2><p class="section-lead">Для небольших изменений с низким риском Harness оставляет короткий путь. Если правка меняет поведение, API, данные, безопасность, архитектуру или зависимости — выполнение прекращается.</p></div><div class="split-cards"><div class="callout callout--success"><strong>Мелкая правка</strong><p><code>PROJECT QUICK FIX: исправь опечатку…</code><br>или ручная правка → <code>GIT CHECK</code> → <code>GIT COMMIT</code>.</p></div><div class="callout callout--warning"><strong>Изменение контракта или риска</strong><p>Новая возможность или риск → <code>STEP ADD:</code> → контракт задачи → обычный цикл ревью и доказательств.</p></div></div></div>
 </section>
 
 <section class="section" id="audience">
@@ -178,7 +178,7 @@
 </section>
 
 <section class="section section--soft">
-  <div class="container"><div class="section-intro"><div class="eyebrow">Разобраться подробнее</div><h2 class="section-title section-title--sm">Документация простым языком</h2></div><div class="docs-grid"><a class="doc-card" href="/getting-started/"><span class="meta">Начало</span><h3>Первый проект</h3><p>Требования к окружению, описание проекта, INIT PROJECT и первый безопасный цикл Git.</p></a><a class="doc-card" href="/workflow/"><span class="meta">Процесс</span><h3>Жизненный цикл работы</h3><p>Как связаны ADD, PLAN, IMPLEMENT, REVIEW, QUICK FIX и RECONCILE.</p></a><a class="doc-card" href="/commands/"><span class="meta">Справочник</span><h3>Команды Harness</h3><p>Стабильный человеко-машинный интерфейс: от INIT до UPDATE HARNESS и PR.</p></a><a class="doc-card" href="/architecture/"><span class="meta">Модель</span><h3>Архитектура контекста</h3><p>Протокол, база знаний, реализация, канонические источники и представления состояния.</p></a><a class="doc-card" href="/repository/"><span class="meta">Git</span><h3>Репозиторий как память</h3><p>Почему новая сессия восстанавливает контекст из файлов и доказательств выполнения.</p></a><a class="doc-card" href="/maintenance/"><span class="meta">Поддержка</span><h3>Поддержка и обновление</h3><p>Расхождения, RECONCILE, мелкие правки, фиксация версии и безопасное самообновление.</p></a></div></div>
+  <div class="container"><div class="section-intro"><div class="eyebrow">Разобраться подробнее</div><h2 class="section-title section-title--sm">Документация простым языком</h2></div><div class="docs-grid"><a class="doc-card" href="/getting-started/"><span class="meta">Начало</span><h3>Первый проект</h3><p>Требования к окружению, описание проекта, PROJECT INIT и первый безопасный цикл Git.</p></a><a class="doc-card" href="/workflow/"><span class="meta">Процесс</span><h3>Жизненный цикл работы</h3><p>Как связаны STEP ADD, STEP PLAN, STEP IMPLEMENT, STEP REVIEW, PROJECT QUICK FIX и PROJECT RECONCILE.</p></a><a class="doc-card" href="/commands/"><span class="meta">Справочник</span><h3>Команды Harness</h3><p>Стабильный человеко-машинный интерфейс: от PROJECT INIT до HARNESS UPDATE APPLY и GIT PR.</p></a><a class="doc-card" href="/architecture/"><span class="meta">Модель</span><h3>Архитектура контекста</h3><p>Протокол, база знаний, реализация, канонические источники и представления состояния.</p></a><a class="doc-card" href="/repository/"><span class="meta">Git</span><h3>Репозиторий как память</h3><p>Почему новая сессия восстанавливает контекст из файлов и доказательств выполнения.</p></a><a class="doc-card" href="/maintenance/"><span class="meta">Поддержка</span><h3>Поддержка и обновление</h3><p>Расхождения, PROJECT RECONCILE, мелкие правки, фиксация версии и безопасное самообновление.</p></a></div></div>
 </section>
 
 <section class="cta-section">
@@ -186,7 +186,7 @@
     <div class="cta-box">
       <div class="cta-copy">
         <h2 class="cta-title">Начните с описания проекта. Остальную структуру Harness соберёт в репозитории сам.</h2>
-        <p>Создайте проект из шаблона, заполните локальный <code>PROJECT_BRIEF.local.md</code>, откройте репозиторий в Codex или Claude Code и выполните <code>INIT PROJECT</code>.</p>
+        <p>Создайте проект из шаблона, заполните локальный <code>PROJECT_BRIEF.local.md</code>, откройте репозиторий в Codex или Claude Code и выполните <code>PROJECT INIT</code>.</p>
         <a class="button button--primary" href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон <span>→</span></a>
       </div>
       <div class="cta-quickstart" aria-label="Три шага до запуска">
@@ -194,7 +194,7 @@
         <ol class="cta-steps">
           <li><span class="cta-step-no">01</span><div><strong>Создайте проект</strong><small>Используйте шаблон GitHub как основу нового репозитория.</small></div></li>
           <li><span class="cta-step-no">02</span><div><strong>Заполните описание проекта</strong><small><code>PROJECT_BRIEF.local.md</code></small></div></li>
-          <li><span class="cta-step-no">03</span><div><strong>Откройте и запустите Harness</strong><small>Codex или Claude Code → <code>INIT PROJECT</code></small></div></li>
+          <li><span class="cta-step-no">03</span><div><strong>Откройте и запустите Harness</strong><small>Codex или Claude Code → <code>PROJECT INIT</code></small></div></li>
         </ol>
       </div>
     </div>
@@ -215,9 +215,9 @@
     </nav>
   </div>
 </footer>
-<script src="/js/release.js?v=b6d4f2a9"></script>
-<script src="/js/theme.js?v=b6d4f2a9"></script>
-<script src="/js/main.js?v=b6d4f2a9"></script>
-<script type="module" src="/js/search.js?v=b6d4f2a9"></script>
+<script src="/js/release.js?v=b7e20d64"></script>
+<script src="/js/theme.js?v=b7e20d64"></script>
+<script src="/js/main.js?v=b7e20d64"></script>
+<script type="module" src="/js/search.js?v=b7e20d64"></script>
 </body>
 </html>

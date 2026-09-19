@@ -23,12 +23,12 @@
 <meta name="twitter:title" content="Git-репозиторий как память AI-проекта | AI Development Harness">
 <meta name="twitter:description" content="Как AI Development Harness превращает Git-репозиторий в долговременную память проекта: требования, ADR, STEP, передача контекста, доказательства, ревью и восстановление согласованности.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=b6d4f2a9"></script>
-<link rel="stylesheet" href="/css/styles.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-site.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-docs.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/theme.css?v=b6d4f2a9">
+<script src="/js/theme-init.js?v=b7e20d64"></script>
+<link rel="stylesheet" href="/css/styles.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/styles-site.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/styles-docs.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=b7e20d64">
+<link rel="stylesheet" href="/css/theme.css?v=b7e20d64">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Репозиторий как долговременная память", "item": "https://ai-development-harness.ru/repository/"}]}</script>
 </head>
 <body>
@@ -84,6 +84,8 @@
 <section id="layout"><h2>Где живёт контекст</h2><div class="code-block"><pre><code>.project/manifest.yaml              protocol release + project state
 .project/harness.lock.json          known BASE текущего Harness release
 .project/harness-update-graph.json  допустимый route обновления + latest
+.project/command-transitions.json    канонические переходы команд
+.project/local/execution/            локальное operational state для recovery
 .project/*.toml                     update/integrity/Git policies
 .codex/                             Codex role/model configuration
 CLAUDE.md + .claude/                Claude Code bridge and role configuration
@@ -98,17 +100,17 @@ planning/reviews/                   immutable review reports
 planning/audits/                    reconcile/audit reports
 planning/harness-updates/           self-update reports
 code / tests / config               фактическая реализация</code></pre></div><p>Runtime-specific конфигурация находится рядом с общим protocol layer, но сама память проекта не принадлежит ни Codex, ни Claude Code. Update graph тоже не является baseline или исполняемой миграцией: он только задаёт допустимый маршрут между release tags, тогда как содержимое Harness для каждого hop читается из immutable release.</p></section>
-<section id="handoff"><h2>Сохраняемый контекст заменяет «помни наш прошлый чат»</h2><div class="code-block"><pre><code>ADD        → task contract
-PLAN       → Implementation plan внутри STEP
-IMPLEMENT  → code/tests + verification evidence
-REVIEW     → immutable review report
-FIX        → изменения по конкретным findings
-RECONCILE  → audit report / corrective STEP</code></pre></div><p>Каждый переход оставляет следующему агенту или новой сессии конкретный вход для продолжения работы.</p></section>
-<section id="git-native"><h2>Git хранит историю, но Harness не сводится к commits</h2><p>Git показывает <em>что</em> изменилось и когда. REQ, ADR, STEP и доказательства выполнения добавляют <em>зачем</em>, в каких границах, по каким критериям и с каким результатом ревью. Поэтому история Git и база знаний проекта дополняют друг друга.</p></section>
-<section id="local"><h2>Локальный исходный контекст остаётся локальным</h2><p><code>PROJECT_BRIEF.local.md</code> предназначен для незрелых идей, приватных ссылок и временных заметок и заранее исключён из Git. После INIT нормализованный контекст переносится в отслеживаемую документацию проекта.</p></section>
-<section id="drift"><h2>Память требует проверки согласованности</h2><p>Ручные hotfix, устаревшие статусы и расхождения документации неизбежны. Поэтому <code>RECONCILE PROJECT</code> сравнивает уровни истины репозитория и создаёт явный отчёт аудита или корректирующую работу вместо скрытого исправления.</p></section>
+<section id="handoff"><h2>Сохраняемый контекст заменяет «помни наш прошлый чат»</h2><div class="code-block" data-copy="false"><pre><code>STEP ADD          → task contract
+STEP PLAN         → Implementation plan внутри STEP
+STEP IMPLEMENT    → code/tests + verification evidence
+STEP REVIEW       → immutable review report
+STEP FIX          → изменения по конкретным findings
+PROJECT RECONCILE → audit report / corrective STEP</code></pre></div><p>Каждый переход оставляет следующему агенту или новой сессии конкретный вход для продолжения работы.</p></section>
+<section id="execution-status"><h2>Execution Status — локальная операционная память, а не журнал аудита</h2><p><code>.project/local/execution/execution-status.json</code> хранит root command, режим выполнения, текущую canonical command, попытку, status/result и данные, нужные resolver для продолжения после сбоя. Файл нужен для recovery между сессиями и не заменяет review reports, evidence или будущую аналитику Activity/Runs.</p></section><section id="git-native"><h2>Git хранит историю, но Harness не сводится к commits</h2><p>Git показывает <em>что</em> изменилось и когда. REQ, ADR, STEP и доказательства выполнения добавляют <em>зачем</em>, в каких границах, по каким критериям и с каким результатом ревью. Поэтому история Git и база знаний проекта дополняют друг друга.</p></section>
+<section id="local"><h2>Локальный исходный контекст остаётся локальным</h2><p><code>PROJECT_BRIEF.local.md</code> предназначен для незрелых идей, приватных ссылок и временных заметок и заранее исключён из Git. После PROJECT INIT нормализованный контекст переносится в отслеживаемую документацию проекта.</p></section>
+<section id="drift"><h2>Память требует проверки согласованности</h2><p>Ручные hotfix, устаревшие статусы и расхождения документации неизбежны. Поэтому <code>PROJECT RECONCILE</code> сравнивает уровни истины репозитория и создаёт явный отчёт аудита или корректирующую работу вместо скрытого исправления.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/runtimes/"><span>Назад</span>Codex и Claude Code</a><a href="/maintenance/"><span>Далее</span>Поддержка</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#memory">Что такое память</a><a href="#layout">Структура</a><a href="#handoff">Передача контекста</a><a href="#git-native">Роль Git</a><a href="#local">Локальный brief</a><a href="#drift">Согласованность</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#memory">Что такое память</a><a href="#layout">Структура</a><a href="#handoff">Передача контекста</a><a href="#execution-status">Execution Status</a><a href="#git-native">Роль Git</a><a href="#local">Локальный brief</a><a href="#drift">Согласованность</a></aside>
   </div>
 </main>
 <footer class="site-footer">
@@ -125,8 +127,8 @@ RECONCILE  → audit report / corrective STEP</code></pre></div><p>Каждый 
     </nav>
   </div>
 </footer>
-<script src="/js/theme.js?v=b6d4f2a9"></script>
-<script src="/js/main.js?v=b6d4f2a9"></script>
-<script type="module" src="/js/search.js?v=b6d4f2a9"></script>
+<script src="/js/theme.js?v=b7e20d64"></script>
+<script src="/js/main.js?v=b7e20d64"></script>
+<script type="module" src="/js/search.js?v=b7e20d64"></script>
 </body>
 </html>

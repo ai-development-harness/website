@@ -14,11 +14,11 @@ async function searchFor(page, query) {
 }
 
 test.describe('Поиск — результаты', () => {
-  test('находит точную команду ADD STEP и поднимает её в начало', async ({ page }) => {
+  test('находит точную команду STEP ADD и поднимает её в начало', async ({ page }) => {
     await openSearch(page);
-    const results = await searchFor(page, 'ADD STEP');
+    const results = await searchFor(page, 'STEP ADD');
 
-    await expect(results.first().locator('.search-result__title')).toContainText('ADD STEP');
+    await expect(results.first().locator('.search-result__title')).toContainText('STEP ADD');
     await expect(results.first().locator('.search-result__meta')).toContainText('Команда');
   });
 
@@ -40,10 +40,10 @@ test.describe('Поиск — результаты', () => {
 
   test('ищет без учёта регистра', async ({ page }) => {
     await openSearch(page);
-    const upperCaseResults = await searchFor(page, 'UPDATE HARNESS');
+    const upperCaseResults = await searchFor(page, 'HARNESS UPDATE');
     const firstHref = await upperCaseResults.first().getAttribute('href');
 
-    const lowerCaseResults = await searchFor(page, 'update harness');
+    const lowerCaseResults = await searchFor(page, 'harness update');
     await expect(lowerCaseResults.first()).toHaveAttribute('href', firstHref);
   });
 
@@ -74,26 +74,26 @@ test.describe('Поиск — результаты', () => {
 
   test('подсвечивает точное совпадение в заголовке результата', async ({ page }) => {
     await openSearch(page);
-    const results = await searchFor(page, 'ADD STEP');
+    const results = await searchFor(page, 'STEP ADD');
 
-    await expect(results.first().locator('.search-result__title mark')).toHaveText('ADD STEP');
+    await expect(results.first().locator('.search-result__title mark')).toHaveText('STEP ADD');
   });
 
   test('результат команды ведёт непосредственно к найденной команде', async ({ page }) => {
     await openSearch(page);
-    const results = await searchFor(page, 'ADD STEP');
+    const results = await searchFor(page, 'STEP ADD');
 
-    await expect(results.first()).toHaveAttribute('href', '/commands/#command-add-step');
+    await expect(results.first()).toHaveAttribute('href', '/commands/#command-step-add');
   });
 
   test('переходит к конкретной команде и закрывает диалог', async ({ page }) => {
     await openSearch(page);
-    const results = await searchFor(page, 'ADD STEP');
+    const results = await searchFor(page, 'STEP ADD');
     await results.first().click();
 
-    await expect(page).toHaveURL(/\/commands\/#command-add-step$/);
-    await expect(page.locator('#command-add-step')).toBeVisible();
-    await expect(page.locator('#command-add-step code')).toContainText('ADD STEP');
+    await expect(page).toHaveURL(/\/commands\/#command-step-add$/);
+    await expect(page.locator('#command-step-add')).toBeVisible();
+    await expect(page.locator('#command-step-add code')).toContainText('STEP ADD');
     await expect(page.locator('.search-dialog')).not.toHaveAttribute('open', '');
   });
 

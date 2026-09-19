@@ -87,7 +87,7 @@ function tokenize(value) {
  * Строит стабильный fragment для конкретной команды Harness.
  *
  * Аргументы в угловых скобках выкидываются, чтобы, например,
- * `ADD STEP: <описание>` всегда давал `command-add-step`, а не якорь,
+ * `STEP ADD: <описание>` всегда даёт `command-step-add`, а не якорь,
  * зависящий от текста placeholder-а.
  */
 export function commandAnchorFromTitle(value = '') {

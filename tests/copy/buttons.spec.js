@@ -29,14 +29,14 @@ test.describe('Копирование — команды Harness', () => {
   });
 
   test('копирует точный текст команды', async ({ page }) => {
-    const item = page.locator('.command-item').filter({ hasText: 'INIT PROJECT' }).first();
-    await item.getByRole('button', { name: /Копировать команду INIT PROJECT/ }).click();
+    const item = page.locator('.command-item').filter({ hasText: 'PROJECT INIT' }).first();
+    await item.getByRole('button', { name: /Копировать команду PROJECT INIT/ }).click();
 
-    expect(await page.evaluate(() => window.__copiedText)).toBe('INIT PROJECT');
+    expect(await page.evaluate(() => window.__copiedText)).toBe('PROJECT INIT');
   });
 
   test('после успешного копирования показывает состояние «Скопировано»', async ({ page }) => {
-    const button = page.locator('.command-item').filter({ hasText: 'INIT PROJECT' }).first().locator('.copy-button');
+    const button = page.locator('.command-item').filter({ hasText: 'PROJECT INIT' }).first().locator('.copy-button');
     await button.click();
 
     await expect(button).toHaveText('Скопировано');
@@ -44,10 +44,10 @@ test.describe('Копирование — команды Harness', () => {
   });
 
   test('кнопка не ломает стабильный якорь команды', async ({ page }) => {
-    const item = page.locator('#command-add-step');
+    const item = page.locator('#command-step-add');
 
     await expect(item).toBeVisible();
-    await expect(item.locator('code')).toContainText('ADD STEP');
+    await expect(item.locator('code')).toContainText('STEP ADD');
     await expect(item.locator('.copy-button')).toBeVisible();
   });
 });
@@ -78,6 +78,15 @@ test.describe('Копирование — исполняемые блоки ко
     const block = page.locator('.code-block').filter({ hasText: 'HARNESS / PROTOCOL' });
 
     await expect(block).toBeVisible();
+    await expect(block.locator(':scope > .copy-button')).toHaveCount(0);
+  });
+
+  test('не добавляет кнопку к схеме артефактов на странице репозитория', async ({ page }) => {
+    await page.goto('/repository/');
+    const block = page.locator('.code-block').filter({ hasText: 'STEP ADD' });
+
+    await expect(block).toBeVisible();
+    await expect(block).toHaveAttribute('data-copy', 'false');
     await expect(block.locator(':scope > .copy-button')).toHaveCount(0);
   });
 
