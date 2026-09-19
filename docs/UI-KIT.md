@@ -155,7 +155,7 @@ number | title + description
        | outcome
 ```
 
-Вертикальный connector строится CSS pseudo-element. Количество шагов — шесть: Brief, INIT PROJECT, ADD STEP, RUN STEP, Review & Evidence, Git.
+Вертикальный connector строится CSS pseudo-element. Количество шагов — шесть: Brief, PROJECT INIT, STEP ADD, STEP RUN, Review & Evidence, Git.
 
 ## 10. Article pages
 
