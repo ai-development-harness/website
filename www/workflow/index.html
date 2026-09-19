@@ -83,7 +83,7 @@
     <article class="article">
 <section id="layers"><h2>Каждый этап сохраняет контекст для следующего</h2><p>История чата не является базой знаний. Каждая стадия сохраняет результат в репозитории: PLAN — в задаче, REVIEW — в неизменяемом отчёте, RECONCILE — в отчёте аудита, завершение — в доказательствах выполнения и представлениях состояния.</p><div class="article-note"><strong>Evidence должно оставаться проверяемым.</strong> Буквально захваченный output нельзя подменять пересказом. Если полный output не сохраняется, Harness фиксирует как минимум выполненную команду, exit code и нормализованное <code>Observed</code> с проверяемыми фактами.</div><div class="article-note"><strong>Главная идея:</strong> следующая сессия должна продолжить работу из состояния репозитория, не требуя пересказа предыдущего разговора.</div></section>
 <section id="task"><h2>От запроса к контракту задачи</h2><p><code>STEP ADD: &lt;описание&gt;</code> проверяет дубликаты, выбирает стабильный ID, связывает REQ/ADR, вычисляет зависимости и формирует Goal, Context, Scope, Mutation policy, Out of scope, Acceptance, Verification и Deliverables.</p><p>Код продукта на этом этапе не меняется.</p></section>
-<section id="run"><h2>RUN STEP: автоматический цикл</h2><div class="code-block"><pre><code>PLAN (если нет актуального плана)
+<section id="run"><h2>STEP RUN: автоматический цикл</h2><div class="code-block"><pre><code>PLAN (если нет актуального плана)
   → IMPLEMENT
   → deterministic verification
   → REVIEW
@@ -101,7 +101,7 @@ COMMIT</code></pre></div><p>PROJECT QUICK FIX допустим только бе
 <section id="reconcile"><h2>Расхождения не скрываются — согласованность восстанавливается явно</h2><p><code>PROJECT RECONCILE</code> сравнивает код, тесты и конфигурацию с REQ, ADR, архитектурой, STEP и доказательствами выполнения. Результат — отчёт аудита и при необходимости корректирующий STEP. Код продукта молча не переписывается.</p></section>
 <section id="git-flow"><h2>Публикация отделена от реализации</h2><div class="code-block"><pre><code>GIT CHECK > COMMIT > PUSH > PR</code></pre></div><p>IMPLEMENT/REVIEW сами не создают commits. Git-операции имеют отдельные правила и проверки безопасности, а force push, hard reset и автоматические merge/rebase не являются поведением Harness по умолчанию.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/getting-started/"><span>Назад</span>Начало работы</a><a href="/commands/"><span>Далее</span>Команды</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#layers">Передача контекста</a><a href="#task">STEP ADD</a><a href="#run">RUN STEP</a><a href="#manual">Ручной режим</a><a href="#micro">PROJECT QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#git-flow">Git</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#layers">Передача контекста</a><a href="#task">STEP ADD</a><a href="#run">STEP RUN</a><a href="#manual">Ручной режим</a><a href="#micro">PROJECT QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#git-flow">Git</a></aside>
   </div>
 </main>
 <footer class="site-footer">
