@@ -19,11 +19,11 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(runCommand).toContainText('STEP PLAN STEP-NNN');
     await expect(runCommand).toContainText('STEP IMPLEMENT');
     await expect(runCommand).toContainText('Verification');
-    await expect(runCommand).toContainText('Independent REVIEW');
+    await expect(runCommand).toContainText('Independent STEP REVIEW');
     await expect(runCommand).toContainText('FAIL');
     await expect(runCommand).toContainText('FIX');
     await expect(runCommand).toContainText('PASS');
-    await expect(runCommand).toContainText('CLOSE STEP');
+    await expect(runCommand).toContainText('Финализация STEP');
     await expect(runCommand).toContainText('BLOCKED');
     await expect(runCommand).toContainText('execution.maxFixReviewCycles');
   });
