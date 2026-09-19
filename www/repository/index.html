@@ -100,7 +100,7 @@ planning/reviews/                   immutable review reports
 planning/audits/                    reconcile/audit reports
 planning/harness-updates/           self-update reports
 code / tests / config               фактическая реализация</code></pre></div><p>Runtime-specific конфигурация находится рядом с общим protocol layer, но сама память проекта не принадлежит ни Codex, ни Claude Code. Update graph тоже не является baseline или исполняемой миграцией: он только задаёт допустимый маршрут между release tags, тогда как содержимое Harness для каждого hop читается из immutable release.</p></section>
-<section id="handoff"><h2>Сохраняемый контекст заменяет «помни наш прошлый чат»</h2><div class="code-block"><pre><code>STEP ADD          → task contract
+<section id="handoff"><h2>Сохраняемый контекст заменяет «помни наш прошлый чат»</h2><div class="code-block" data-copy="false"><pre><code>STEP ADD          → task contract
 STEP PLAN         → Implementation plan внутри STEP
 STEP IMPLEMENT    → code/tests + verification evidence
 STEP REVIEW       → immutable review report
