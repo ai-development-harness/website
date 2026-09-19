@@ -39,7 +39,7 @@ test.describe('Поиск — клавиатурная навигация', () =
   });
 
   test('Enter открывает активный результат', async ({ page }) => {
-    const input = await openSearchWithQuery(page, 'ADD STEP');
+    const input = await openSearchWithQuery(page, 'STEP ADD');
     const href = await page.locator('.search-result.is-active').getAttribute('href');
 
     await input.press('Enter');
@@ -49,7 +49,7 @@ test.describe('Поиск — клавиатурная навигация', () =
   test('после смены запроса выбор снова начинается с первого результата', async ({ page }) => {
     const input = await openSearchWithQuery(page, 'STEP');
     await page.keyboard.press('ArrowDown');
-    await input.fill('UPDATE HARNESS');
+    await input.fill('HARNESS UPDATE');
 
     await expect(input).toHaveAttribute('aria-activedescendant', 'site-search-result-0');
   });
