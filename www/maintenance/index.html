@@ -6,30 +6,30 @@
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark light">
 <title>Поддержка и обновление AI Development Harness</title>
-<meta name="description" content="QUICK FIX, RECONCILE PROJECT и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами, BASE/OURS/THEIRS и подключение старых проектов.">
+<meta name="description" content="PROJECT QUICK FIX, PROJECT RECONCILE и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами, BASE/OURS/THEIRS и подключение старых проектов.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/maintenance/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://mc.yandex.ru">
 <link rel="prefetch" href="/faq/">
-<link rel="preload" href="/css/copy.css?v=b6d4f2a9" as="style">
+<link rel="preload" href="/css/copy.css?v=d4c7a901" as="style">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
 <meta property="og:title" content="Поддержка и обновление AI Development Harness">
-<meta property="og:description" content="QUICK FIX, RECONCILE PROJECT и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами и BASE/OURS/THEIRS.">
+<meta property="og:description" content="PROJECT QUICK FIX, PROJECT RECONCILE и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами и BASE/OURS/THEIRS.">
 <meta property="og:url" content="https://ai-development-harness.ru/maintenance/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Поддержка и обновление AI Development Harness">
-<meta name="twitter:description" content="QUICK FIX, RECONCILE PROJECT и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами и BASE/OURS/THEIRS.">
+<meta name="twitter:description" content="PROJECT QUICK FIX, PROJECT RECONCILE и безопасное обновление Harness: точный target release, фиксация версии, неизменяемые теги, правила владения файлами и BASE/OURS/THEIRS.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=b6d4f2a9"></script>
-<link rel="stylesheet" href="/css/styles.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-site.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-docs.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=b6d4f2a9">
-<link rel="stylesheet" href="/css/theme.css?v=b6d4f2a9">
+<script src="/js/theme-init.js?v=d4c7a901"></script>
+<link rel="stylesheet" href="/css/styles.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-site.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-docs.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=d4c7a901">
+<link rel="stylesheet" href="/css/theme.css?v=d4c7a901">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Поддержка и обновление", "item": "https://ai-development-harness.ru/maintenance/"}]}</script>
 </head>
 <body>
@@ -82,23 +82,23 @@
   <div class="container docs-shell">
     <article class="article">
 <section id="boundaries"><h2>Служебный слой Harness и код проекта обновляются по-разному</h2><p>К Harness относятся AGENTS, runtime adapters, базовые навыки, протокол выполнения, <code>docs/harness</code>, политики, механизм обновления, валидатор и шаблоны. Проекту принадлежат REQ, ADR, архитектура, задачи, ревью, аудиты, код и тесты продукта, конфигурация и дополнительные навыки проекта или сторонних источников.</p></section>
-<section id="quick"><h2>Для мелкой правки не нужен искусственный STEP</h2><p>Опечатка, пунктуация, безопасный комментарий или локальное форматирование могут идти через <code>QUICK FIX</code> или ручную правку. Git diff и commit — достаточная история такой мелочи.</p><div class="article-note"><strong>Короткий путь запрещён</strong> при изменении поведения, API, схемы или миграций, аутентификации и безопасности, зависимостей, архитектурных границ, существенной стратегии тестирования либо требований и критериев приёмки.</div></section>
-<section id="reconcile"><h2>RECONCILE восстанавливает согласованность</h2><p>Расхождения архитектуры, документации и статусов фиксируются явно. <code>RECONCILE PROJECT</code> создаёт отчёт аудита и корректирующий STEP там, где изменение нельзя безопасно спрятать в текущую задачу.</p></section>
-<section id="update"><h2>Обновление Harness — отдельный процесс</h2><div class="code-block"><pre><code>CHECK HARNESS UPDATE [TO &lt;tag&gt;]   # read-only route check
-UPDATE HARNESS [TO &lt;tag&gt;]         # mutation того же target и route
+<section id="quick"><h2>Для мелкой правки не нужен искусственный STEP</h2><p>Опечатка, пунктуация, безопасный комментарий или локальное форматирование могут идти через <code>PROJECT QUICK FIX</code> или ручную правку. Git diff и commit — достаточная история такой мелочи.</p><div class="article-note"><strong>Короткий путь запрещён</strong> при изменении поведения, API, схемы или миграций, аутентификации и безопасности, зависимостей, архитектурных границ, существенной стратегии тестирования либо требований и критериев приёмки.</div></section>
+<section id="reconcile"><h2>RECONCILE восстанавливает согласованность</h2><p>Расхождения архитектуры, документации и статусов фиксируются явно. <code>PROJECT RECONCILE</code> создаёт отчёт аудита и корректирующий STEP там, где изменение нельзя безопасно спрятать в текущую задачу.</p></section>
+<section id="update"><h2>Обновление Harness — отдельный процесс</h2><div class="code-block"><pre><code>HARNESS UPDATE CHECK [TO &lt;tag&gt;]   # read-only route check
+HARNESS UPDATE APPLY [TO &lt;tag&gt;]         # mutation того же target и route
 
 inspect diff
 GIT CHECK
-COMMIT
-PUSH
+GIT COMMIT
+GIT PUSH
 PR</code></pre></div><p>Updater больше не рассматривает отдельный release tag как достаточное основание для перехода. Он читает canonical <code>.project/harness-update-graph.json</code> из configured source branch только как routing metadata, определяет конечный target и строит единственный допустимый маршрут от текущего lock release.</p><div class="code-block"><pre><code>.project/harness.lock.json          → текущий BASE
 .project/harness-update-graph.json  → latest + разрешённые переходы
-.project/harness-update.toml        → ownership и merge rules каждого hop</code></pre></div><p>Без <code>TO &lt;tag&gt;</code> конечный target берётся из <code>harness-update-graph.json → latest</code>. Явный <code>TO</code> фиксирует конкретный конечный target, но updater всё равно обязан доказать его достижимость. Затем весь route проверяется без записи и применяется строго hop-by-hop по immutable tags. Lock продвигается только после успешной postcondition-проверки конкретного hop.</p><div class="article-note"><strong>Reload boundary.</strong> Если edge имеет <code>reloadRequired: true</code>, updater завершает текущий hop, фиксирует достигнутый release в lock и останавливается. После перезапуска runtime повторяется та же команда до исходного конечного target.</div></section>
+.project/harness-update.toml        → ownership и merge rules каждого hop</code></pre></div><p>Без <code>TO &lt;tag&gt;</code> конечный target берётся из <code>harness-update-graph.json → latest</code>. Явный <code>TO</code> фиксирует конкретный конечный target, но updater всё равно обязан доказать его достижимость. Затем весь route проверяется без записи и применяется строго hop-by-hop по immutable tags. Успешный CHECK сохраняет target и route в durable Execution Status, поэтому после перезапуска сессии APPLY для того же target может продолжить работу без повторного CHECK. Lock продвигается только после успешной postcondition-проверки конкретного hop.</p><div class="article-note"><strong>Reload boundary.</strong> Если edge имеет <code>reloadRequired: true</code>, updater завершает текущий hop, фиксирует достигнутый release в lock и останавливается. После перезапуска runtime повторяется та же команда до исходного конечного target.</div></section>
 <section id="ownership"><h2>BASE / OURS / THEIRS и правила владения файлами</h2><div class="article-grid"><div class="mini-card"><h3>harness_owned</h3><p>Локальное отличие от BASE блокирует скрытую перезапись.</p></div><div class="mini-card"><h3>shared</h3><p>Для настраиваемых файлов выполняется трёхстороннее слияние. Сюда входят tracked role/config files Codex и Claude Code.</p></div><div class="mini-card"><h3>marker_merge</h3><p>README и AGENTS объединяются с сохранением сгенерированных блоков проекта.</p></div><div class="mini-card"><h3>unknown</h3><p>По умолчанию файл считается принадлежащим проекту, и механизм обновления его не меняет.</p></div></div></section>
 <section id="legacy"><h2>Старые проекты без lock требуют явного baseline</h2><p>Если <code>.project/harness.lock.json</code> отсутствует, доказуемой BASE-версии нет. Harness не угадывает её по похожести файлов. Legacy adoption разрешён только когда известен конкретный неизменяемый release, которому соответствует исходное состояние Harness; при неизвестном baseline нужен ручной reconciliation.</p><div class="article-note"><strong>Исторические исключения не являются частью постоянной инструкции.</strong> Обязательные промежуточные releases и reload boundaries задаются соответствующими edges в canonical <code>.project/harness-update-graph.json</code>, поэтому updater получает их из routing metadata, а не из захардкоженного сценария документации.</div></section>
 <section id="security"><h2>Граф и целевые релизы читаются как данные, а не исполняются</h2><p>Moving source branch разрешено читать только для canonical <code>.project/harness-update-graph.json</code>. Сам граф содержит только routing metadata: <code>latest</code>, directed transitions, тип перехода и при необходимости reload boundary. Содержимое protocol layer каждого hop читается только из неизменяемых release tags. Скрипты миграции, установки и инициализации из графа или целевого релиза автоматически не запускаются.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/repository/"><span>Назад</span>Репозиторий как память</a><a href="/faq/"><span>Далее</span>FAQ</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#boundaries">Границы владения</a><a href="#quick">QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#update">Обновление Harness</a><a href="#ownership">3-way merge</a><a href="#legacy">Старые проекты</a><a href="#security">Граница безопасности</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#boundaries">Границы владения</a><a href="#quick">PROJECT QUICK FIX</a><a href="#reconcile">RECONCILE</a><a href="#update">Обновление Harness</a><a href="#ownership">3-way merge</a><a href="#legacy">Старые проекты</a><a href="#security">Граница безопасности</a></aside>
   </div>
 </main>
 <footer class="site-footer">
@@ -115,8 +115,8 @@ PR</code></pre></div><p>Updater больше не рассматривает о�
     </nav>
   </div>
 </footer>
-<script src="/js/theme.js?v=b6d4f2a9"></script>
-<script src="/js/main.js?v=b6d4f2a9"></script>
-<script type="module" src="/js/search.js?v=b6d4f2a9"></script>
+<script src="/js/theme.js?v=d4c7a901"></script>
+<script src="/js/main.js?v=d4c7a901"></script>
+<script type="module" src="/js/search.js?v=d4c7a901"></script>
 </body>
 </html>
