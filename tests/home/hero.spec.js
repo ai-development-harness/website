@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 
 const EXPECTED_STEPS = [
   'Описание проекта',
-  'INIT PROJECT',
-  'ADD STEP',
-  'RUN STEP',
+  'PROJECT INIT',
+  'STEP ADD',
+  'STEP RUN',
   'Ревью и доказательства',
   'Git',
 ];
