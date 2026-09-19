@@ -38,7 +38,7 @@ test.describe('Поиск — адаптивность', () => {
 
   test('результаты поиска остаются читаемыми на узком экране', async ({ page }) => {
     await openSearch(page);
-    await page.locator('.search-input').fill('ADD STEP');
+    await page.locator('.search-input').fill('STEP ADD');
     const firstResult = page.locator('.search-result').first();
 
     await expect(firstResult).toBeVisible();
