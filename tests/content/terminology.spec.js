@@ -38,7 +38,7 @@ test.describe('Контент — русская терминология', () =
     await page.goto('/commands/');
     const text = await page.locator('article.article').innerText();
 
-    for (const command of ['INIT PROJECT', 'ADD STEP:', 'RUN STEP-NNN', 'QUICK FIX:', 'CHECK HARNESS UPDATE', 'UPDATE HARNESS']) {
+    for (const command of ['PROJECT INIT', 'STEP ADD:', 'STEP RUN STEP-NNN', 'PROJECT QUICK FIX:', 'HARNESS UPDATE CHECK', 'HARNESS UPDATE APPLY']) {
       expect(text).toContain(command);
     }
   });
