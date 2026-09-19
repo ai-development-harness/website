@@ -48,14 +48,23 @@ test.describe('Контент — русская терминология', () =
   for (const publicPage of PUBLIC_PAGES) {
     test(`страница ${publicPage.path} не содержит устаревших форм команд Harness`, async ({ page }) => {
       await page.goto(publicPage.path);
-      const lines = (await page.locator('body').innerText())
-        .split('\n')
-        .map((line) => line.trim())
-        .filter(Boolean);
+      const textNodes = await page.locator('body').evaluate((body) => {
+        const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+        const values = [];
+        let node = walker.nextNode();
 
-      for (const line of lines) {
+        while (node) {
+          const value = node.nodeValue?.trim();
+          if (value) values.push(value);
+          node = walker.nextNode();
+        }
+
+        return values;
+      });
+
+      for (const textNode of textNodes) {
         for (const pattern of DEPRECATED_COMMAND_PATTERNS) {
-          expect(line).not.toMatch(pattern);
+          expect(textNode).not.toMatch(pattern);
         }
       }
     });
