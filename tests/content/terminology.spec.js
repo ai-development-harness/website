@@ -2,19 +2,30 @@ import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES } from '../helpers/site.js';
 
 
+const CANONICAL_COMMAND_PATTERNS = [
+  /\bPROJECT (?:INIT|STATUS|RECONCILE|QUICK FIX)\b/g,
+  /\bSTEP (?:ADD|NEXT)\b/g,
+  /\bSTEP (?:PLAN|IMPLEMENT|REVIEW|FIX|RUN|AUDIT)\b(?:\s+STEP-[A-Z0-9]+)?/g,
+  /\bSKILL (?:FIND|INSTALL|CREATE)\b/g,
+  /\bGITHUB GENERATE TEMPLATES\b/g,
+  /\bRELEASE CHECK\b/g,
+  /\bHARNESS UPDATE (?:CHECK|APPLY)\b/g,
+  /\bGIT (?:CHECK|COMMIT|PUSH|PR|SYNC)\b/g,
+];
+
 const DEPRECATED_COMMAND_PATTERNS = [
   /\bINIT PROJECT\b/,
   /\bADD STEP\b/,
-  /(?<!STEP )\bPLAN STEP(?:-[A-Z0-9]+)?\b/,
-  /(?<!STEP )\bIMPLEMENT STEP(?:-[A-Z0-9]+)?\b/,
-  /(?<!STEP )\bREVIEW STEP(?:-[A-Z0-9]+)?\b/,
-  /(?<!STEP )\bFIX STEP(?:-[A-Z0-9]+)?\b/,
-  /(?<!STEP )\bRUN STEP(?:-[A-Z0-9]+)?\b/,
-  /(?<!STEP )\bAUDIT STEP(?:-[A-Z0-9]+)?\b/,
+  /\bPLAN STEP(?:-[A-Z0-9]+)?\b/,
+  /\bIMPLEMENT STEP(?:-[A-Z0-9]+)?\b/,
+  /\bREVIEW STEP(?:-[A-Z0-9]+)?\b/,
+  /\bFIX STEP(?:-[A-Z0-9]+)?\b/,
+  /\bRUN STEP(?:-[A-Z0-9]+)?\b/,
+  /\bAUDIT STEP(?:-[A-Z0-9]+)?\b/,
   /\bNEXT STEP\b/,
   /\bSTATUS PROJECT\b/,
   /\bRECONCILE PROJECT\b/,
-  /(?<!PROJECT )\bQUICK FIX\b/,
+  /\bQUICK FIX\b/,
   /\bFIND SKILL\b/,
   /\bINSTALL SKILL\b/,
   /\bCREATE SKILL\b/,
@@ -22,6 +33,13 @@ const DEPRECATED_COMMAND_PATTERNS = [
   /\bCHECK HARNESS UPDATE\b/,
   /\bUPDATE HARNESS\b/,
 ];
+
+function stripCanonicalCommands(value) {
+  return CANONICAL_COMMAND_PATTERNS.reduce(
+    (result, pattern) => result.replace(pattern, ''),
+    value,
+  );
+}
 
 const UNWANTED_PHRASES = [
   'руководство по старту',
@@ -63,12 +81,19 @@ test.describe('Контент — русская терминология', () =
       });
 
       for (const textNode of textNodes) {
+        const legacyCandidate = stripCanonicalCommands(textNode);
+
         for (const pattern of DEPRECATED_COMMAND_PATTERNS) {
-          expect(textNode).not.toMatch(pattern);
+          expect(legacyCandidate).not.toMatch(pattern);
         }
       }
     });
   }
+
+  test('legacy-проверка отличает PROJECT QUICK FIX от старого QUICK FIX', async () => {
+    expect(stripCanonicalCommands('PROJECT QUICK FIX: исправить опечатку')).not.toMatch(/\bQUICK FIX\b/);
+    expect(stripCanonicalCommands('QUICK FIX: исправить опечатку')).toMatch(/\bQUICK FIX\b/);
+  });
 
   test('раздел начала работы называется «Начало работы»', async ({ page }) => {
     await page.goto('/getting-started/');
