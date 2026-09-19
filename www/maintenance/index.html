@@ -84,7 +84,11 @@
 <section id="boundaries"><h2>Служебный слой Harness и код проекта обновляются по-разному</h2><p>К Harness относятся AGENTS, runtime adapters, базовые навыки, протокол выполнения, <code>docs/harness</code>, политики, механизм обновления, валидатор и шаблоны. Проекту принадлежат REQ, ADR, архитектура, задачи, ревью, аудиты, код и тесты продукта, конфигурация и дополнительные навыки проекта или сторонних источников.</p></section>
 <section id="quick"><h2>Для мелкой правки не нужен искусственный STEP</h2><p>Опечатка, пунктуация, безопасный комментарий или локальное форматирование могут идти через <code>PROJECT QUICK FIX</code> или ручную правку. Git diff и commit — достаточная история такой мелочи.</p><div class="article-note"><strong>Короткий путь запрещён</strong> при изменении поведения, API, схемы или миграций, аутентификации и безопасности, зависимостей, архитектурных границ, существенной стратегии тестирования либо требований и критериев приёмки.</div></section>
 <section id="reconcile"><h2>PROJECT RECONCILE восстанавливает согласованность</h2><p>Расхождения архитектуры, документации и статусов фиксируются явно. <code>PROJECT RECONCILE</code> создаёт отчёт аудита и корректирующий STEP там, где изменение нельзя безопасно спрятать в текущую задачу.</p></section>
-<section id="update"><h2>Обновление Harness — отдельный процесс</h2><div class="code-block"><pre><code>HARNESS UPDATE CHECK [TO &lt;tag&gt;] &gt; APPLY
+<section id="update"><h2>Обновление Harness — отдельный процесс</h2><div class="code-block"><pre><code>HARNESS UPDATE CHECK [TO &lt;tag&gt;]   # read-only route check
+HARNESS UPDATE APPLY [TO &lt;tag&gt;]   # mutation того же target и route
+
+# Эквивалентная цепочка:
+HARNESS UPDATE CHECK [TO &lt;tag&gt;] &gt; APPLY
 
 inspect diff
 GIT CHECK &gt; COMMIT &gt; PUSH &gt; PR</code></pre></div><p>Updater больше не рассматривает отдельный release tag как достаточное основание для перехода. Он читает canonical <code>.project/harness-update-graph.json</code> из configured source branch только как routing metadata, определяет конечный target и строит единственный допустимый маршрут от текущего lock release.</p><div class="code-block"><pre><code>.project/harness.lock.json          → текущий BASE
