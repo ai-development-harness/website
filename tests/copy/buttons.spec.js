@@ -29,14 +29,14 @@ test.describe('Копирование — команды Harness', () => {
   });
 
   test('копирует точный текст команды', async ({ page }) => {
-    const item = page.locator('.command-item').filter({ hasText: 'INIT PROJECT' }).first();
-    await item.getByRole('button', { name: /Копировать команду INIT PROJECT/ }).click();
+    const item = page.locator('.command-item').filter({ hasText: 'PROJECT INIT' }).first();
+    await item.getByRole('button', { name: /Копировать команду PROJECT INIT/ }).click();
 
-    expect(await page.evaluate(() => window.__copiedText)).toBe('INIT PROJECT');
+    expect(await page.evaluate(() => window.__copiedText)).toBe('PROJECT INIT');
   });
 
   test('после успешного копирования показывает состояние «Скопировано»', async ({ page }) => {
-    const button = page.locator('.command-item').filter({ hasText: 'INIT PROJECT' }).first().locator('.copy-button');
+    const button = page.locator('.command-item').filter({ hasText: 'PROJECT INIT' }).first().locator('.copy-button');
     await button.click();
 
     await expect(button).toHaveText('Скопировано');
@@ -47,7 +47,7 @@ test.describe('Копирование — команды Harness', () => {
     const item = page.locator('#command-add-step');
 
     await expect(item).toBeVisible();
-    await expect(item.locator('code')).toContainText('ADD STEP');
+    await expect(item.locator('code')).toContainText('STEP ADD');
     await expect(item.locator('.copy-button')).toBeVisible();
   });
 });
