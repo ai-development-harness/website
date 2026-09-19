@@ -81,6 +81,15 @@ test.describe('Копирование — исполняемые блоки ко
     await expect(block.locator(':scope > .copy-button')).toHaveCount(0);
   });
 
+  test('не добавляет кнопку к схеме артефактов на странице репозитория', async ({ page }) => {
+    await page.goto('/repository/');
+    const block = page.locator('.code-block').filter({ hasText: 'STEP ADD' });
+
+    await expect(block).toBeVisible();
+    await expect(block).toHaveAttribute('data-copy', 'false');
+    await expect(block.locator(':scope > .copy-button')).toHaveCount(0);
+  });
+
   test('стили кнопки копирования подключаются с общим revision', async ({ page }) => {
     await page.goto('/commands/');
     const href = await page.locator('link[data-copy-styles]').getAttribute('href');
