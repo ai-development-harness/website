@@ -100,7 +100,7 @@ Execution Status
     ↓
 Codex / Claude Code adapter
     ↓
-repository artifacts</code></pre></div></section><section id="deterministic"><h2>Критические границы всё меньше зависят от интерпретации модели</h2><p>В v0.6.0 Harness использует детерминированные проверки переходов команд, финализации PROJECT INIT, проекций, выбора специализированных проверок, самообновления и изменяющих операций Git. Агент анализирует семантику и объясняет блокеры, а критически важное состояние и разрешение операции вычисляют инструменты Harness.</p><div class="code-block"><pre><code>.harness/tools/validate-command.py
+repository artifacts</code></pre></div></section><section id="deterministic"><h2>Критические границы всё меньше зависят от интерпретации модели</h2><p>Harness использует детерминированные проверки переходов команд, финализации PROJECT INIT, проекций, выбора специализированных проверок, самообновления и изменяющих операций Git. Агент анализирует семантику и объясняет блокеры, а критически важное состояние и разрешение операции вычисляют инструменты Harness.</p><div class="code-block"><pre><code>.harness/tools/validate-command.py
 .harness/tools/finalize-project-init.py
 .harness/tools/review_gates.py
 .harness/tools/harness-update.py
