@@ -81,7 +81,7 @@
     </div>
   </header>
   <div class="container docs-shell docs-shell--commands">
-    <article class="article"><section id="syntax"><h2>Канонический синтаксис и цепочки</h2><p>В Harness v0.6.0 команды используют форму <code>DOMAIN ACTION [TARGET]</code>. Внутри одного домена соседние операции можно объединять оператором <code>&gt;</code>; домен и целевой объект наследуются только там, где это явно разрешено протоколом.</p><div class="code-block"><pre><code>PROJECT INIT
+    <article class="article"><section id="syntax"><h2>Канонический синтаксис и цепочки</h2><p>Команды Harness используют форму <code>DOMAIN ACTION [TARGET]</code>. Внутри одного домена соседние операции можно объединять оператором <code>&gt;</code>; домен и целевой объект наследуются только там, где это явно разрешено протоколом.</p><div class="code-block"><pre><code>PROJECT INIT
 STEP ADD: Добавить экспорт PDF
 STEP PLAN STEP-024 &gt; IMPLEMENT &gt; REVIEW
 GIT CHECK &gt; COMMIT &gt; PUSH &gt; PR
