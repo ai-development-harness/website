@@ -39,16 +39,18 @@ test.describe('Документация — структура страниц', 
   test('документация обновления описывает маршрут через harness-update-graph.json', async ({ page }) => {
     for (const path of ['/getting-started/', '/commands/', '/maintenance/']) {
       await page.goto(path);
-      await expect(page.locator('article.article')).toContainText('.project/harness-update-graph.json');
+      await expect(page.locator('article.article')).toContainText('.harness/harness-update-graph.json');
     }
   });
 
-  test('документация разделяет REQ definition и lifecycle status', async ({ page }) => {
+  test('документация отличает canonical REQ от deterministic projections', async ({ page }) => {
     await page.goto('/architecture/');
     const article = page.locator('article.article');
 
-    await expect(article).toContainText('docs/requirements/SPEC.md');
-    await expect(article).toContainText('docs/requirements/STATUS.md');
+    await expect(article).toContainText('docs/requirements/REQ-NNN-*.md');
+    await expect(article).toContainText('SPEC.md');
+    await expect(article).toContainText('STATUS.md');
+    await expect(article).toContainText('.harness/tools/sync-projections.py');
   });
 
   test('workflow описывает проверяемое Evidence без подмены output пересказом', async ({ page }) => {
@@ -59,9 +61,13 @@ test.describe('Документация — структура страниц', 
     await expect(article).toContainText('Observed');
   });
 
-  test('FAQ описывает BLOCKED при недоступном Git metadata', async ({ page }) => {
+  test('FAQ направляет к актуальному deterministic validation layer', async ({ page }) => {
     await page.goto('/faq/');
-    await expect(page.locator('article.article')).toContainText('HARNESS VALIDATION: BLOCKED');
+    const article = page.locator('article.article');
+
+    await expect(article).toContainText('dependency-free Python 3.11+');
+    await expect(article).toContainText('gate блокирует операцию');
+    await expect(article.getByRole('link', { name: '«Валидаторы»' })).toHaveAttribute('href', '/validators/');
   });
 
   test('страница FAQ содержит раскрываемые ответы на частые вопросы', async ({ page }) => {
