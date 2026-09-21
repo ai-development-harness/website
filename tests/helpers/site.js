@@ -10,7 +10,7 @@ export const PUBLIC_PAGES = [
   { path: '/repository/', h1: 'Репозиторий как долговременная память', docs: true },
   { path: '/validators/', h1: 'Валидаторы и deterministic gates', docs: true },
   { path: '/maintenance/', h1: 'Поддержка и обновление', docs: true },
-  { path: '/faq/', h1: 'FAQ', docs: true },
+  { path: '/faq/', h1: 'Вопросы и ответы', docs: true },
 ];
 
 export const DOC_PAGES = PUBLIC_PAGES.filter((page) => page.docs);
