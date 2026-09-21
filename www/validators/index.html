@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark light">
 <title>Валидаторы AI Development Harness — CLI и проверки</title>
-<meta name="description" content="Справочник validation layer AI Development Harness v0.6.0: validate.py, command validation, projections, INIT finalization, review/report contracts, Git preflight, ключи, exit codes и примеры.">
+<meta name="description" content="Справочник validation layer AI Development Harness: validate.py, command validation, projections, INIT finalization, review/report contracts, Git preflight, ключи, exit codes и примеры.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/validators/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -17,12 +17,12 @@
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
 <meta property="og:title" content="Валидаторы AI Development Harness — CLI и проверки">
-<meta property="og:description" content="Как устроен deterministic validation layer Harness v0.6.0: основные CLI, контракты, exit codes, self-tests и рекомендуемые последовательности.">
+<meta property="og:description" content="Как устроен deterministic validation layer Harness: основные CLI, контракты, exit codes, self-tests и рекомендуемые последовательности.">
 <meta property="og:url" content="https://ai-development-harness.ru/validators/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Валидаторы AI Development Harness — CLI и проверки">
-<meta name="twitter:description" content="Справочник deterministic validation layer Harness v0.6.0: validate.py, command/review/report contracts, projections, INIT finalization и Git preflight.">
+<meta name="twitter:description" content="Справочник deterministic validation layer Harness: validate.py, command/review/report contracts, projections, INIT finalization и Git preflight.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <script src="/js/theme-init.js?v=c4a91f6e"></script>
 <link rel="stylesheet" href="/css/styles.css?v=c4a91f6e">
@@ -82,7 +82,7 @@
   </header>
   <div class="container docs-shell">
     <article class="article">
-<section id="overview"><h2>Слой проверок — часть протокола, а не набор вспомогательных скриптов</h2><p>Harness v0.6.0 разделяет рассуждение модели и детерминированные инварианты. Модель анализирует требования, архитектуру и код, но структура документов, переходы команд, отпечатки, проекции, схемы отчётов ревью, маршрут обновления и безопасность Git проверяются инструментами Python под <code>.harness/tools/</code>.</p><div class="article-note"><strong>Блокировать при неопределённости.</strong> Если обязательный контекст Git, конфигурации или документов нельзя достоверно прочитать, проверка должна вернуть BLOCKED/FAIL, а не «продолжить насколько получилось».</div><p><a class="text-link" href="https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/VALIDATORS.md" target="_blank" rel="noreferrer">Каноническая низкоуровневая документация VALIDATORS.md →</a></p></section>
+<section id="overview"><h2>Слой проверок — часть протокола, а не набор вспомогательных скриптов</h2><p>Harness разделяет рассуждение модели и детерминированные инварианты. Модель анализирует требования, архитектуру и код, но структура документов, переходы команд, отпечатки, проекции, схемы отчётов ревью, маршрут обновления и безопасность Git проверяются инструментами Python под <code>.harness/tools/</code>.</p><div class="article-note"><strong>Блокировать при неопределённости.</strong> Если обязательный контекст Git, конфигурации или документов нельзя достоверно прочитать, проверка должна вернуть BLOCKED/FAIL, а не «продолжить насколько получилось».</div><p><a class="text-link" href="https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/VALIDATORS.md" target="_blank" rel="noreferrer">Каноническая низкоуровневая документация VALIDATORS.md →</a></p></section>
 
 <section id="validate"><h2>Главный валидатор целостности Harness</h2><h3><code>.harness/tools/validate.py</code></h3><p>Агрегирует состояние репозитория, manifest и политики, целостность проекта, контракты планирования, проекции, отчёты, lock обновления и другие обязательные инварианты.</p><div class="code-block"><pre><code>python3 .harness/tools/validate.py --mode manual
 python3 .harness/tools/validate.py --mode commit
