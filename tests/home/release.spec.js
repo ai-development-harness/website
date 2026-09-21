@@ -15,7 +15,7 @@ test.describe('Главная страница — последний релиз
     await page.goto('/');
 
     const release = page.locator('[data-latest-release]');
-    await expect(release).toHaveText('Latest release: v9.9.9 →');
+    await expect(release).toHaveText('Последний релиз: v9.9.9 →');
     await expect(release).toHaveAttribute('href', MOCK_RELEASE_URL);
   });
 
@@ -25,7 +25,7 @@ test.describe('Главная страница — последний релиз
     await page.goto('/');
 
     const release = page.locator('[data-latest-release]');
-    await expect(release).toHaveText('Latest release →');
+    await expect(release).toHaveText('Последний релиз →');
     await expect(release).toHaveAttribute('href', FALLBACK_URL);
   });
 
@@ -41,9 +41,9 @@ test.describe('Главная страница — последний релиз
     });
 
     await page.goto('/');
-    await expect(page.locator('[data-latest-release]')).toHaveText('Latest release: v9.9.9 →');
+    await expect(page.locator('[data-latest-release]')).toHaveText('Последний релиз: v9.9.9 →');
     await page.reload();
-    await expect(page.locator('[data-latest-release]')).toHaveText('Latest release: v9.9.9 →');
+    await expect(page.locator('[data-latest-release]')).toHaveText('Последний релиз: v9.9.9 →');
 
     expect(requestCount).toBe(1);
   });

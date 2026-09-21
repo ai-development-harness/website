@@ -18,7 +18,7 @@
 
   /** Показывает проверенные данные релиза и обновляет ссылку на GitHub Release. */
   function renderRelease(release) {
-    releaseLink.textContent = `Latest release: ${release.tagName} →`;
+    releaseLink.textContent = `Последний релиз: ${release.tagName} →`;
     releaseLink.href = release.url;
   }
 

@@ -12,7 +12,7 @@
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://mc.yandex.ru">
 <link rel="prefetch" href="/commands/">
-<link rel="preload" href="/css/copy.css?v=b7e20d64" as="style">
+<link rel="preload" href="/css/copy.css?v=f19b7a42" as="style">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
@@ -24,12 +24,12 @@
 <meta name="twitter:title" content="Процесс AI-разработки: от задачи до ревью и Git | AI Development Harness">
 <meta name="twitter:description" content="Как AI Development Harness организует STEP ADD, PLAN, IMPLEMENT, проверки, REVIEW, FIX, PROJECT QUICK FIX, RECONCILE и безопасную работу с Git.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=b7e20d64"></script>
-<link rel="stylesheet" href="/css/styles.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-site.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-docs.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/theme.css?v=b7e20d64">
+<script src="/js/theme-init.js?v=f19b7a42"></script>
+<link rel="stylesheet" href="/css/styles.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-site.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-docs.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/theme.css?v=f19b7a42">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Процесс разработки", "item": "https://ai-development-harness.ru/workflow/"}]}</script>
 </head>
 <body>
@@ -65,8 +65,9 @@
   <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" hidden>
     <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a>
     <a href="/repository/">Репозиторий как память</a>
+    <a href="/validators/">Валидаторы</a>
     <a href="/maintenance/">Поддержка</a>
-    <a href="/faq/">FAQ</a>
+    <a href="/faq/">Вопросы и ответы</a>
     <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон</a>
   </nav>
 </header>
@@ -81,16 +82,16 @@
   </header>
   <div class="container docs-shell">
     <article class="article">
-<section id="layers"><h2>Каждый этап сохраняет контекст для следующего</h2><p>История чата не является базой знаний. Каждая стадия сохраняет результат в репозитории: PLAN — в задаче, REVIEW — в неизменяемом отчёте, RECONCILE — в отчёте аудита, завершение — в доказательствах выполнения и представлениях состояния.</p><div class="article-note"><strong>Evidence должно оставаться проверяемым.</strong> Буквально захваченный output нельзя подменять пересказом. Если полный output не сохраняется, Harness фиксирует как минимум выполненную команду, exit code и нормализованное <code>Observed</code> с проверяемыми фактами.</div><div class="article-note"><strong>Главная идея:</strong> следующая сессия должна продолжить работу из состояния репозитория, не требуя пересказа предыдущего разговора.</div></section>
-<section id="task"><h2>От запроса к контракту задачи</h2><p><code>STEP ADD: &lt;описание&gt;</code> проверяет дубликаты, выбирает стабильный ID, связывает REQ/ADR, вычисляет зависимости и формирует Goal, Context, Scope, Mutation policy, Out of scope, Acceptance, Verification и Deliverables.</p><p>Код продукта на этом этапе не меняется.</p></section>
-<section id="run"><h2>STEP RUN: автоматический цикл</h2><div class="code-block"><pre><code>STEP PLAN (если нет актуального плана)
+<section id="layers"><h2>Каждый этап сохраняет контекст для следующего</h2><p>История чата не является базой знаний. Каждая стадия сохраняет результат в репозитории: PLAN — в задаче, REVIEW — в неизменяемом отчёте, RECONCILE — в отчёте аудита, завершение — в доказательствах выполнения и представлениях состояния.</p><div class="article-note"><strong>Доказательства должны оставаться проверяемыми.</strong> Буквально сохранённый вывод нельзя подменять пересказом. Если полный вывод не сохраняется, Harness фиксирует как минимум выполненную команду, код завершения и нормализованное наблюдение <code>Observed</code> с проверяемыми фактами.</div><div class="article-note"><strong>Главная идея:</strong> следующая сессия должна продолжить работу из состояния репозитория, не требуя пересказа предыдущего разговора.</div></section>
+<section id="task"><h2>От запроса к контракту задачи</h2><p><code>STEP ADD: &lt;описание&gt;</code> проверяет дубликаты, выбирает стабильный ID, связывает REQ/ADR, вычисляет зависимости и формирует цель, контекст, границы изменений, правила изменения файлов, исключения, критерии приёмки, проверки и ожидаемые результаты.</p><p>Код продукта на этом этапе не меняется.</p></section>
+<section id="run"><h2>STEP RUN: автоматический цикл</h2><div class="code-block"><pre><code>STEP PLAN: contract check + independent planning review
   → STEP IMPLEMENT
   → deterministic verification
   → STEP REVIEW
   → [условно security/test review]
   → STEP FIX ↔ STEP REVIEW (лимит задаёт execution.maxFixReviewCycles, допустимо 1–5, по умолчанию 3)
   → CLOSE</code></pre></div><p>Блокирующая проблема или исчерпание циклов останавливает процесс. Harness не должен скрывать неуспешный результат.</p></section>
-<section id="manual"><h2>Тот же процесс можно запускать вручную</h2><p><code>STEP PLAN STEP-NNN</code> сохраняет технический контекст прямо в задаче. <code>STEP IMPLEMENT STEP-NNN</code> работает по сохранённому плану. <code>STEP REVIEW STEP-NNN</code> выполняется независимо и выдаёт один из итогов: <strong>PASS</strong>, <strong>FAIL</strong> или <strong>BLOCKED</strong>.</p></section>
+<section id="manual"><h2>Тот же процесс можно запускать вручную</h2><p><code>STEP PLAN STEP-NNN</code> сначала пытается доказать, что контракт задачи непротиворечив и исполним. Затем сохраняет план реализации и запускает независимую семантическую проверку плана. План считается готовым только при совпадающем <code>PASS</code>, актуальном <code>context_basis</code> и <code>plan_content_hash</code>.</p><p><code>STEP IMPLEMENT STEP-NNN</code> работает только по готовому плану. <code>STEP REVIEW STEP-NNN</code> проверяет точную ревизию репозитория: дефект реализации даёт <strong>FAIL</strong> и ведёт в FIX, а противоречие контракта или отсутствующее архитектурное решение даёт <strong>BLOCKED</strong> и останавливает цикл.</p></section>
 <section id="micro"><h2>Небольшая правка идёт по короткому пути</h2><div class="code-block"><pre><code>PROJECT QUICK FIX: исправь опечатку…
         ↓
 proportional check
@@ -99,7 +100,7 @@ GIT CHECK
         ↓
 GIT COMMIT</code></pre></div><p>PROJECT QUICK FIX допустим только без изменения поведения продукта, API, данных, безопасности, архитектуры и зависимостей. Если фактические границы правки шире — Harness останавливает короткий путь и предлагает <code>STEP ADD:</code>.</p></section>
 <section id="reconcile"><h2>Расхождения не скрываются — согласованность восстанавливается явно</h2><p><code>PROJECT RECONCILE</code> сравнивает код, тесты и конфигурацию с REQ, ADR, архитектурой, STEP и доказательствами выполнения. Результат — отчёт аудита и при необходимости корректирующий STEP. Код продукта молча не переписывается.</p></section>
-<section id="git-flow"><h2>Публикация отделена от реализации</h2><div class="code-block"><pre><code>GIT CHECK > COMMIT > PUSH > PR</code></pre></div><p>STEP IMPLEMENT / STEP REVIEW сами не создают commits. Git-операции имеют отдельные правила и проверки безопасности, а force push, hard reset и автоматические merge/rebase не являются поведением Harness по умолчанию.</p></section>
+<section id="git-flow"><h2>Публикация отделена от реализации</h2><div class="code-block"><pre><code>GIT CHECK > COMMIT > PUSH > PR</code></pre></div><p>STEP IMPLEMENT / STEP REVIEW сами не создают коммиты. Перед изменяющей операцией Git Harness использует детерминированную предварительную проверку <code>.harness/tools/git-preflight.py</code>: она проверяет политику, защищённые ветки, индекс, расхождение с удалённой веткой и допустимый план операции. Принудительная отправка, hard reset и автоматические merge/rebase не являются поведением Harness по умолчанию.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/getting-started/"><span>Назад</span>Начало работы</a><a href="/commands/"><span>Далее</span>Команды</a></nav></article>
     <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#layers">Передача контекста</a><a href="#task">STEP ADD</a><a href="#run">STEP RUN</a><a href="#manual">Ручной режим</a><a href="#micro">PROJECT QUICK FIX</a><a href="#reconcile">PROJECT RECONCILE</a><a href="#git-flow">Git</a></aside>
   </div>
@@ -113,13 +114,13 @@ GIT COMMIT</code></pre></div><p>PROJECT QUICK FIX допустим только 
     </div>
     <nav class="footer-links" aria-label="Навигация в подвале">
       <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
-      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/maintenance/">Поддержка</a><a href="/faq/">FAQ</a>
+      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/validators/">Валидаторы</a><a href="/maintenance/">Поддержка</a><a href="/faq/">Вопросы и ответы</a>
       <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
   </div>
 </footer>
-<script src="/js/theme.js?v=b7e20d64"></script>
-<script src="/js/main.js?v=b7e20d64"></script>
-<script type="module" src="/js/search.js?v=b7e20d64"></script>
+<script src="/js/theme.js?v=f19b7a42"></script>
+<script src="/js/main.js?v=f19b7a42"></script>
+<script type="module" src="/js/search.js?v=f19b7a42"></script>
 </body>
 </html>

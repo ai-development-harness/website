@@ -36,6 +36,7 @@ const FALLBACK_PUBLIC_PATHS = [
   '/commands/',
   '/architecture/',
   '/repository/',
+  '/validators/',
   '/maintenance/',
   '/faq/',
   '/runtimes/',

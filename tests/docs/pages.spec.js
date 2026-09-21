@@ -21,7 +21,7 @@ test.describe('Документация — структура страниц', 
 
       await expect(breadcrumbs).toBeVisible();
       await expect(breadcrumbs.getByRole('link', { name: 'Главная' })).toHaveAttribute('href', '/');
-      await expect(breadcrumbs).toContainText(docPage.h1 === 'Команды Harness' ? 'Команды Harness' : docPage.h1);
+      await expect(breadcrumbs).toContainText(docPage.breadcrumb ?? docPage.h1);
     });
 
     test(`оглавление страницы «${docPage.h1}» ссылается только на существующие разделы`, async ({ page }) => {
@@ -39,32 +39,38 @@ test.describe('Документация — структура страниц', 
   test('документация обновления описывает маршрут через harness-update-graph.json', async ({ page }) => {
     for (const path of ['/getting-started/', '/commands/', '/maintenance/']) {
       await page.goto(path);
-      await expect(page.locator('article.article')).toContainText('.project/harness-update-graph.json');
+      await expect(page.locator('article.article')).toContainText('.harness/harness-update-graph.json');
     }
   });
 
-  test('документация разделяет REQ definition и lifecycle status', async ({ page }) => {
+  test('документация отличает канонические REQ от детерминированных проекций', async ({ page }) => {
     await page.goto('/architecture/');
     const article = page.locator('article.article');
 
-    await expect(article).toContainText('docs/requirements/SPEC.md');
-    await expect(article).toContainText('docs/requirements/STATUS.md');
+    await expect(article).toContainText('docs/requirements/REQ-NNN-*.md');
+    await expect(article).toContainText('SPEC.md');
+    await expect(article).toContainText('STATUS.md');
+    await expect(article).toContainText('.harness/tools/sync-projections.py');
   });
 
-  test('workflow описывает проверяемое Evidence без подмены output пересказом', async ({ page }) => {
+  test('процесс описывает проверяемые доказательства без подмены вывода пересказом', async ({ page }) => {
     await page.goto('/workflow/');
     const article = page.locator('article.article');
 
-    await expect(article).toContainText('exit code');
+    await expect(article).toContainText('код завершения');
     await expect(article).toContainText('Observed');
   });
 
-  test('FAQ описывает BLOCKED при недоступном Git metadata', async ({ page }) => {
+  test('раздел вопросов направляет к актуальному слою проверок', async ({ page }) => {
     await page.goto('/faq/');
-    await expect(page.locator('article.article')).toContainText('HARNESS VALIDATION: BLOCKED');
+    const article = page.locator('article.article');
+
+    await expect(article).toContainText('Python 3.11+ без сторонних зависимостей');
+    await expect(article).toContainText('проверка блокирует операцию');
+    await expect(article.getByRole('link', { name: '«Валидаторы»' })).toHaveAttribute('href', '/validators/');
   });
 
-  test('страница FAQ содержит раскрываемые ответы на частые вопросы', async ({ page }) => {
+  test('страница вопросов содержит раскрываемые ответы на частые вопросы', async ({ page }) => {
     await page.goto('/faq/');
     const questions = page.locator('.faq-item');
 

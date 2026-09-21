@@ -20,9 +20,15 @@ test.describe('Главная страница — основные секции
     await expect(page.locator('.process-step')).toHaveCount(5);
   });
 
-  test('показывает модель контекста из пяти элементов', async ({ page }) => {
-    await expect(page.locator('.traceability-flow')).toBeVisible();
-    await expect(page.locator('.flow-card')).toHaveCount(5);
+  test('показывает модель контекста как три визуальных слоя', async ({ page }) => {
+    const model = page.locator('.traceability-flow');
+
+    await expect(model).toBeVisible();
+    await expect(model.locator('.context-layer')).toHaveCount(3);
+    await expect(model.locator('.knowledge-parts > div')).toHaveCount(3);
+    await expect(model).toContainText('Протокол');
+    await expect(model).toContainText('База знаний проекта');
+    await expect(model).toContainText('Фактическое состояние');
   });
 
   test('показывает оба поддерживаемых runtime adapter', async ({ page }) => {
@@ -31,7 +37,7 @@ test.describe('Главная страница — основные секции
     await expect(section).toBeVisible();
     await expect(section).toContainText('Codex');
     await expect(section).toContainText('Claude Code');
-    await expect(section.getByRole('link', { name: /runtime adapters/ })).toHaveAttribute('href', '/runtimes/');
+    await expect(section.getByRole('link', { name: /среды исполнения/i })).toHaveAttribute('href', '/runtimes/');
   });
 
 

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark light">
-<title>Архитектура AI Development Harness: REQ, ADR, STEP и runtime adapters</title>
+<title>Архитектура AI Development Harness: REQ, ADR, STEP и среды исполнения</title>
 <meta name="description" content="Как устроен AI Development Harness: служебный слой, база знаний проекта, реализация, REQ/ADR/STEP, источники истины, роли, навыки и runtime adapters Codex и Claude Code.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/architecture/">
@@ -15,20 +15,20 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
-<meta property="og:title" content="Архитектура AI Development Harness: REQ, ADR, STEP и runtime adapters">
+<meta property="og:title" content="Архитектура AI Development Harness: REQ, ADR, STEP и среды исполнения">
 <meta property="og:description" content="Как устроен AI Development Harness: служебный слой, база знаний проекта, реализация, REQ/ADR/STEP, источники истины, роли, навыки и runtime adapters Codex и Claude Code.">
 <meta property="og:url" content="https://ai-development-harness.ru/architecture/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Архитектура AI Development Harness: REQ, ADR, STEP и runtime adapters">
+<meta name="twitter:title" content="Архитектура AI Development Harness: REQ, ADR, STEP и среды исполнения">
 <meta name="twitter:description" content="Как устроен AI Development Harness: служебный слой, база знаний проекта, реализация, REQ/ADR/STEP, источники истины, роли, навыки и runtime adapters Codex и Claude Code.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=b7e20d64"></script>
-<link rel="stylesheet" href="/css/styles.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-site.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-docs.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/theme.css?v=b7e20d64">
+<script src="/js/theme-init.js?v=f19b7a42"></script>
+<link rel="stylesheet" href="/css/styles.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-site.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-docs.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/theme.css?v=f19b7a42">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Архитектура Harness", "item": "https://ai-development-harness.ru/architecture/"}]}</script>
 </head>
 <body>
@@ -64,8 +64,9 @@
   <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" hidden>
     <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a>
     <a href="/repository/">Репозиторий как память</a>
+    <a href="/validators/">Валидаторы</a>
     <a href="/maintenance/">Поддержка</a>
-    <a href="/faq/">FAQ</a>
+    <a href="/faq/">Вопросы и ответы</a>
     <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон</a>
   </nav>
 </header>
@@ -75,7 +76,7 @@
       <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span>→</span><span>Архитектура Harness</span></nav>
       <div class="eyebrow">Документация Harness</div>
       <h1>Архитектура Harness</h1>
-      <p>Почему требования, решения, задачи, реализация и доказательства разделены — и как они образуют одну прослеживаемую систему независимо от выбранного AI runtime.</p>
+      <p>Почему требования, решения, задачи, реализация и доказательства разделены — и как они образуют одну прослеживаемую систему независимо от выбранной среды исполнения AI.</p>
     </div>
   </header>
   <div class="container docs-shell">
@@ -88,10 +89,10 @@ PROJECT + REQ + ADR + architecture + planning
              ↓
 IMPLEMENTATION
 code + tests + migrations + runtime config</code></pre></div><p>Harness — слой процесса, а не фреймворк приложения. Каталоги реализации продукта намеренно отсутствуют в шаблоне до PROJECT INIT и реальных STEP.</p></section>
-<section id="entities"><h2>REQ, ADR и STEP не смешиваются</h2><div class="article-grid"><div class="mini-card"><h3>REQ</h3><p>Что система обязана обеспечивать? Определение и критерии приёмки живут в <code>docs/requirements/SPEC.md</code>, текущее lifecycle-состояние — только в <code>docs/requirements/STATUS.md</code>.</p></div><div class="mini-card"><h3>ADR</h3><p>Какое устойчивое архитектурное решение принято и почему? Канонический источник — <code>docs/adr/</code>.</p></div><div class="mini-card"><h3>STEP</h3><p>Какую ограниченную работу выполняем сейчас? Канонический источник — <code>planning/tasks/STEP-NNN.md</code>.</p></div><div class="mini-card"><h3>Доказательства</h3><p>Какими реальными проверками и артефактами подтверждено выполнение критериев приёмки? Буквально сохранённый output отделяется от нормализованного наблюдения <code>Observed</code>.</p></div></div></section>
-<section id="canonical"><h2>Канонические источники и представления состояния</h2><p><code>STEP-NNN.md</code> — канонический контракт задачи. <code>PLAN.md</code> и <code>STATUS.md</code> — удобные представления. Для требований <code>docs/requirements/SPEC.md</code> хранит определение и критерии приёмки, а <code>docs/requirements/STATUS.md</code> является единственным сохраняемым представлением текущего состояния REQ. Если представление расходится с каноническим источником, доказательствами или фактическим состоянием, исправляется представление, а не источник истины.</p></section>
-<section id="truth"><h2>Иерархия источников истины</h2><ol><li>Фактический код / миграции / конфигурация / тесты.</li><li>Принятые ADR.</li><li>Архитектурная документация и документация подсистем.</li><li>Требования.</li><li>STEP.</li><li>Представления PLAN/STATUS.</li><li>Brief, чат и неформальные заметки.</li></ol><div class="article-note"><strong>Код не объявляется автоматически «правым».</strong> Если он расходится с принятым ADR, это архитектурное расхождение, которое нужно явно разрешить.</div></section>
-<section id="command-contract"><h2>Командный протокол отделён от интерпретации модели</h2><p><code>.project/command-transitions.json</code> хранит канонические допустимые переходы команд, а <code>tools/harness/validate-command.py</code> выполняет структурную проверку до dispatch. Runtime не решает сам, допустима ли цепочка. После запуска текущее operational state хранится в локальном <code>.project/local/execution/execution-status.json</code>, а resolver определяет безопасное продолжение после interruption.</p><div class="code-block"><pre><code>raw command
+<section id="entities"><h2>REQ, ADR и STEP не смешиваются</h2><div class="article-grid"><div class="mini-card"><h3>REQ</h3><p>Что система обязана обеспечивать? Канонический контракт живёт в <code>docs/requirements/REQ-NNN-*.md</code>; <code>SPEC.md</code> и <code>STATUS.md</code> — детерминированные проекции канонических REQ.</p></div><div class="mini-card"><h3>ADR</h3><p>Какое устойчивое архитектурное решение принято и почему? Канонический источник — <code>docs/adr/</code>.</p></div><div class="mini-card"><h3>STEP</h3><p>Какую ограниченную работу выполняем сейчас? Канонический источник — <code>planning/tasks/STEP-NNN.md</code>.</p></div><div class="mini-card"><h3>Доказательства</h3><p>Какими реальными проверками и артефактами подтверждено выполнение критериев приёмки? Буквально сохранённый вывод отделяется от нормализованного наблюдения <code>Observed</code>.</p></div></div></section>
+<section id="canonical"><h2>Канонические источники и представления состояния</h2><p><code>STEP-NNN.md</code>, <code>REQ-NNN-*.md</code>, ADR и OQ — канонические документы. <code>PLAN.md</code>, проектный <code>STATUS.md</code>, <code>SPEC.md</code>/<code>STATUS.md</code> требований и <code>OPEN_QUESTIONS.md</code> строятся детерминированно через <code>.harness/tools/sync-projections.py</code>. Расхождение проекций считается дефектом целостности, а не альтернативным источником истины.</p></section>
+<section id="truth"><h2>Иерархия источников истины</h2><ol><li>Фактический код / миграции / конфигурация / тесты.</li><li>Принятые ADR.</li><li>Архитектурная документация и документация подсистем.</li><li>Требования.</li><li>STEP.</li><li>Представления PLAN/STATUS.</li><li>Бриф, чат и неформальные заметки.</li></ol><div class="article-note"><strong>Код не объявляется автоматически «правым».</strong> Если он расходится с принятым ADR, это архитектурное расхождение, которое нужно явно разрешить.</div></section>
+<section id="command-contract"><h2>Командный протокол отделён от интерпретации модели</h2><p><code>.harness/command-transitions.json</code> хранит канонические допустимые переходы команд, а <code>.harness/tools/validate-command.py</code> выполняет структурную проверку до запуска. Среда исполнения не решает сама, допустима ли цепочка. После запуска текущее рабочее состояние хранится в локальном <code>.harness/local/execution/execution-status.json</code>, а механизм восстановления определяет безопасное продолжение после прерывания.</p><div class="code-block"><pre><code>raw command
     ↓
 normalize + CTS preflight
     ↓
@@ -99,11 +100,16 @@ Execution Status
     ↓
 Codex / Claude Code adapter
     ↓
-repository artifacts</code></pre></div></section><section id="agents"><h2>Роли и независимый контроль</h2><p>Стадии с большим объёмом рассуждений можно отдавать сильным профилям planner/reviewer, а механическую реализацию — более экономичному implementer. Reviewer остаётся независимым от implementer. Смысл ролей задаётся Harness protocol, а model/effort настраиваются в adapter-конфигурации выбранного runtime.</p></section>
-<section id="runtimes"><h2>Codex и Claude Code — adapter’ы одного Harness</h2><div class="article-grid"><div class="mini-card"><h3>Codex</h3><p><code>.codex/config.toml</code> и <code>.codex/agents/*.toml</code> задают project-scoped роли, модели и reasoning effort.</p></div><div class="mini-card"><h3>Claude Code</h3><p><code>CLAUDE.md</code>, <code>.claude/settings.json</code> и <code>.claude/agents/*.md</code> задают bridge, root profile и специализированные роли.</p></div></div><p><code>AGENTS.md</code>, execution protocol, REQ/ADR/STEP и <code>.agents/skills/</code> остаются общими источниками истины. Поэтому смена runtime не требует переносить проектный процесс в другой формат.</p><p><a class="text-link" href="/runtimes/">Подробнее о Codex и Claude Code →</a></p></section>
+repository artifacts</code></pre></div></section><section id="deterministic"><h2>Критические границы всё меньше зависят от интерпретации модели</h2><p>Harness использует детерминированные проверки переходов команд, финализации PROJECT INIT, проекций, выбора специализированных проверок, самообновления и изменяющих операций Git. Агент анализирует семантику и объясняет блокеры, а критически важное состояние и разрешение операции вычисляют инструменты Harness.</p><div class="code-block"><pre><code>.harness/tools/validate-command.py
+.harness/tools/finalize-project-init.py
+.harness/tools/review_gates.py
+.harness/tools/harness-update.py
+.harness/tools/git-preflight.py
+.harness/tools/validate.py</code></pre></div><p><a class="text-link" href="/validators/">Справочник валидаторов и проверок →</a></p></section><section id="agents"><h2>Роли и независимый контроль</h2><p>Стадии с большим объёмом рассуждений можно отдавать сильным профилям планировщика и проверяющего, а механическую реализацию — более экономичному реализатору. Проверяющий остаётся независимым от реализатора. Смысл ролей задаётся протоколом Harness, а модель и уровень рассуждений настраиваются в конфигурации адаптера выбранной среды исполнения.</p></section>
+<section id="runtimes"><h2>Codex и Claude Code — адаптеры одного Harness</h2><div class="article-grid"><div class="mini-card"><h3>Codex</h3><p><code>.codex/config.toml</code> и <code>.codex/agents/*.toml</code> задают проектные роли, модели и уровень рассуждений.</p></div><div class="mini-card"><h3>Claude Code</h3><p><code>CLAUDE.md</code>, <code>.claude/settings.json</code> и <code>.claude/agents/*.md</code> задают связующий слой, основной профиль и специализированные роли.</p></div></div><p><code>AGENTS.md</code>, протокол выполнения, REQ/ADR/STEP и <code>.agents/skills/</code> остаются общими источниками истины. Поэтому смена среды исполнения не требует переносить проектный процесс в другой формат.</p><p><a class="text-link" href="/runtimes/">Подробнее о Codex и Claude Code →</a></p></section>
 <section id="skills"><h2>Технологические знания подключаются по необходимости</h2><p>Harness не вшивает в шаблон инструкции для всех возможных фреймворков. <code>SKILL FIND</code> ищет нужную возможность, пользователь выбирает кандидат, а <code>SKILL INSTALL</code> фиксирует происхождение и маршрутизацию. Сторонний навык никогда не получает приоритет над контрактом репозитория.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/commands/"><span>Назад</span>Команды</a><a href="/runtimes/"><span>Далее</span>Codex и Claude Code</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#three-layers">Три слоя</a><a href="#entities">REQ / ADR / STEP</a><a href="#canonical">Канонические источники</a><a href="#truth">Источники истины</a><a href="#command-contract">Командный протокол</a><a href="#agents">Агенты</a><a href="#runtimes">Runtime adapters</a><a href="#skills">Навыки</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#three-layers">Три слоя</a><a href="#entities">REQ / ADR / STEP</a><a href="#canonical">Канонические источники</a><a href="#truth">Источники истины</a><a href="#command-contract">Командный протокол</a><a href="#deterministic">Детерминированные проверки</a><a href="#agents">Агенты</a><a href="#runtimes">Среды исполнения</a><a href="#skills">Навыки</a></aside>
   </div>
 </main>
 <footer class="site-footer">
@@ -115,13 +121,13 @@ repository artifacts</code></pre></div></section><section id="agents"><h2>Рол
     </div>
     <nav class="footer-links" aria-label="Навигация в подвале">
       <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
-      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/maintenance/">Поддержка</a><a href="/faq/">FAQ</a>
+      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/validators/">Валидаторы</a><a href="/maintenance/">Поддержка</a><a href="/faq/">Вопросы и ответы</a>
       <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
   </div>
 </footer>
-<script src="/js/theme.js?v=b7e20d64"></script>
-<script src="/js/main.js?v=b7e20d64"></script>
-<script type="module" src="/js/search.js?v=b7e20d64"></script>
+<script src="/js/theme.js?v=f19b7a42"></script>
+<script src="/js/main.js?v=f19b7a42"></script>
+<script type="module" src="/js/search.js?v=f19b7a42"></script>
 </body>
 </html>

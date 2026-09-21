@@ -11,7 +11,7 @@
 <link rel="canonical" href="https://ai-development-harness.ru/repository/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://mc.yandex.ru">
-<link rel="prefetch" href="/maintenance/">
+<link rel="prefetch" href="/validators/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
@@ -23,12 +23,12 @@
 <meta name="twitter:title" content="Git-репозиторий как память AI-проекта | AI Development Harness">
 <meta name="twitter:description" content="Как AI Development Harness превращает Git-репозиторий в долговременную память проекта: требования, ADR, STEP, передача контекста, доказательства, ревью и восстановление согласованности.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=b7e20d64"></script>
-<link rel="stylesheet" href="/css/styles.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-site.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-docs.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=b7e20d64">
-<link rel="stylesheet" href="/css/theme.css?v=b7e20d64">
+<script src="/js/theme-init.js?v=f19b7a42"></script>
+<link rel="stylesheet" href="/css/styles.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-site.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-docs.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=f19b7a42">
+<link rel="stylesheet" href="/css/theme.css?v=f19b7a42">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Репозиторий как долговременная память", "item": "https://ai-development-harness.ru/repository/"}]}</script>
 </head>
 <body>
@@ -64,8 +64,9 @@
   <nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация" hidden>
     <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a><a href="/architecture/">Архитектура</a>
     <a href="/repository/">Репозиторий как память</a>
+    <a href="/validators/">Валидаторы</a>
     <a href="/maintenance/">Поддержка</a>
-    <a href="/faq/">FAQ</a>
+    <a href="/faq/">Вопросы и ответы</a>
     <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон</a>
   </nav>
 </header>
@@ -80,37 +81,46 @@
   </header>
   <div class="container docs-shell">
     <article class="article">
-<section id="memory"><h2>Память — это файлы, связи и фактическое состояние</h2><p>Harness специально не использует историю чата как постоянную базу знаний. Новая сессия восстанавливает контекст из версионируемых артефактов репозитория: требований, ADR, STEP, сохранённого плана, кода, тестов, доказательств выполнения и отчётов ревью.</p></section>
-<section id="layout"><h2>Где живёт контекст</h2><div class="code-block"><pre><code>.project/manifest.yaml              protocol release + project state
-.project/harness.lock.json          known BASE текущего Harness release
-.project/harness-update-graph.json  допустимый route обновления + latest
-.project/command-transitions.json    канонические переходы команд
-.project/local/execution/            локальное operational state для recovery
-.project/*.toml                     update/integrity/Git policies
-.codex/                             Codex role/model configuration
-CLAUDE.md + .claude/                Claude Code bridge and role configuration
-.agents/skills/                     shared workflow and technology skills
-docs/PROJECT.md                     нормализованный проектный контекст
-docs/requirements/SPEC.md           определения REQ + критерии приёмки
-docs/requirements/STATUS.md         единственный сохраняемый статус REQ
-docs/adr/                           immutable architecture decisions
-docs/architecture.md                current architecture baseline
-planning/tasks/                     canonical STEP contracts
-planning/reviews/                   immutable review reports
-planning/audits/                    reconcile/audit reports
-planning/harness-updates/           self-update reports
-code / tests / config               фактическая реализация</code></pre></div><p>Runtime-specific конфигурация находится рядом с общим protocol layer, но сама память проекта не принадлежит ни Codex, ни Claude Code. Update graph тоже не является baseline или исполняемой миграцией: он только задаёт допустимый маршрут между release tags, тогда как содержимое Harness для каждого hop читается из immutable release.</p></section>
-<section id="handoff"><h2>Сохраняемый контекст заменяет «помни наш прошлый чат»</h2><div class="code-block" data-copy="false"><pre><code>STEP ADD          → task contract
-STEP PLAN         → Implementation plan внутри STEP
+<section id="memory"><h2>Память — это файлы, связи и фактическое состояние</h2><p>Harness специально не использует историю чата как постоянную базу знаний. Новая сессия восстанавливает контекст из версионируемых артефактов репозитория: канонических REQ/ADR/OQ/STEP, сохранённого плана, кода, тестов, доказательств выполнения и неизменяемых отчётов ревью.</p></section>
+<section id="layout"><h2>Где живёт контекст</h2><div class="code-block"><pre><code>.harness/manifest.yaml                    release + project state + configured paths
+.harness/harness.lock.json                known BASE текущего Harness release
+.harness/harness-update-graph.json        допустимый route обновления + latest
+.harness/command-transitions.json         канонические переходы команд
+.harness/*.toml                           update / integrity / Git policies
+.harness/docs/                            документация ядра Harness
+.harness/tools/                           deterministic tooling и validators
+.harness/local/execution/                 локальное operational state для recovery
+.codex/                                   Codex adapter
+CLAUDE.md + .claude/                      Claude Code adapter
+.agents/skills/                           runtime-neutral core/project skills
+docs/PROJECT.md                           нормализованный проектный контекст
+docs/requirements/REQ-NNN-*.md            canonical requirements
+docs/requirements/SPEC.md + STATUS.md     deterministic REQ projections
+docs/open-questions/OQ-NNN-*.md           canonical Open Questions
+docs/OPEN_QUESTIONS.md                    deterministic OQ projection
+docs/adr/                                 architecture decisions
+docs/architecture.md                      current architecture baseline
+planning/tasks/STEP-NNN.md                canonical task contracts
+planning/PLAN.md + STATUS.md              deterministic planning projections
+planning/*-reviews/ + reviews/            immutable semantic/review history
+planning/audits/                          reconcile/audit/migration reports
+planning/harness-updates/                 durable self-update reports
+code / tests / config                     фактическая реализация</code></pre></div></section>
+<section id="topology"><h2>Пути проекта задаёт manifest, а не скрытые defaults</h2><p>Каталоги <code>docs/**</code> и <code>planning/**</code> — только стандартная структура шаблона. Каноническая структура проекта берётся из <code>.harness/manifest.yaml → sources.* / protocol.*</code>. Если проект переносит требования, ADR, OQ, STEP или отчёты проверок в другие каталоги, валидаторы, восстановление выполнения, проекции и навыки обязаны использовать настроенные пути.</p><div class="article-note"><strong>Один источник структуры.</strong> Стандартный путь не должен продолжать работать как второй скрытый реестр после изменения manifest.</div></section>
+<section id="projections"><h2>Проекции генерируются, а не редактируются как второй источник истины</h2><p><code>SPEC.md</code>, <code>STATUS.md</code> требований, дорожная карта <code>PLAN.md</code>, проектный <code>STATUS.md</code> и индекс Open Questions строятся из канонических документов через <code>.harness/tools/sync-projections.py</code>. Валидатор требует точного побайтового соответствия ожидаемому содержимому.</p></section>
+<section id="handoff"><h2>Сохраняемый контекст заменяет «помни наш прошлый чат»</h2><div class="code-block" data-copy="false"><pre><code>STEP ADD          → canonical task contract
+STEP PLAN         → draft plan + independent planning-review + fingerprints
 STEP IMPLEMENT    → code/tests + verification evidence
-STEP REVIEW       → immutable review report
-STEP FIX          → изменения по конкретным findings
-PROJECT RECONCILE → audit report / corrective STEP</code></pre></div><p>Каждый переход оставляет следующему агенту или новой сессии конкретный вход для продолжения работы.</p></section>
-<section id="execution-status"><h2>Execution Status — локальная операционная память, а не журнал аудита</h2><p><code>.project/local/execution/execution-status.json</code> хранит root command, режим выполнения, текущую canonical command, попытку, status/result и данные, нужные resolver для продолжения после сбоя. Файл нужен для recovery между сессиями и не заменяет review reports, evidence или будущую аналитику Activity/Runs.</p></section><section id="git-native"><h2>Git хранит историю, но Harness не сводится к commits</h2><p>Git показывает <em>что</em> изменилось и когда. REQ, ADR, STEP и доказательства выполнения добавляют <em>зачем</em>, в каких границах, по каким критериям и с каким результатом ревью. Поэтому история Git и база знаний проекта дополняют друг друга.</p></section>
-<section id="local"><h2>Локальный исходный контекст остаётся локальным</h2><p><code>PROJECT_BRIEF.local.md</code> предназначен для незрелых идей, приватных ссылок и временных заметок и заранее исключён из Git. После PROJECT INIT нормализованный контекст переносится в отслеживаемую документацию проекта.</p></section>
-<section id="drift"><h2>Память требует проверки согласованности</h2><p>Ручные hotfix, устаревшие статусы и расхождения документации неизбежны. Поэтому <code>PROJECT RECONCILE</code> сравнивает уровни истины репозитория и создаёт явный отчёт аудита или корректирующую работу вместо скрытого исправления.</p></section>
-<nav class="prev-next" aria-label="Навигация по документации"><a href="/runtimes/"><span>Назад</span>Codex и Claude Code</a><a href="/maintenance/"><span>Далее</span>Поддержка</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#memory">Что такое память</a><a href="#layout">Структура</a><a href="#handoff">Передача контекста</a><a href="#execution-status">Execution Status</a><a href="#git-native">Роль Git</a><a href="#local">Локальный brief</a><a href="#drift">Согласованность</a></aside>
+STEP REVIEW       → immutable exact-revision review report
+STEP FIX          → изменения по конкретным implementation findings
+PROJECT RECONCILE → audit/migration report + corrective work</code></pre></div><p>Каждый переход оставляет следующему агенту или новой сессии проверяемый вход для продолжения работы.</p></section>
+<section id="execution-status"><h2>Состояние выполнения — локальная операционная память, а не журнал аудита</h2><p><code>.harness/local/execution/execution-status.json</code> хранит корневую команду, режим выполнения, текущую каноническую команду, попытку, состояние и результат и данные для безопасного продолжения после сбоя. Файл не отслеживается Git и не заменяет отчёты проверок, доказательства или продуктовую историю.</p></section>
+<section id="history"><h2>Активные документы и исторические отчёты имеют разный жизненный цикл</h2><p>REQ, STEP, OQ, текущая архитектура и статус ADR могут эволюционировать. Отчёты проверки реализации, планы, INIT-проверки и завершённые отчёты аудита/обновления — неизменяемая история. Миграция схемы обновляет активные документы и шаблоны, но не переписывает старые отчёты задним числом.</p></section>
+<section id="git-native"><h2>Git хранит историю, но Harness не сводится к коммитам</h2><p>Git показывает <em>что</em> изменилось и когда. REQ, ADR, STEP, семантические проверки и доказательства добавляют <em>зачем</em>, в каких границах, по каким критериям и с каким результатом проверки.</p></section>
+<section id="local"><h2>Локальный исходный контекст остаётся локальным</h2><p><code>PROJECT_BRIEF.local.md</code> предназначен для незрелых идей, приватных ссылок и временных заметок и исключён из Git. После PROJECT INIT нормализованный контекст переносится в отслеживаемые канонические документы проекта.</p></section>
+<section id="drift"><h2>Память требует проверки согласованности</h2><p><code>PROJECT RECONCILE</code> сравнивает фактическое состояние с знаниями проекта, мигрирует активную схему проектных документов при необходимости и создаёт явный явный аудит и корректирующую работу вместо скрытого изменения кода продукта.</p></section>
+<nav class="prev-next" aria-label="Навигация по документации"><a href="/runtimes/"><span>Назад</span>Codex и Claude Code</a><a href="/validators/"><span>Далее</span>Валидаторы</a></nav></article>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#memory">Что такое память</a><a href="#layout">Структура репозитория</a><a href="#topology">Пути из manifest</a><a href="#projections">Проекции</a><a href="#handoff">Передача контекста</a><a href="#execution-status">Состояние выполнения</a><a href="#history">История</a><a href="#git-native">Роль Git</a><a href="#local">Локальный бриф</a><a href="#drift">Согласованность</a></aside>
   </div>
 </main>
 <footer class="site-footer">
@@ -122,13 +132,13 @@ PROJECT RECONCILE → audit report / corrective STEP</code></pre></div><p>Каж
     </div>
     <nav class="footer-links" aria-label="Навигация в подвале">
       <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
-      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/maintenance/">Поддержка</a><a href="/faq/">FAQ</a>
+      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/validators/">Валидаторы</a><a href="/maintenance/">Поддержка</a><a href="/faq/">Вопросы и ответы</a>
       <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
   </div>
 </footer>
-<script src="/js/theme.js?v=b7e20d64"></script>
-<script src="/js/main.js?v=b7e20d64"></script>
-<script type="module" src="/js/search.js?v=b7e20d64"></script>
+<script src="/js/theme.js?v=f19b7a42"></script>
+<script src="/js/main.js?v=f19b7a42"></script>
+<script type="module" src="/js/search.js?v=f19b7a42"></script>
 </body>
 </html>
