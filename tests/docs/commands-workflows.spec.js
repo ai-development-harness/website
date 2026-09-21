@@ -28,7 +28,7 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(runCommand).toContainText('execution.maxFixReviewCycles');
   });
 
-  test('цепочки отражают актуальную семантику v0.6.0, а не старые упрощения', async ({ page }) => {
+  test('цепочки отражают актуальную семантику Harness, а не старые упрощения', async ({ page }) => {
     await page.goto('/commands/');
 
     const next = page.locator('.command-item').filter({ hasText: 'STEP NEXT' }).first();
