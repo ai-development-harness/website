@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark light">
-<title>Валидаторы AI Development Harness — CLI, gates и проверки</title>
+<title>Валидаторы AI Development Harness — CLI и проверки</title>
 <meta name="description" content="Справочник validation layer AI Development Harness v0.6.0: validate.py, command validation, projections, INIT finalization, review/report contracts, Git preflight, ключи, exit codes и примеры.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/validators/">
@@ -16,12 +16,12 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
-<meta property="og:title" content="Валидаторы AI Development Harness — CLI, gates и проверки">
+<meta property="og:title" content="Валидаторы AI Development Harness — CLI и проверки">
 <meta property="og:description" content="Как устроен deterministic validation layer Harness v0.6.0: основные CLI, контракты, exit codes, self-tests и рекомендуемые последовательности.">
 <meta property="og:url" content="https://ai-development-harness.ru/validators/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Валидаторы AI Development Harness — CLI, gates и проверки">
+<meta name="twitter:title" content="Валидаторы AI Development Harness — CLI и проверки">
 <meta name="twitter:description" content="Справочник deterministic validation layer Harness v0.6.0: validate.py, command/review/report contracts, projections, INIT finalization и Git preflight.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <script src="/js/theme-init.js?v=c4a91f6e"></script>
@@ -76,58 +76,58 @@
     <div class="container">
       <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span>→</span><span>Валидаторы</span></nav>
       <div class="eyebrow">Документация Harness</div>
-      <h1>Валидаторы и deterministic gates</h1>
-      <p>Что именно Harness проверяет машинно до mutation: от структуры project knowledge и command transitions до INIT finalization, review contracts, self-update и безопасных Git-операций.</p>
+      <h1>Валидаторы и детерминированные проверки</h1>
+      <p>Что именно Harness проверяет машинно до изменяющих операций: от структуры знаний проекта и переходов команд до финализации INIT, контрактов ревью, самообновления и безопасных операций Git.</p>
     </div>
   </header>
   <div class="container docs-shell">
     <article class="article">
-<section id="overview"><h2>Validation layer — часть протокола, а не набор вспомогательных скриптов</h2><p>Harness v0.6.0 разделяет reasoning и детерминированные инварианты. Модель анализирует требования, архитектуру и код, но структура документов, переходы команд, fingerprints, projections, review/report schema, update route и Git safety проверяются Python tooling под <code>.harness/tools/</code>.</p><div class="article-note"><strong>Fail closed.</strong> Если обязательный Git/config/document context нельзя достоверно прочитать, gate должен вернуть BLOCKED/FAIL, а не «продолжить насколько получилось».</div><p><a class="text-link" href="https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/VALIDATORS.md" target="_blank" rel="noreferrer">Каноническая низкоуровневая документация VALIDATORS.md →</a></p></section>
+<section id="overview"><h2>Слой проверок — часть протокола, а не набор вспомогательных скриптов</h2><p>Harness v0.6.0 разделяет рассуждение модели и детерминированные инварианты. Модель анализирует требования, архитектуру и код, но структура документов, переходы команд, отпечатки, проекции, схемы отчётов ревью, маршрут обновления и безопасность Git проверяются инструментами Python под <code>.harness/tools/</code>.</p><div class="article-note"><strong>Блокировать при неопределённости.</strong> Если обязательный контекст Git, конфигурации или документов нельзя достоверно прочитать, проверка должна вернуть BLOCKED/FAIL, а не «продолжить насколько получилось».</div><p><a class="text-link" href="https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/VALIDATORS.md" target="_blank" rel="noreferrer">Каноническая низкоуровневая документация VALIDATORS.md →</a></p></section>
 
-<section id="validate"><h2>Главный Harness Integrity validator</h2><h3><code>.harness/tools/validate.py</code></h3><p>Агрегирует repository hygiene, manifest/policy, project integrity, planning contracts, projections, reports, update lock и другие обязательные инварианты.</p><div class="code-block"><pre><code>python3 .harness/tools/validate.py --mode manual
+<section id="validate"><h2>Главный валидатор целостности Harness</h2><h3><code>.harness/tools/validate.py</code></h3><p>Агрегирует состояние репозитория, manifest и политики, целостность проекта, контракты планирования, проекции, отчёты, lock обновления и другие обязательные инварианты.</p><div class="code-block"><pre><code>python3 .harness/tools/validate.py --mode manual
 python3 .harness/tools/validate.py --mode commit
-python3 .harness/tools/validate.py --mode ci</code></pre></div><p><strong>Exit codes:</strong> <code>0</code> — PASS, <code>1</code> — FAIL, <code>2</code> — BLOCKED: обязательный контекст или dependency недоступны.</p></section>
+python3 .harness/tools/validate.py --mode ci</code></pre></div><p><strong>Коды завершения:</strong> <code>0</code> — PASS, <code>1</code> — FAIL, <code>2</code> — BLOCKED: обязательный контекст или зависимости недоступны.</p></section>
 
-<section id="commands"><h2>Command Transition System</h2><h3><code>.harness/tools/validate-command.py</code></h3><p>Нормализует одну Harness-команду или chain и проверяет её по <code>.harness/command-transitions.json</code> до запуска runtime. Неизвестный edge означает <code>INVALID_CHAIN</code> и ноль выполненных сегментов.</p><div class="code-block"><pre><code>python3 .harness/tools/validate-command.py --json -- 'GIT CHECK > COMMIT > PUSH > PR'</code></pre></div><p><code>--json</code> нужен клиентам и tooling для machine-readable результата.</p><h3><code>.harness/tools/check-command-references.py</code></h3><p>Ищет deprecated или неканонические command references в живых документах.</p><div class="code-block"><pre><code>python3 .harness/tools/check-command-references.py
-python3 .harness/tools/check-command-references.py --json</code></pre></div><p>DRIFT является результатом аудита и не считается runtime crash checker-а; BLOCKED используется, если документ нельзя безопасно прочитать или определить scope.</p></section>
+<section id="commands"><h2>Система переходов команд</h2><h3><code>.harness/tools/validate-command.py</code></h3><p>Нормализует одну команду Harness или цепочку и проверяет её по <code>.harness/command-transitions.json</code> до запуска среды исполнения. Неизвестный переход означает <code>INVALID_CHAIN</code> и ноль выполненных сегментов.</p><div class="code-block"><pre><code>python3 .harness/tools/validate-command.py --json -- 'GIT CHECK > COMMIT > PUSH > PR'</code></pre></div><p><code>--json</code> нужен клиентам и инструментам для машиночитаемого результата.</p><h3><code>.harness/tools/check-command-references.py</code></h3><p>Ищет устаревшие или неканонические ссылки на команды в актуальных документах.</p><div class="code-block"><pre><code>python3 .harness/tools/check-command-references.py
+python3 .harness/tools/check-command-references.py --json</code></pre></div><p>DRIFT является результатом аудита и не считается сбоем самой проверки; BLOCKED используется, если документ нельзя безопасно прочитать или определить область проверки.</p></section>
 
-<section id="documents"><h2>Documents, planning и project integrity</h2><div class="article-grid"><div class="mini-card"><h3><code>document_contract.py</code></h3><p>Schema-v1 Markdown/frontmatter parser: duplicate sections, H1, mandatory fields, placeholders, hashes и atomic UTF-8 writes.</p></div><div class="mini-card"><h3><code>planning_contract.py</code></h3><p>REQ/ADR/OQ/STEP IDs, dependencies, risk flags, mutation policy, completion proofs, OQ blockers, plan/context fingerprints и matching planning-review.</p></div><div class="mini-card"><h3><code>project_integrity.py</code></h3><p>Собирает ошибки project document model в единый список для <code>validate.py</code> и INIT finalization.</p></div><div class="mini-card"><h3><code>projection_contract.py</code></h3><p>Строит canonical projections, fail-closed обрабатывает derivation errors и требует byte-for-byte equality tracked copies.</p></div><div class="mini-card"><h3><code>template_contract.py</code></h3><p>Проверяет schema-v1 project-owned templates STEP/REQ/ADR/OQ/review/report. Их изменение выполняет reconciliation, а не silent self-update.</p></div><div class="mini-card"><h3><code>harness_config.py</code></h3><p>Fail-closed parser manifest/frontmatter/TOML, duplicate keys и repository-relative path containment.</p></div></div><p>Эти модули в основном являются внутренними validation boundaries. Пользователь обычно вызывает их через публичные CLI-gates.</p></section>
+<section id="documents"><h2>Документы, планирование и целостность проекта</h2><div class="article-grid"><div class="mini-card"><h3><code>document_contract.py</code></h3><p>Парсер Markdown/frontmatter schema-v1: дубли разделов, H1, обязательные поля, заполнители, хэши и атомарная запись UTF-8.</p></div><div class="mini-card"><h3><code>planning_contract.py</code></h3><p>REQ/ADR/OQ/STEP IDs, зависимости, флаги риска, правила изменений, доказательства завершения, блокирующие OQ, отпечатки плана/контекста и соответствующая проверка плана.</p></div><div class="mini-card"><h3><code>project_integrity.py</code></h3><p>Собирает ошибки модели проектных документов в единый список для <code>validate.py</code> и INIT finalization.</p></div><div class="mini-card"><h3><code>projection_contract.py</code></h3><p>Строит канонические проекции, блокирует работу при ошибках построения и требует точного побайтового совпадения отслеживаемых копий.</p></div><div class="mini-card"><h3><code>template_contract.py</code></h3><p>Проверяет проектные шаблоны schema-v1 для STEP/REQ/ADR/OQ/review/report. Их изменение выполняется через восстановление согласованности, а не скрытое самообновление.</p></div><div class="mini-card"><h3><code>harness_config.py</code></h3><p>Строгий парсер manifest/frontmatter/TOML: дубли ключей и контроль путей относительно репозитория.</p></div></div><p>Эти модули в основном являются внутренними границами проверок. Пользователь обычно вызывает их через публичные CLI-проверки.</p></section>
 
-<section id="projections"><h2>Projection validator</h2><h3><code>.harness/tools/sync-projections.py</code></h3><p>Строит ожидаемые <code>SPEC.md</code>, requirements/project STATUS, roadmap и Open Questions index из canonical REQ/STEP/OQ и сравнивает tracked copies byte-for-byte.</p><div class="code-block"><pre><code># read-only
+<section id="projections"><h2>Валидатор проекций</h2><h3><code>.harness/tools/sync-projections.py</code></h3><p>Строит ожидаемые <code>SPEC.md</code>, STATUS требований/проекта, дорожную карту и индекс открытых вопросов из канонических REQ/STEP/OQ и сравнивает отслеживаемые копии побайтово.</p><div class="code-block"><pre><code># read-only
 python3 .harness/tools/sync-projections.py --check --json
 
 # regeneration
-python3 .harness/tools/sync-projections.py --json</code></pre></div><p>В <code>--check</code>: <code>0</code> — PASS, <code>1</code> — DRIFT. В mutation mode: <code>0</code> — UPDATED/PASS, <code>2</code> — BLOCKED, если canonical state нельзя безопасно превратить в projection.</p></section>
+python3 .harness/tools/sync-projections.py --json</code></pre></div><p>В <code>--check</code>: <code>0</code> — PASS, <code>1</code> — DRIFT. В режиме изменения: <code>0</code> — UPDATED/PASS, <code>2</code> — BLOCKED, если каноническое состояние нельзя безопасно превратить в проекцию.</p></section>
 
-<section id="init"><h2>PROJECT INIT finalization gate</h2><h3><code>.harness/tools/finalize-project-init.py</code></h3><p>Единственный корректный путь выставить <code>project.initialized=true</code>. Проверяет project overview, canonical REQ, STEP, project integrity, projections, два matching PASS INIT-review и отсутствие блокирующих project-level OQ.</p><div class="code-block"><pre><code># только проверить preconditions
+<section id="init"><h2>Проверка финализации PROJECT INIT</h2><h3><code>.harness/tools/finalize-project-init.py</code></h3><p>Единственный корректный путь выставить <code>project.initialized=true</code>. Проверяет описание проекта, канонические REQ, STEP, целостность проекта, проекции, два соответствующих PASS-отчёта INIT и отсутствие блокирующих OQ уровня проекта.</p><div class="code-block"><pre><code># только проверить preconditions
 python3 .harness/tools/finalize-project-init.py \
   --name '&lt;project-name&gt;' --check --json
 
 # finalize
 python3 .harness/tools/finalize-project-init.py \
-  --name '&lt;project-name&gt;' --json</code></pre></div><p><strong>Exit codes:</strong> <code>0</code> — PASS/INITIALIZED, <code>1</code> — BLOCKED. Mutation атомарна: при неуспешной postcondition исходный manifest восстанавливается.</p></section>
+  --name '&lt;project-name&gt;' --json</code></pre></div><p><strong>Коды завершения:</strong> <code>0</code> — PASS/INITIALIZED, <code>1</code> — BLOCKED. Изменение атомарно: при неуспешной postcondition исходный manifest восстанавливается.</p></section>
 
-<section id="reviews"><h2>Review gates и immutable review contracts</h2><h3><code>.harness/tools/review_gates.py</code></h3><p>Read-only preselector определяет минимально обязательные security/tests reviewers по policy, STEP type, risk flags и фактической changed surface.</p><div class="code-block"><pre><code>python3 .harness/tools/review_gates.py STEP-042 --json</code></pre></div><h3><code>.harness/tools/review_contract.py</code></h3><p>Проверяет implementation/planning/init/migration review history: schema, точную repository revision, verdict/findings, specialized evidence, hashes и immutable identity.</p><div class="code-block"><pre><code>python3 .harness/tools/review_contract.py --json
+<section id="reviews"><h2>Проверки ревью и неизменяемые контракты отчётов</h2><h3><code>.harness/tools/review_gates.py</code></h3><p>Проверка без изменений определяет минимально обязательные проверки безопасности и тестов по политике, типу STEP, флагам риска и фактически изменённым областям.</p><div class="code-block"><pre><code>python3 .harness/tools/review_gates.py STEP-042 --json</code></pre></div><h3><code>.harness/tools/review_contract.py</code></h3><p>Проверяет историю ревью реализации, планирования, INIT и миграций: схему, точную ревизию репозитория, вердикт/замечания, специализированные доказательства, хэши и неизменяемую идентичность.</p><div class="code-block"><pre><code>python3 .harness/tools/review_contract.py --json
 python3 .harness/tools/review_contract.py --step STEP-042 --json
 python3 .harness/tools/review_contract.py \
   --file planning/reviews/STEP-042/REVIEW-&lt;timestamp&gt;.md \
-  --current-revision --json</code></pre></div><p><strong>Exit codes:</strong> <code>0</code> — PASS, <code>1</code> — FAIL.</p></section>
+  --current-revision --json</code></pre></div><p><strong>Коды завершения:</strong> <code>0</code> — PASS, <code>1</code> — FAIL.</p></section>
 
-<section id="reports"><h2>Durable operational reports</h2><h3><code>.harness/tools/report_contract.py</code></h3><p>Проверяет audit, release-check, skill-search и harness-update reports: schema, kind, metadata, timestamp identity и обязательные sections.</p><div class="code-block"><pre><code>python3 .harness/tools/report_contract.py --all --json
+<section id="reports"><h2>Сохраняемые операционные отчёты</h2><h3><code>.harness/tools/report_contract.py</code></h3><p>Проверяет отчёты аудита, готовности к релизу, поиска навыков и обновления Harness: схему, тип, метаданные, временную идентичность и обязательные разделы.</p><div class="code-block"><pre><code>python3 .harness/tools/report_contract.py --all --json
 python3 .harness/tools/report_contract.py \
   --file planning/harness-updates/UPDATE-&lt;timestamp&gt;.md \
-  --kind harness_update --json</code></pre></div><p><strong>Exit codes:</strong> <code>0</code> — valid, <code>1</code> — invalid.</p></section>
+  --kind harness_update --json</code></pre></div><p><strong>Коды завершения:</strong> <code>0</code> — корректно, <code>1</code> — некорректно.</p></section>
 
-<section id="git"><h2>Deterministic Git preflight</h2><h3><code>.harness/tools/git-preflight.py</code></h3><p>Read-only safety gate перед Git mutation. Проверяет strict <code>.harness/git-policy.toml</code>, branch/protected rules, staged/unstaged state, remote ahead/behind, PR prerequisites и Harness validation. Сам commit/push/PR/merge не выполняет; на PASS возвращает exact mutation plan.</p><div class="code-block"><pre><code>python3 .harness/tools/git-preflight.py check --json
+<section id="git"><h2>Детерминированная предварительная проверка Git</h2><h3><code>.harness/tools/git-preflight.py</code></h3><p>Проверка безопасности без изменений перед изменяющей операцией Git. Проверяет строгий <code>.harness/git-policy.toml</code>, правила веток и защищённых веток, состояние индекса/рабочего дерева, расхождение с удалённой веткой, предусловия PR и проверку Harness. Сам коммит/отправку/PR/слияние не выполняет; при PASS возвращает точный план изменяющей операции.</p><div class="code-block"><pre><code>python3 .harness/tools/git-preflight.py check --json
 python3 .harness/tools/git-preflight.py \
   commit --commit-type feat --slug user-export --json
 python3 .harness/tools/git-preflight.py push --json
 python3 .harness/tools/git-preflight.py pr --json
-python3 .harness/tools/git-preflight.py sync --json</code></pre></div><p><strong>Exit codes:</strong> <code>0</code> — PASS, <code>2</code> — BLOCKED/config/IO/Git error. <code>--commit-type</code> и <code>--slug</code> относятся только к commit preflight.</p></section>
+python3 .harness/tools/git-preflight.py sync --json</code></pre></div><p><strong>Коды завершения:</strong> <code>0</code> — PASS, <code>2</code> — BLOCKED или ошибка конфигурации, ввода-вывода либо Git. <code>--commit-type</code> и <code>--slug</code> относятся только к предварительной проверке коммита.</p></section>
 
-<section id="execution"><h2>Execution Status validation</h2><h3><code>.harness/tools/execution_status.py</code></h3><p>Управляет crash-safe local state и всегда валидирует schema при load/save: уникальные execution IDs, mode/status, root/current commands, attempt и FIX/REVIEW cycle counter. Повреждённый файл не трактуется как «нет незавершённых execution».</p></section>
+<section id="execution"><h2>Проверка состояния выполнения</h2><h3><code>.harness/tools/execution_status.py</code></h3><p>Управляет локальным состоянием, устойчивым к сбоям, и всегда проверяет схему при чтении/записи: уникальные ID выполнения, режим/состояние, корневую/текущую команды, номер попытки и счётчик циклов FIX/REVIEW. Повреждённый файл не трактуется как «нет незавершённых запусков».</p></section>
 
-<section id="self-tests"><h2>Self-tests проверяют сами gates</h2><p>Harness содержит synthetic regression suites для command references, execution, planning contracts, reports, repository hardening, Git policy/preflight, config, self-update и update migration.</p><div class="code-block"><pre><code>python3 .harness/tools/command-references-self-test.py
+<section id="self-tests"><h2>Самопроверки проверяют сами механизмы</h2><p>Harness содержит синтетические регрессионные наборы для ссылок на команды, выполнения, контрактов планирования, отчётов, защиты репозитория, политики/предварительной проверки Git, конфигурации, самообновления и миграции обновлений.</p><div class="code-block"><pre><code>python3 .harness/tools/command-references-self-test.py
 python3 .harness/tools/execution-self-test.py
 python3 .harness/tools/planning-contract-self-test.py
 python3 .harness/tools/report-contract-self-test.py
@@ -136,17 +136,17 @@ python3 .harness/tools/git-policy-self-test.py
 python3 .harness/tools/git-preflight-self-test.py
 python3 .harness/tools/harness-config-self-test.py
 python3 .harness/tools/harness-update-self-test.py
-python3 .harness/tools/update-migration-self-test.py</code></pre></div><div class="article-note"><strong>Self-test PASS не проверяет текущий проект.</strong> Он доказывает только, что implementation самого gate выдержал известные positive/negative regressions.</div></section>
+python3 .harness/tools/update-migration-self-test.py</code></pre></div><div class="article-note"><strong>PASS самопроверки не проверяет текущий проект.</strong> Он доказывает только, что реализация самого механизма выдержала известные положительные и отрицательные регрессии.</div></section>
 
-<section id="recipes"><h2>Типовые последовательности</h2><h3>Перед commit</h3><div class="code-block"><pre><code>python3 .harness/tools/git-preflight.py check --json
+<section id="recipes"><h2>Типовые последовательности</h2><h3>Перед коммитом</h3><div class="code-block"><pre><code>python3 .harness/tools/git-preflight.py check --json
 python3 .harness/tools/validate.py --mode commit
 python3 .harness/tools/git-preflight.py \
-  commit --commit-type &lt;type&gt; --slug &lt;slug&gt; --json</code></pre></div><h3>После изменения project documents</h3><div class="code-block"><pre><code>python3 .harness/tools/sync-projections.py --check --json
-python3 .harness/tools/validate.py --mode manual</code></pre></div><h3>При проблемах command routing</h3><div class="code-block"><pre><code>python3 .harness/tools/validate-command.py --json -- '&lt;command-or-chain&gt;'
+  commit --commit-type &lt;type&gt; --slug &lt;slug&gt; --json</code></pre></div><h3>После изменения проектных документов</h3><div class="code-block"><pre><code>python3 .harness/tools/sync-projections.py --check --json
+python3 .harness/tools/validate.py --mode manual</code></pre></div><h3>При проблемах маршрутизации команд</h3><div class="code-block"><pre><code>python3 .harness/tools/validate-command.py --json -- '&lt;command-or-chain&gt;'
 python3 .harness/tools/check-command-references.py --json</code></pre></div></section>
 
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/repository/"><span>Назад</span>Репозиторий как память</a><a href="/maintenance/"><span>Далее</span>Поддержка и обновление</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#overview">Модель</a><a href="#validate">validate.py</a><a href="#commands">Команды</a><a href="#documents">Documents</a><a href="#projections">Проекции</a><a href="#init">INIT gate</a><a href="#reviews">Review</a><a href="#reports">Reports</a><a href="#git">Git preflight</a><a href="#execution">Execution Status</a><a href="#self-tests">Self-tests</a><a href="#recipes">Рецепты</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#overview">Модель</a><a href="#validate">validate.py</a><a href="#commands">Команды</a><a href="#documents">Документы</a><a href="#projections">Проекции</a><a href="#init">Проверка INIT</a><a href="#reviews">Ревью</a><a href="#reports">Отчёты</a><a href="#git">Предварительная проверка Git</a><a href="#execution">Состояние выполнения</a><a href="#self-tests">Самопроверки</a><a href="#recipes">Рецепты</a></aside>
   </div>
 </main>
 <footer class="site-footer">
