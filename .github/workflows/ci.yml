@@ -72,11 +72,16 @@ jobs:
             echo "Playwright пропущен: новый набор изменений не влияет на сайт или тесты." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-  playwright:
+  playwright-shards:
+    name: Playwright — shard ${{ matrix.shard }}/3
     needs: changes
     if: needs.changes.outputs.run_tests == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
 
     steps:
       - name: Checkout
@@ -116,12 +121,44 @@ jobs:
         run: yarn playwright install chromium webkit
 
       - name: Run Playwright tests
-        run: yarn test
+        run: yarn test --shard=${{ matrix.shard }}/3
 
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}-of-3
           path: playwright-report/
           retention-days: 14
+
+  # Отдельный агрегирующий job сохраняет стабильное имя проверки "playwright"
+  # для branch protection и сводит результат трёх параллельных shards в один статус.
+  playwright:
+    needs: [changes, playwright-shards]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: Aggregate Playwright result
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          RUN_TESTS: ${{ needs.changes.outputs.run_tests }}
+          SHARDS_RESULT: ${{ needs.playwright-shards.result }}
+        run: |
+          if [[ "$CHANGES_RESULT" != "success" ]]; then
+            echo "Не удалось определить необходимость запуска тестов."
+            exit 1
+          fi
+
+          if [[ "$RUN_TESTS" != "true" ]]; then
+            echo "Playwright пропущен: новый набор изменений не влияет на сайт или тесты."
+            exit 0
+          fi
+
+          if [[ "$SHARDS_RESULT" != "success" ]]; then
+            echo "Хотя бы один Playwright shard завершился неуспешно: $SHARDS_RESULT"
+            exit 1
+          fi
+
+          echo "Все три Playwright shard завершились успешно."
