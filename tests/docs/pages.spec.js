@@ -43,7 +43,7 @@ test.describe('Документация — структура страниц', 
     }
   });
 
-  test('документация отличает canonical REQ от deterministic projections', async ({ page }) => {
+  test('документация отличает канонические REQ от детерминированных проекций', async ({ page }) => {
     await page.goto('/architecture/');
     const article = page.locator('article.article');
 
@@ -53,24 +53,24 @@ test.describe('Документация — структура страниц', 
     await expect(article).toContainText('.harness/tools/sync-projections.py');
   });
 
-  test('workflow описывает проверяемое Evidence без подмены output пересказом', async ({ page }) => {
+  test('процесс описывает проверяемые доказательства без подмены вывода пересказом', async ({ page }) => {
     await page.goto('/workflow/');
     const article = page.locator('article.article');
 
-    await expect(article).toContainText('exit code');
+    await expect(article).toContainText('код завершения');
     await expect(article).toContainText('Observed');
   });
 
-  test('FAQ направляет к актуальному deterministic validation layer', async ({ page }) => {
+  test('раздел вопросов направляет к актуальному слою проверок', async ({ page }) => {
     await page.goto('/faq/');
     const article = page.locator('article.article');
 
-    await expect(article).toContainText('dependency-free Python 3.11+');
-    await expect(article).toContainText('gate блокирует операцию');
+    await expect(article).toContainText('Python 3.11+ без сторонних зависимостей');
+    await expect(article).toContainText('проверка блокирует операцию');
     await expect(article.getByRole('link', { name: '«Валидаторы»' })).toHaveAttribute('href', '/validators/');
   });
 
-  test('страница FAQ содержит раскрываемые ответы на частые вопросы', async ({ page }) => {
+  test('страница вопросов содержит раскрываемые ответы на частые вопросы', async ({ page }) => {
     await page.goto('/faq/');
     const questions = page.locator('.faq-item');
 
