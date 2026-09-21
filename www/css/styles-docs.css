@@ -14,7 +14,7 @@
 .article a { color: var(--cyan); }
 .article ul, .article ol { padding-left: 24px; }
 .article li + li { margin-top: 8px; }
-.article code { padding: 2px 6px; border: 1px solid var(--border); border-radius: 6px; background: rgba(13, 31, 50, .8); color: #c7e8ff; font-size: .9em; }
+.article code { padding: 2px 6px; border: 1px solid var(--border); border-radius: 6px; background: rgba(13, 31, 50, .8); color: #c7e8ff; font-size: .9em; overflow-wrap: anywhere; }
 .code-block { margin: 20px 0; overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: #06101c; }
 .code-block pre { margin: 0; padding: 24px; font-size: 14px; line-height: 1.65; color: #c9d7e8; }
 .code-block code { padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; font-size: inherit; }

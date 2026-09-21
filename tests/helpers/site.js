@@ -8,7 +8,7 @@ export const PUBLIC_PAGES = [
   { path: '/architecture/', h1: 'Архитектура Harness', docs: true },
   { path: '/runtimes/', h1: 'Codex и Claude Code', docs: true },
   { path: '/repository/', h1: 'Репозиторий как долговременная память', docs: true },
-  { path: '/validators/', h1: 'Валидаторы и детерминированные проверки', docs: true },
+  { path: '/validators/', h1: 'Валидаторы и детерминированные проверки', breadcrumb: 'Валидаторы', docs: true },
   { path: '/maintenance/', h1: 'Поддержка и обновление', docs: true },
   { path: '/faq/', h1: 'Вопросы и ответы', docs: true },
 ];

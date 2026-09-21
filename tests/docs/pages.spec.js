@@ -21,7 +21,7 @@ test.describe('Документация — структура страниц', 
 
       await expect(breadcrumbs).toBeVisible();
       await expect(breadcrumbs.getByRole('link', { name: 'Главная' })).toHaveAttribute('href', '/');
-      await expect(breadcrumbs).toContainText(docPage.h1 === 'Команды Harness' ? 'Команды Harness' : docPage.h1);
+      await expect(breadcrumbs).toContainText(docPage.breadcrumb ?? docPage.h1);
     });
 
     test(`оглавление страницы «${docPage.h1}» ссылается только на существующие разделы`, async ({ page }) => {

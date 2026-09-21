@@ -12,7 +12,7 @@
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://mc.yandex.ru">
 <link rel="prefetch" href="/maintenance/">
-<link rel="preload" href="/css/copy.css?v=c4a91f6e" as="style">
+<link rel="preload" href="/css/copy.css?v=e6a41c2f" as="style">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
@@ -24,12 +24,12 @@
 <meta name="twitter:title" content="Валидаторы AI Development Harness — CLI и проверки">
 <meta name="twitter:description" content="Справочник deterministic validation layer Harness: validate.py, command/review/report contracts, projections, INIT finalization и Git preflight.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=c4a91f6e"></script>
-<link rel="stylesheet" href="/css/styles.css?v=c4a91f6e">
-<link rel="stylesheet" href="/css/styles-site.css?v=c4a91f6e">
-<link rel="stylesheet" href="/css/styles-docs.css?v=c4a91f6e">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=c4a91f6e">
-<link rel="stylesheet" href="/css/theme.css?v=c4a91f6e">
+<script src="/js/theme-init.js?v=e6a41c2f"></script>
+<link rel="stylesheet" href="/css/styles.css?v=e6a41c2f">
+<link rel="stylesheet" href="/css/styles-site.css?v=e6a41c2f">
+<link rel="stylesheet" href="/css/styles-docs.css?v=e6a41c2f">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=e6a41c2f">
+<link rel="stylesheet" href="/css/theme.css?v=e6a41c2f">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-development-harness.ru/"}, {"@type": "ListItem", "position": 2, "name": "Валидаторы", "item": "https://ai-development-harness.ru/validators/"}]}</script>
 </head>
 <body>
@@ -91,7 +91,7 @@ python3 .harness/tools/validate.py --mode ci</code></pre></div><p><strong>Код
 <section id="commands"><h2>Система переходов команд</h2><h3><code>.harness/tools/validate-command.py</code></h3><p>Нормализует одну команду Harness или цепочку и проверяет её по <code>.harness/command-transitions.json</code> до запуска среды исполнения. Неизвестный переход означает <code>INVALID_CHAIN</code> и ноль выполненных сегментов.</p><div class="code-block"><pre><code>python3 .harness/tools/validate-command.py --json -- 'GIT CHECK > COMMIT > PUSH > PR'</code></pre></div><p><code>--json</code> нужен клиентам и инструментам для машиночитаемого результата.</p><h3><code>.harness/tools/check-command-references.py</code></h3><p>Ищет устаревшие или неканонические ссылки на команды в актуальных документах.</p><div class="code-block"><pre><code>python3 .harness/tools/check-command-references.py
 python3 .harness/tools/check-command-references.py --json</code></pre></div><p>DRIFT является результатом аудита и не считается сбоем самой проверки; BLOCKED используется, если документ нельзя безопасно прочитать или определить область проверки.</p></section>
 
-<section id="documents"><h2>Документы, планирование и целостность проекта</h2><div class="article-grid"><div class="mini-card"><h3><code>document_contract.py</code></h3><p>Парсер Markdown/frontmatter schema-v1: дубли разделов, H1, обязательные поля, заполнители, хэши и атомарная запись UTF-8.</p></div><div class="mini-card"><h3><code>planning_contract.py</code></h3><p>REQ/ADR/OQ/STEP IDs, зависимости, флаги риска, правила изменений, доказательства завершения, блокирующие OQ, отпечатки плана/контекста и соответствующая проверка плана.</p></div><div class="mini-card"><h3><code>project_integrity.py</code></h3><p>Собирает ошибки модели проектных документов в единый список для <code>validate.py</code> и INIT finalization.</p></div><div class="mini-card"><h3><code>projection_contract.py</code></h3><p>Строит канонические проекции, блокирует работу при ошибках построения и требует точного побайтового совпадения отслеживаемых копий.</p></div><div class="mini-card"><h3><code>template_contract.py</code></h3><p>Проверяет проектные шаблоны schema-v1 для STEP/REQ/ADR/OQ/review/report. Их изменение выполняется через восстановление согласованности, а не скрытое самообновление.</p></div><div class="mini-card"><h3><code>harness_config.py</code></h3><p>Строгий парсер manifest/frontmatter/TOML: дубли ключей и контроль путей относительно репозитория.</p></div></div><p>Эти модули в основном являются внутренними границами проверок. Пользователь обычно вызывает их через публичные CLI-проверки.</p></section>
+<section id="documents"><h2>Документы, планирование и целостность проекта</h2><div class="article-grid"><div class="mini-card"><h3><code>.harness/tools/document_contract.py</code></h3><p>Парсер Markdown/frontmatter schema-v1: дубли разделов, H1, обязательные поля, заполнители, хэши и атомарная запись UTF-8.</p></div><div class="mini-card"><h3><code>.harness/tools/planning_contract.py</code></h3><p>REQ/ADR/OQ/STEP IDs, зависимости, флаги риска, правила изменений, доказательства завершения, блокирующие OQ, отпечатки плана/контекста и соответствующая проверка плана.</p></div><div class="mini-card"><h3><code>.harness/tools/project_integrity.py</code></h3><p>Собирает ошибки модели проектных документов в единый список для <code>validate.py</code> и INIT finalization.</p></div><div class="mini-card"><h3><code>.harness/tools/projection_contract.py</code></h3><p>Строит канонические проекции, блокирует работу при ошибках построения и требует точного побайтового совпадения отслеживаемых копий.</p></div><div class="mini-card"><h3><code>.harness/tools/template_contract.py</code></h3><p>Проверяет проектные шаблоны schema-v1 для STEP/REQ/ADR/OQ/review/report. Их изменение выполняется через восстановление согласованности, а не скрытое самообновление.</p></div><div class="mini-card"><h3><code>.harness/tools/harness_config.py</code></h3><p>Строгий парсер manifest/frontmatter/TOML: дубли ключей и контроль путей относительно репозитория.</p></div></div><p>Эти модули в основном являются внутренними границами проверок. Пользователь обычно вызывает их через публичные CLI-проверки.</p></section>
 
 <section id="projections"><h2>Валидатор проекций</h2><h3><code>.harness/tools/sync-projections.py</code></h3><p>Строит ожидаемые <code>SPEC.md</code>, STATUS требований/проекта, дорожную карту и индекс открытых вопросов из канонических REQ/STEP/OQ и сравнивает отслеживаемые копии побайтово.</p><div class="code-block"><pre><code># read-only
 python3 .harness/tools/sync-projections.py --check --json
@@ -163,8 +163,8 @@ python3 .harness/tools/check-command-references.py --json</code></pre></div></se
     </nav>
   </div>
 </footer>
-<script src="/js/theme.js?v=c4a91f6e"></script>
-<script src="/js/main.js?v=c4a91f6e"></script>
-<script type="module" src="/js/search.js?v=c4a91f6e"></script>
+<script src="/js/theme.js?v=e6a41c2f"></script>
+<script src="/js/main.js?v=e6a41c2f"></script>
+<script type="module" src="/js/search.js?v=e6a41c2f"></script>
 </body>
 </html>
