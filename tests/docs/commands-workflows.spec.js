@@ -12,20 +12,44 @@ test.describe('Команды — диаграммы цепочек выполн
     }
   });
 
-  test('STEP RUN STEP-NNN показывает PLAN, implementation, review и все verdict-ветки', async ({ page }) => {
+  test('STEP RUN STEP-NNN показывает планирование, реализацию, проверку и все ветки результата', async ({ page }) => {
     await page.goto('/commands/');
     const runCommand = page.locator('.command-item').filter({ hasText: 'STEP RUN STEP-NNN' });
 
     await expect(runCommand).toContainText('STEP PLAN STEP-NNN');
     await expect(runCommand).toContainText('STEP IMPLEMENT');
-    await expect(runCommand).toContainText('Verification');
-    await expect(runCommand).toContainText('Independent STEP REVIEW');
+    await expect(runCommand).toContainText('Проверки реализации');
+    await expect(runCommand).toContainText('Независимая STEP REVIEW');
     await expect(runCommand).toContainText('FAIL');
     await expect(runCommand).toContainText('FIX');
     await expect(runCommand).toContainText('PASS');
     await expect(runCommand).toContainText('Финализация STEP');
     await expect(runCommand).toContainText('BLOCKED');
     await expect(runCommand).toContainText('execution.maxFixReviewCycles');
+  });
+
+  test('цепочки отражают актуальную семантику v0.6.0, а не старые упрощения', async ({ page }) => {
+    await page.goto('/commands/');
+
+    const next = page.locator('.command-item').filter({ hasText: 'STEP NEXT' }).first();
+    await expect(next).toContainText('Незавершённые исполнения');
+    await expect(next).toContainText('Есть прерванный STEP?');
+
+    const quickFix = page.locator('.command-item').filter({ hasText: 'PROJECT QUICK FIX' }).first();
+    await expect(quickFix).toContainText('Предложить GIT COMMIT');
+
+    const updateApply = page.locator('.command-item').filter({ hasText: 'HARNESS UPDATE APPLY' }).first();
+    await expect(updateApply).toContainText('Свежая машинная предварительная проверка');
+    await expect(updateApply).toContainText('Показать изменения и предложить GIT CHECK');
+    await expect(updateApply).not.toContainText('GIT COMMIT');
+
+    const gitCommit = page.locator('.command-item').filter({ hasText: 'GIT COMMIT /' }).first();
+    await expect(gitCommit).toContainText('Фактические изменения');
+    await expect(gitCommit).not.toContainText('GIT CHECK');
+
+    const reconcile = page.locator('.command-item').filter({ hasText: 'PROJECT RECONCILE' }).first();
+    await expect(reconcile).toContainText('Проверка устаревших команд');
+    await expect(reconcile).toContainText('Нужна миграция');
   });
 
   test('страница описывает CTS, цепочки и восстановление выполнения', async ({ page }) => {
