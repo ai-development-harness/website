@@ -54,6 +54,8 @@ test.describe('Контент — Harness v0.6.0', () => {
       '.harness/tools/review_gates.py',
       '.harness/tools/review_contract.py',
       '.harness/tools/report_contract.py',
+      '.harness/tools/projection_contract.py',
+      '.harness/tools/template_contract.py',
       '.harness/tools/git-preflight.py',
       '.harness/tools/execution_status.py',
     ]) {
