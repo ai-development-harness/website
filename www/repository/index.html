@@ -82,7 +82,7 @@
   <div class="container docs-shell">
     <article class="article">
 <section id="memory"><h2>Память — это файлы, связи и фактическое состояние</h2><p>Harness специально не использует историю чата как постоянную базу знаний. Новая сессия восстанавливает контекст из версионируемых артефактов репозитория: канонических REQ/ADR/OQ/STEP, сохранённого плана, кода, тестов, доказательств выполнения и неизменяемых отчётов ревью.</p></section>
-<section id="layout"><h2>Где живёт контекст в v0.6.0</h2><div class="code-block"><pre><code>.harness/manifest.yaml                    release + project state + configured paths
+<section id="layout"><h2>Где живёт контекст</h2><div class="code-block"><pre><code>.harness/manifest.yaml                    release + project state + configured paths
 .harness/harness.lock.json                known BASE текущего Harness release
 .harness/harness-update-graph.json        допустимый route обновления + latest
 .harness/command-transitions.json         канонические переходы команд
@@ -120,7 +120,7 @@ PROJECT RECONCILE → audit/migration report + corrective work</code></pre></div
 <section id="local"><h2>Локальный исходный контекст остаётся локальным</h2><p><code>PROJECT_BRIEF.local.md</code> предназначен для незрелых идей, приватных ссылок и временных заметок и исключён из Git. После PROJECT INIT нормализованный контекст переносится в отслеживаемые канонические документы проекта.</p></section>
 <section id="drift"><h2>Память требует проверки согласованности</h2><p><code>PROJECT RECONCILE</code> сравнивает фактическое состояние с знаниями проекта, мигрирует активную схему проектных документов при необходимости и создаёт явный явный аудит и корректирующую работу вместо скрытого изменения кода продукта.</p></section>
 <nav class="prev-next" aria-label="Навигация по документации"><a href="/runtimes/"><span>Назад</span>Codex и Claude Code</a><a href="/validators/"><span>Далее</span>Валидаторы</a></nav></article>
-    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#memory">Что такое память</a><a href="#layout">Структура v0.6.0</a><a href="#topology">Пути из manifest</a><a href="#projections">Проекции</a><a href="#handoff">Передача контекста</a><a href="#execution-status">Состояние выполнения</a><a href="#history">История</a><a href="#git-native">Роль Git</a><a href="#local">Локальный бриф</a><a href="#drift">Согласованность</a></aside>
+    <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#memory">Что такое память</a><a href="#layout">Структура репозитория</a><a href="#topology">Пути из manifest</a><a href="#projections">Проекции</a><a href="#handoff">Передача контекста</a><a href="#execution-status">Состояние выполнения</a><a href="#history">История</a><a href="#git-native">Роль Git</a><a href="#local">Локальный бриф</a><a href="#drift">Согласованность</a></aside>
   </div>
 </main>
 <footer class="site-footer">
