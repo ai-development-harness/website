@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES } from '../helpers/site.js';
 
-test.describe('Контент — Harness v0.6.0', () => {
+test.describe('Контент — актуальный Harness', () => {
   test('публичные страницы не описывают старый .project control plane', async ({ page }) => {
     for (const publicPage of PUBLIC_PAGES) {
       await page.goto(publicPage.path);
@@ -16,7 +16,7 @@ test.describe('Контент — Harness v0.6.0', () => {
     await page.goto('/commands/');
     const article = page.locator('article.article');
 
-    await expect(article).toContainText('Harness v0.6.0');
+    await expect(article).toContainText('Команды Harness используют форму');
     await expect(article).toContainText('.harness/command-transitions.json');
     await expect(article).toContainText('Независимая проверка плана');
     await expect(article).toContainText('Основа контекста + хэш плана');
