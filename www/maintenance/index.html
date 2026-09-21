@@ -67,7 +67,7 @@
     <a href="/repository/">Репозиторий как память</a>
     <a href="/validators/">Валидаторы</a>
     <a href="/maintenance/">Поддержка</a>
-    <a href="/faq/">FAQ</a>
+    <a href="/faq/">Вопросы и ответы</a>
     <a href="https://github.com/ai-development-harness/ai-development-harness-template/generate" target="_blank" rel="noreferrer">Использовать шаблон</a>
   </nav>
 </header>
@@ -100,7 +100,7 @@ GIT CHECK &gt; COMMIT &gt; PUSH &gt; PR</code></pre></div><p>Начиная с v
 <section id="legacy"><h2>Старые проекты без lock требуют явного baseline</h2><p>Если <code>.harness/harness.lock.json</code> отсутствует, доказуемой BASE-версии нет. Harness не угадывает её по похожести файлов. Legacy adoption разрешён только когда известен конкретный неизменяемый release, которому соответствует исходное состояние Harness; при неизвестном baseline нужен ручной reconciliation.</p><div class="article-note"><strong>Исторические исключения не являются частью постоянной инструкции.</strong> Обязательные промежуточные releases и reload boundaries задаются соответствующими edges в canonical <code>.harness/harness-update-graph.json</code>, поэтому updater получает их из routing metadata, а не из захардкоженного сценария документации.</div></section>
 <section id="git-preflight"><h2>Git mutation тоже проходит deterministic preflight</h2><p>Перед <code>GIT CHECK</code>, <code>GIT COMMIT</code>, <code>GIT PUSH</code>, <code>GIT PR</code> и <code>GIT SYNC</code> используется <code>.harness/tools/git-preflight.py</code>. Он возвращает PASS/BLOCKED и exact mutation plan, но сам не делает commit/push/merge. Это отделяет проверяемую safety policy от интерпретации агента.</p></section>
 <section id="security"><h2>Граф и целевые релизы читаются как данные, а не исполняются</h2><p>Moving source branch разрешено читать только для canonical <code>.harness/harness-update-graph.json</code>. Сам граф содержит только routing metadata: <code>latest</code>, directed transitions, тип перехода и при необходимости reload boundary. Содержимое protocol layer каждого hop читается только из неизменяемых release tags. Скрипты миграции, установки и инициализации из графа или целевого релиза автоматически не запускаются.</p></section>
-<nav class="prev-next" aria-label="Навигация по документации"><a href="/validators/"><span>Назад</span>Валидаторы</a><a href="/faq/"><span>Далее</span>FAQ</a></nav></article>
+<nav class="prev-next" aria-label="Навигация по документации"><a href="/validators/"><span>Назад</span>Валидаторы</a><a href="/faq/"><span>Далее</span>Вопросы и ответы</a></nav></article>
     <aside class="toc" aria-label="Содержание страницы"><div class="toc-title">На странице</div><a href="#boundaries">Границы владения</a><a href="#quick">PROJECT QUICK FIX</a><a href="#reconcile">PROJECT RECONCILE</a><a href="#update">Обновление Harness</a><a href="#ownership">3-way merge</a><a href="#migration">Schema migration</a><a href="#legacy">Старые проекты</a><a href="#git-preflight">Git preflight</a><a href="#security">Граница безопасности</a></aside>
   </div>
 </main>
@@ -113,7 +113,7 @@ GIT CHECK &gt; COMMIT &gt; PUSH &gt; PR</code></pre></div><p>Начиная с v
     </div>
     <nav class="footer-links" aria-label="Навигация в подвале">
       <a href="/getting-started/">Начало работы</a><a href="/workflow/">Процесс</a><a href="/commands/">Команды</a>
-      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/validators/">Валидаторы</a><a href="/maintenance/">Поддержка</a><a href="/faq/">FAQ</a>
+      <a href="/architecture/">Архитектура</a><a href="/repository/">Репозиторий</a><a href="/validators/">Валидаторы</a><a href="/maintenance/">Поддержка</a><a href="/faq/">Вопросы и ответы</a>
       <a href="https://github.com/ai-development-harness/ai-development-harness-template" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
   </div>
