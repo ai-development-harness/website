@@ -12,7 +12,8 @@ const NEXT_PAGE = new Map([
   ['/commands/', '/architecture/'],
   ['/architecture/', '/runtimes/'],
   ['/runtimes/', '/repository/'],
-  ['/repository/', '/maintenance/'],
+  ['/repository/', '/validators/'],
+  ['/validators/', '/maintenance/'],
   ['/maintenance/', '/faq/'],
 ]);
 
