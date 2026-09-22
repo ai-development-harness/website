@@ -89,6 +89,20 @@ test.describe('Контент — актуальный Harness', () => {
     }
   });
 
+  test('процесс и FAQ описывают завершение PR и необязательность GitHub CLI', async ({ page }) => {
+    await page.goto('/workflow/');
+    await expect(page.locator('#git-flow')).toContainText('GIT PR FINISH');
+    await expect(page.locator('#git-flow')).toContainText('git branch -D');
+    await expect(page.locator('#git-flow')).toContainText('gh');
+
+    await page.goto('/faq/');
+    const article = page.locator('article.article');
+    await expect(article).toContainText('HARNESS STATUS');
+    await expect(article).toContainText('HARNESS RESUME');
+    await expect(article).toContainText('Обязателен ли GitHub CLI для работы Harness?');
+    await expect(article).toContainText('GIT PR FINISH');
+  });
+
   test('поддержка описывает детерминированное обновление и миграцию проектных документов', async ({ page }) => {
     await page.goto('/maintenance/');
 
