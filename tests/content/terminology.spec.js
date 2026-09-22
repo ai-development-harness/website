@@ -4,12 +4,14 @@ import { PUBLIC_PAGES } from '../helpers/site.js';
 
 const CANONICAL_COMMAND_PATTERNS = [
   /\bPROJECT (?:INIT|STATUS|RECONCILE|QUICK FIX)\b/g,
-  /\bSTEP (?:ADD|NEXT)\b/g,
-  /\bSTEP (?:PLAN|IMPLEMENT|REVIEW|FIX|RUN|AUDIT)\b(?:\s+STEP-[A-Z0-9]+)?/g,
+  /\bSTEP (?:ADD|LIST|NEXT)\b/g,
+  /\bSTEP (?:SHOW|PLAN|IMPLEMENT|REVIEW|FIX|RUN|AUDIT)\b(?:\s+STEP-[A-Z0-9]+)?/g,
   /\bSKILL (?:FIND|INSTALL|CREATE)\b/g,
   /\bGITHUB GENERATE TEMPLATES\b/g,
   /\bRELEASE CHECK\b/g,
+  /\bHARNESS (?:HELP|STATUS|RESUME|DOCTOR|CONFIG)\b/g,
   /\bHARNESS UPDATE (?:CHECK|APPLY)\b/g,
+  /\bGIT PR FINISH\b/g,
   /\bGIT (?:CHECK|COMMIT|PUSH|PR|SYNC)\b/g,
 ];
 
@@ -111,7 +113,22 @@ test.describe('Контент — русская терминология', () =
     await page.goto('/commands/');
     const text = await page.locator('article.article').innerText();
 
-    for (const command of ['PROJECT INIT', 'STEP ADD:', 'STEP RUN STEP-NNN', 'PROJECT QUICK FIX:', 'HARNESS UPDATE CHECK', 'HARNESS UPDATE APPLY']) {
+    for (const command of [
+      'PROJECT INIT',
+      'STEP ADD:',
+      'STEP LIST',
+      'STEP SHOW STEP-NNN',
+      'STEP RUN STEP-NNN',
+      'PROJECT QUICK FIX:',
+      'HARNESS HELP',
+      'HARNESS STATUS',
+      'HARNESS RESUME',
+      'HARNESS DOCTOR',
+      'HARNESS CONFIG',
+      'HARNESS UPDATE CHECK',
+      'HARNESS UPDATE APPLY',
+      'GIT PR FINISH',
+    ]) {
       expect(text).toContain(command);
     }
   });

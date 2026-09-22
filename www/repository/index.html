@@ -87,9 +87,11 @@
 .harness/harness-update-graph.json        допустимый route обновления + latest
 .harness/command-transitions.json         канонические переходы команд
 .harness/*.toml                           update / integrity / Git policies
-.harness/docs/                            документация ядра Harness
-.harness/tools/                           deterministic tooling и validators
-.harness/local/execution/                 локальное operational state для recovery
+.harness/docs/                            документация ядра и контракт зависимостей
+.harness/docs/DEPENDENCIES.md             обязательные и необязательные зависимости
+.harness/tools/                           детерминированные инструменты и валидаторы
+.harness/local/execution/                 локальное состояние выполнения и восстановления
+.harness/local/git/pr-state.json          локальное состояние жизненного цикла PR
 .codex/                                   Codex adapter
 CLAUDE.md + .claude/                      Claude Code adapter
 .agents/skills/                           runtime-neutral core/project skills
@@ -114,7 +116,7 @@ STEP IMPLEMENT    → code/tests + verification evidence
 STEP REVIEW       → immutable exact-revision review report
 STEP FIX          → изменения по конкретным implementation findings
 PROJECT RECONCILE → audit/migration report + corrective work</code></pre></div><p>Каждый переход оставляет следующему агенту или новой сессии проверяемый вход для продолжения работы.</p></section>
-<section id="execution-status"><h2>Состояние выполнения — локальная операционная память, а не журнал аудита</h2><p><code>.harness/local/execution/execution-status.json</code> хранит корневую команду, режим выполнения, текущую каноническую команду, попытку, состояние и результат и данные для безопасного продолжения после сбоя. Файл не отслеживается Git и не заменяет отчёты проверок, доказательства или продуктовую историю.</p></section>
+<section id="execution-status"><h2>Локальное состояние помогает продолжить работу, но не заменяет историю</h2><p><code>.harness/local/execution/execution-status.json</code> хранит корневую команду, режим выполнения, текущую каноническую команду, попытку, состояние, результат и данные для безопасного продолжения после сбоя. <code>HARNESS STATUS</code> показывает незавершённые исполнения, а <code>HARNESS RESUME</code> продолжает только однозначно возобновляемое выполнение.</p><p>После успешного <code>GIT PR</code> файл <code>.harness/local/git/pr-state.json</code> сохраняет номер PR, head/base и ветку возврата для <code>GIT PR FINISH</code>. Оба вида локального состояния исключены из Git и не заменяют отчёты проверок, доказательства или продуктовую историю.</p></section>
 <section id="history"><h2>Активные документы и исторические отчёты имеют разный жизненный цикл</h2><p>REQ, STEP, OQ, текущая архитектура и статус ADR могут эволюционировать. Отчёты проверки реализации, планы, INIT-проверки и завершённые отчёты аудита/обновления — неизменяемая история. Миграция схемы обновляет активные документы и шаблоны, но не переписывает старые отчёты задним числом.</p></section>
 <section id="git-native"><h2>Git хранит историю, но Harness не сводится к коммитам</h2><p>Git показывает <em>что</em> изменилось и когда. REQ, ADR, STEP, семантические проверки и доказательства добавляют <em>зачем</em>, в каких границах, по каким критериям и с каким результатом проверки.</p></section>
 <section id="local"><h2>Локальный исходный контекст остаётся локальным</h2><p><code>PROJECT_BRIEF.local.md</code> предназначен для незрелых идей, приватных ссылок и временных заметок и исключён из Git. После PROJECT INIT нормализованный контекст переносится в отслеживаемые канонические документы проекта.</p></section>

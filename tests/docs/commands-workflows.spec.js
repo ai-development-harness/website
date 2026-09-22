@@ -6,7 +6,7 @@ test.describe('Команды — диаграммы цепочек выполн
     const commands = page.locator('.command-item');
     const count = await commands.count();
 
-    expect(count).toBeGreaterThanOrEqual(20);
+    expect(count).toBeGreaterThanOrEqual(32);
     for (let index = 0; index < count; index += 1) {
       await expect(commands.nth(index).locator('.command-flow')).toHaveCount(1);
     }
@@ -52,11 +52,53 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(reconcile).toContainText('Нужна миграция');
   });
 
+  test('оперативные команды показывают проверяемое состояние без скрытых изменений', async ({ page }) => {
+    await page.goto('/commands/');
+
+    const status = page.locator('.command-item').filter({ hasText: 'HARNESS STATUS' }).first();
+    await expect(status).toContainText('Незавершённые исполнения');
+    await expect(status).toContainText('Снимок состояния без изменений');
+
+    const resume = page.locator('.command-item').filter({ hasText: 'HARNESS RESUME' }).first();
+    await expect(resume).toContainText('Ровно одно продолжение?');
+    await expect(resume).toContainText('BLOCKED');
+
+    const doctor = page.locator('.command-item').filter({ hasText: 'HARNESS DOCTOR' }).first();
+    await expect(doctor).toContainText('Python 3.11+ / Git');
+    await expect(doctor).toContainText('Codex / Claude Code / gh');
+
+    const config = page.locator('.command-item').filter({ hasText: 'HARNESS CONFIG' }).first();
+    await expect(config).toContainText('Эффективная конфигурация без изменений');
+  });
+
+  test('просмотр STEP поддерживает список, подробности и сокращённый идентификатор', async ({ page }) => {
+    await page.goto('/commands/');
+
+    const list = page.locator('.command-item').filter({ hasText: 'STEP LIST' }).first();
+    await expect(list).toContainText('Компактный список без изменений');
+
+    const show = page.locator('.command-item').filter({ hasText: 'STEP SHOW STEP-NNN' }).first();
+    await expect(show).toContainText('STEP SHOW 024');
+
+    await expect(page.locator('#syntax')).toContainText('STEP RUN 024');
+    await expect(page.locator('#syntax')).toContainText('STEP RUN STEP-024');
+  });
+
+  test('GIT PR FINISH описывает безопасное завершение локальной ветки после слияния', async ({ page }) => {
+    await page.goto('/commands/');
+
+    const finish = page.locator('.command-item').filter({ hasText: 'GIT PR FINISH' }).first();
+    await expect(finish).toContainText('MERGED');
+    await expect(finish).toContainText('headRefOid');
+    await expect(finish).toContainText('git branch -D');
+    await expect(finish).toContainText('Удалить только проверенную локальную ветку PR');
+  });
+
   test('страница описывает CTS, цепочки и восстановление выполнения', async ({ page }) => {
     await page.goto('/commands/');
     await expect(page.locator('#syntax')).toContainText('INVALID_CHAIN');
     await expect(page.locator('#syntax')).toContainText('GIT CHECK > COMMIT > PUSH > PR');
-    await expect(page.locator('#execution-status')).toContainText('RESUME');
+    await expect(page.locator('#execution-status')).toContainText('HARNESS RESUME');
     await expect(page.locator('#execution-status')).toContainText('execution-status.json');
   });
 

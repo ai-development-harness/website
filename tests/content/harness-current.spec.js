@@ -22,6 +22,24 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(article).toContainText('Основа контекста + хэш плана');
     await expect(article).toContainText('.harness/tools/harness-update.py');
     await expect(article).toContainText('.harness/tools/git-preflight.py');
+
+    for (const command of [
+      'HARNESS HELP',
+      'HARNESS STATUS',
+      'HARNESS RESUME',
+      'HARNESS DOCTOR',
+      'HARNESS CONFIG',
+      'STEP LIST',
+      'STEP SHOW STEP-NNN',
+      'GIT PR FINISH',
+    ]) {
+      await expect(article).toContainText(command);
+    }
+
+    await expect(page.locator('#syntax')).toContainText('STEP RUN 024');
+    await expect(page.locator('#syntax')).toContainText('STEP RUN STEP-024');
+    await expect(page.locator('#git')).toContainText('.harness/local/git/pr-state.json');
+    await expect(page.locator('#git')).toContainText('headRefOid');
   });
 
   test('начало работы требует две INIT-проверки и детерминированную финализацию', async ({ page }) => {
@@ -30,6 +48,9 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#init')).toContainText('две независимые семантические проверки');
     await expect(page.locator('#init')).toContainText('.harness/tools/finalize-project-init.py');
     await expect(page.locator('#init')).toContainText('REQ-NNN-*.md');
+    await expect(page.locator('#prerequisites')).toContainText('HARNESS DOCTOR');
+    await expect(page.locator('#prerequisites')).toContainText('GIT PR FINISH');
+    await expect(page.locator('#prerequisites')).toContainText('gh');
   });
 
   test('страница репозитория показывает канонические REQ и детерминированные проекции', async ({ page }) => {
@@ -39,6 +60,9 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#layout')).toContainText('docs/requirements/REQ-NNN-*.md');
     await expect(page.locator('#projections')).toContainText('.harness/tools/sync-projections.py');
     await expect(page.locator('#topology')).toContainText('manifest');
+    await expect(page.locator('#layout')).toContainText('.harness/docs/DEPENDENCIES.md');
+    await expect(page.locator('#layout')).toContainText('.harness/local/git/pr-state.json');
+    await expect(page.locator('#execution-status')).toContainText('HARNESS RESUME');
   });
 
   test('страница валидаторов документирует основные публичные проверки', async ({ page }) => {
@@ -57,10 +81,26 @@ test.describe('Контент — актуальный Harness', () => {
       '.harness/tools/projection_contract.py',
       '.harness/tools/template_contract.py',
       '.harness/tools/git-preflight.py',
+      '.harness/tools/harness-help.py',
+      '.harness/tools/harness-ux.py',
       '.harness/tools/execution_status.py',
     ]) {
       await expect(article).toContainText(tool);
     }
+  });
+
+  test('процесс и FAQ описывают завершение PR и необязательность GitHub CLI', async ({ page }) => {
+    await page.goto('/workflow/');
+    await expect(page.locator('#git-flow')).toContainText('GIT PR FINISH');
+    await expect(page.locator('#git-flow')).toContainText('git branch -D');
+    await expect(page.locator('#git-flow')).toContainText('gh');
+
+    await page.goto('/faq/');
+    const article = page.locator('article.article');
+    await expect(article).toContainText('HARNESS STATUS');
+    await expect(article).toContainText('HARNESS RESUME');
+    await expect(article).toContainText('Обязателен ли GitHub CLI для работы Harness?');
+    await expect(article).toContainText('GIT PR FINISH');
   });
 
   test('поддержка описывает детерминированное обновление и миграцию проектных документов', async ({ page }) => {
@@ -69,5 +109,8 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#update')).toContainText('.harness/tools/harness-update.py');
     await expect(page.locator('#migration')).toContainText('PROJECT RECONCILE');
     await expect(page.locator('#git-preflight')).toContainText('.harness/tools/git-preflight.py');
+    await expect(page.locator('#git-preflight')).toContainText('GIT PR FINISH');
+    await expect(page.locator('#git-preflight')).toContainText('.harness/local/git/pr-state.json');
+    await expect(page.locator('#git-preflight')).toContainText('gh');
   });
 });
