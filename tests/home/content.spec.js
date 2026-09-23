@@ -12,6 +12,11 @@ test.describe('Главная страница — основные секции
     }
   });
 
+  test('объясняет единый dispatcher на первом экране', async ({ page }) => {
+    await expect(page.locator('.timeline-note')).toContainText('Единый dispatcher');
+    await expect(page.locator('.hero-facts')).toContainText('Проверяемое выполнение');
+  });
+
   test('показывает четыре карточки проблем', async ({ page }) => {
     await expect(page.locator('.problem-card')).toHaveCount(4);
   });

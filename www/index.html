@@ -96,7 +96,7 @@
           <div class="workflow-step"><span class="workflow-no">05</span><span class="workflow-icon">⌕</span><div class="workflow-copy"><b>Ревью и доказательства</b><span>Независимое ревью сверяет задачу, реализацию и доказательства</span></div><div class="workflow-outcome">PASS / FAIL / BLOCKED</div></div>
           <div class="workflow-step"><span class="workflow-no">06</span><span class="workflow-icon">⑂</span><div class="workflow-copy"><b>Git</b><span>Публикация изменений выполняется отдельными безопасными командами</span></div><div class="workflow-outcome">проверка → коммит → отправка → PR</div></div>
         </div>
-        <div class="timeline-note"><strong>Стабильный процесс.</strong> Команды сначала проходят формальную проверку переходов, а незавершённое выполнение можно восстановить из локального состояния выполнения.</div>
+        <div class="timeline-note"><strong>Стабильный процесс.</strong> Единый dispatcher проверяет переходы, ведёт состояние выполнения и отделяет машинную механику от смысловой работы модели. Незавершённое выполнение можно безопасно восстановить из локального состояния.</div>
       </div>
     </div>
 
@@ -121,7 +121,7 @@
 
     <div class="hero-facts" aria-label="Ключевые свойства">
       <div class="hero-fact"><span class="hero-fact-icon">◇</span><b>Открытый шаблон</b><span>Публичный шаблон репозитория, который становится вашим проектом.</span></div>
-      <div class="hero-fact"><span class="hero-fact-icon">⌘</span><b>Проверяемые переходы</b><span>Цепочки команд проходят формальную проверку по канонической таблице переходов до запуска среды исполнения.</span></div>
+      <div class="hero-fact"><span class="hero-fact-icon">⌘</span><b>Проверяемое выполнение</b><span>Команды проходят через единый dispatcher: переходы, состояние и машинные операции отделены от смысловой работы модели.</span></div>
       <div class="hero-fact"><span class="hero-fact-icon">⇄</span><b>Codex и Claude Code</b><span>Два адаптера среды исполнения используют один протокол Harness и общую память проекта.</span></div>
     </div>
   </div>

@@ -22,6 +22,11 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(article).toContainText('Основа контекста + хэш плана');
     await expect(article).toContainText('.harness/tools/harness-update.py');
     await expect(article).toContainText('.harness/tools/git-preflight.py');
+    await expect(page.locator('#syntax')).toContainText('.harness/tools/harness-dispatch.py');
+    await expect(page.locator('#syntax')).toContainText('.harness/reasoning-boundaries.json');
+    await expect(page.locator('#execution')).toContainText('.harness/tools/verification.py');
+    await expect(page.locator('#execution')).toContainText('.harness/tools/semantic-writer.py');
+    await expect(page.locator('#git')).toContainText('.harness/tools/git-action.py');
 
     for (const command of [
       'HARNESS HELP',
@@ -61,6 +66,7 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#projections')).toContainText('.harness/tools/sync-projections.py');
     await expect(page.locator('#topology')).toContainText('manifest');
     await expect(page.locator('#layout')).toContainText('.harness/docs/DEPENDENCIES.md');
+    await expect(page.locator('#layout')).toContainText('.harness/reasoning-boundaries.json');
     await expect(page.locator('#layout')).toContainText('.harness/local/git/pr-state.json');
     await expect(page.locator('#execution-status')).toContainText('HARNESS RESUME');
   });
@@ -71,6 +77,7 @@ test.describe('Контент — актуальный Harness', () => {
 
     for (const tool of [
       '.harness/tools/validate.py',
+      '.harness/tools/harness-dispatch.py',
       '.harness/tools/validate-command.py',
       '.harness/tools/check-command-references.py',
       '.harness/tools/sync-projections.py',
@@ -83,6 +90,10 @@ test.describe('Контент — актуальный Harness', () => {
       '.harness/tools/git-preflight.py',
       '.harness/tools/harness-help.py',
       '.harness/tools/harness-ux.py',
+      '.harness/tools/verification.py',
+      '.harness/tools/semantic-writer.py',
+      '.harness/tools/git-action.py',
+      '.harness/tools/reasoning-boundaries.py',
       '.harness/tools/execution_status.py',
     ]) {
       await expect(article).toContainText(tool);
@@ -91,6 +102,8 @@ test.describe('Контент — актуальный Harness', () => {
 
   test('процесс и FAQ описывают завершение PR и необязательность GitHub CLI', async ({ page }) => {
     await page.goto('/workflow/');
+    await expect(page.locator('#run')).toContainText('переходы между PLAN, IMPLEMENT, REVIEW и FIX вычисляет dispatcher');
+    await expect(page.locator('#run')).toContainText('Verification запускается машинно');
     await expect(page.locator('#git-flow')).toContainText('GIT PR FINISH');
     await expect(page.locator('#git-flow')).toContainText('git branch -D');
     await expect(page.locator('#git-flow')).toContainText('gh');
@@ -107,6 +120,8 @@ test.describe('Контент — актуальный Harness', () => {
     await page.goto('/maintenance/');
 
     await expect(page.locator('#update')).toContainText('.harness/tools/harness-update.py');
+    await expect(page.locator('#update')).toContainText('без вызова модели');
+    await expect(page.locator('#legacy')).toContainText('v0.6.0');
     await expect(page.locator('#migration')).toContainText('PROJECT RECONCILE');
     await expect(page.locator('#git-preflight')).toContainText('.harness/tools/git-preflight.py');
     await expect(page.locator('#git-preflight')).toContainText('GIT PR FINISH');
