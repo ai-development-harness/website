@@ -26,6 +26,8 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(runCommand).toContainText('Финализация STEP');
     await expect(runCommand).toContainText('BLOCKED');
     await expect(runCommand).toContainText('execution.maxFixReviewCycles');
+    await expect(runCommand).toContainText('dispatcher детерминированно оркестрирует переходы');
+    await expect(runCommand).toContainText('.harness/tools/verification.py');
   });
 
   test('цепочки отражают актуальную семантику Harness, а не старые упрощения', async ({ page }) => {
@@ -46,6 +48,13 @@ test.describe('Команды — диаграммы цепочек выполн
     const gitCommit = page.locator('.command-item').filter({ hasText: 'GIT COMMIT /' }).first();
     await expect(gitCommit).toContainText('Фактические изменения');
     await expect(gitCommit).not.toContainText('GIT CHECK');
+
+    const gitPush = page.locator('.command-item').filter({ hasText: 'GIT PUSH' }).first();
+    await expect(gitPush).toContainText('детерминированный быстрый путь');
+    await expect(gitPush).toContainText('удалённый HEAD');
+
+    const gitPr = page.locator('.command-item').filter({ hasText: 'GIT PR' }).first();
+    await expect(gitPr).toContainText('.harness/tools/git-action.py');
 
     const reconcile = page.locator('.command-item').filter({ hasText: 'PROJECT RECONCILE' }).first();
     await expect(reconcile).toContainText('Проверка устаревших команд');
@@ -98,6 +107,8 @@ test.describe('Команды — диаграммы цепочек выполн
     await page.goto('/commands/');
     await expect(page.locator('#syntax')).toContainText('INVALID_CHAIN');
     await expect(page.locator('#syntax')).toContainText('GIT CHECK > COMMIT > PUSH > PR');
+    await expect(page.locator('#syntax')).toContainText('.harness/tools/harness-dispatch.py');
+    await expect(page.locator('#syntax')).toContainText('.harness/reasoning-boundaries.json');
     await expect(page.locator('#execution-status')).toContainText('HARNESS RESUME');
     await expect(page.locator('#execution-status')).toContainText('execution-status.json');
   });
