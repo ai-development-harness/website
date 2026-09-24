@@ -1,0 +1,610 @@
+/* --------------------------------------------------------------------------
+ * Интерактивные схемы команд
+ *
+ * Модальное окно использует те же цветовые токены, что и остальной сайт.
+ * Диаграмма рассчитана прежде всего на планшет и десктоп; на узком экране
+ * содержимое остаётся доступным через локальную прокрутку внутри схемы.
+ * -------------------------------------------------------------------------- */
+
+.command-diagram-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 16px;
+  padding: 9px 13px;
+  border: 1px solid rgba(0, 215, 245, .28);
+  border-radius: 10px;
+  background: rgba(0, 215, 245, .055);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 760;
+  cursor: pointer;
+  transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease;
+}
+
+.command-diagram-open:hover {
+  border-color: rgba(0, 215, 245, .58);
+  background: rgba(0, 215, 245, .09);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.command-diagram-open:focus-visible,
+.command-diagram-close:focus-visible,
+.command-diagram-toolbar button:focus-visible,
+.command-diagram-choice:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+.command-diagram-open__icon {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 7px;
+  background: rgba(0, 215, 245, .1);
+  color: var(--cyan);
+  font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.command-diagram-dialog {
+  width: min(1440px, calc(100vw - 36px));
+  max-width: 1440px;
+  max-height: calc(100vh - 36px);
+  margin: auto;
+  padding: 0;
+  border: 1px solid rgba(91, 151, 210, .35);
+  border-radius: 18px;
+  background: #07111d;
+  color: var(--text);
+  box-shadow: 0 38px 130px rgba(0, 0, 0, .55);
+  overflow: hidden;
+}
+
+.command-diagram-dialog::backdrop {
+  background: rgba(1, 6, 12, .78);
+  backdrop-filter: blur(5px);
+}
+
+.command-diagram-shell {
+  display: flex;
+  max-height: calc(100vh - 38px);
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(0, 215, 245, .075), transparent 30rem),
+    radial-gradient(circle at 100% 12%, rgba(138, 82, 255, .095), transparent 30rem),
+    #07111d;
+}
+
+.command-diagram-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid rgba(91, 151, 210, .2);
+}
+
+.command-diagram-eyebrow {
+  margin-bottom: 7px;
+  color: var(--cyan);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.command-diagram-header h2 {
+  margin: 0;
+  font-size: clamp(21px, 2.5vw, 30px);
+  letter-spacing: -.02em;
+}
+
+.command-diagram-header h2 code {
+  color: #d7bdff;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.command-diagram-summary {
+  max-width: 940px;
+  margin: 8px 0 0;
+  color: #9eafc2;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.command-diagram-close {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 1px solid rgba(91, 151, 210, .28);
+  border-radius: 11px;
+  background: rgba(9, 24, 40, .88);
+  color: #aabbd0;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.command-diagram-close:hover {
+  border-color: rgba(0, 215, 245, .5);
+  color: #fff;
+}
+
+.command-diagram-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 13px 24px;
+  border-bottom: 1px solid rgba(91, 151, 210, .14);
+  background: rgba(4, 13, 24, .58);
+}
+
+.command-diagram-toolbar button {
+  min-height: 36px;
+  padding: 7px 11px;
+  border: 1px solid rgba(91, 151, 210, .26);
+  border-radius: 9px;
+  background: rgba(11, 27, 45, .72);
+  color: #92a5bb;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.command-diagram-toolbar button:hover,
+.command-diagram-toolbar button.is-active {
+  border-color: rgba(138, 82, 255, .64);
+  background: rgba(138, 82, 255, .1);
+  color: #eee7ff;
+}
+
+.command-diagram-layout {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) 270px;
+  gap: 0;
+  overflow: hidden;
+}
+
+.command-diagram-canvas {
+  min-width: 0;
+  overflow: auto;
+  padding: 26px 24px 34px;
+  background:
+    linear-gradient(rgba(39, 76, 112, .065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(39, 76, 112, .065) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.command-diagram-flow {
+  width: min(100%, 920px);
+  min-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.command-diagram-step {
+  width: min(100%, 660px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity .18s ease, filter .18s ease;
+}
+
+.command-diagram-step.is-inactive {
+  opacity: .2;
+  filter: saturate(.45);
+}
+
+.command-diagram-node {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid rgba(66, 133, 201, .42);
+  border-radius: 13px;
+  background: rgba(7, 20, 35, .94);
+  box-shadow: inset 0 0 30px rgba(37, 133, 255, .035);
+}
+
+.command-diagram-node--user {
+  border-color: rgba(0, 215, 245, .44);
+}
+
+.command-diagram-node--dispatcher,
+.command-diagram-node--gate {
+  border-color: rgba(77, 167, 255, .5);
+}
+
+.command-diagram-node--contract,
+.command-diagram-node--decision,
+.command-diagram-node--artifact {
+  border-color: rgba(138, 82, 255, .52);
+}
+
+.command-diagram-node--decision {
+  background: rgba(37, 21, 65, .72);
+}
+
+.command-diagram-node--agent {
+  border-color: rgba(0, 215, 245, .5);
+  background: rgba(4, 29, 41, .82);
+}
+
+.command-diagram-node--action {
+  border-color: rgba(37, 133, 255, .58);
+}
+
+.command-diagram-node--success {
+  border-color: rgba(48, 216, 144, .58);
+  background: rgba(21, 65, 53, .28);
+}
+
+.command-diagram-node-type {
+  margin-bottom: 5px;
+  color: #7389a2;
+  font: 850 10px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.command-diagram-node--agent .command-diagram-node-type {
+  color: #79dcea;
+}
+
+.command-diagram-node--decision .command-diagram-node-type,
+.command-diagram-node--contract .command-diagram-node-type,
+.command-diagram-node--artifact .command-diagram-node-type {
+  color: #b9a1ef;
+}
+
+.command-diagram-node--success .command-diagram-node-type {
+  color: #72dca7;
+}
+
+.command-diagram-node-label {
+  color: #edf5ff;
+  font-size: 14px;
+  font-weight: 760;
+  line-height: 1.42;
+  overflow-wrap: anywhere;
+}
+
+.command-diagram-node-detail {
+  margin-top: 6px;
+  color: #91a4ba;
+  font: 600 11px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+.command-diagram-connector {
+  width: 2px;
+  height: 28px;
+  position: relative;
+  background: linear-gradient(#3c87c2, #795ce4);
+}
+
+.command-diagram-connector::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #8069e8;
+  border-bottom: 2px solid #8069e8;
+  transform: rotate(45deg);
+}
+
+.command-diagram-choices {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 11px;
+}
+
+.command-diagram-choice {
+  min-height: 34px;
+  flex: 1 1 150px;
+  padding: 7px 9px;
+  border: 1px solid rgba(91, 151, 210, .28);
+  border-radius: 8px;
+  background: rgba(3, 12, 23, .65);
+  color: #91a4b8;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 720;
+  cursor: pointer;
+}
+
+.command-diagram-choice:hover:not(:disabled) {
+  border-color: rgba(0, 215, 245, .46);
+  color: #dcecff;
+}
+
+.command-diagram-choice.is-selected {
+  border-color: rgba(138, 82, 255, .72);
+  background: rgba(138, 82, 255, .13);
+  color: #efe8ff;
+}
+
+.command-diagram-choice:disabled {
+  cursor: default;
+}
+
+.command-diagram-side {
+  min-width: 0;
+  padding: 18px;
+  overflow: auto;
+  border-left: 1px solid rgba(91, 151, 210, .16);
+  background: rgba(4, 13, 23, .88);
+}
+
+.command-diagram-panel {
+  padding: 13px;
+  border: 1px solid rgba(91, 151, 210, .2);
+  border-radius: 12px;
+  background: rgba(11, 25, 42, .72);
+}
+
+.command-diagram-panel + .command-diagram-panel {
+  margin-top: 11px;
+}
+
+.command-diagram-panel h3 {
+  margin: 0 0 10px;
+  color: #7589a2;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.command-diagram-fact {
+  padding: 8px 0;
+  color: #b2c1d1;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.command-diagram-fact + .command-diagram-fact {
+  border-top: 1px solid rgba(91, 151, 210, .12);
+}
+
+.command-diagram-result {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid rgba(48, 216, 144, .28);
+  border-radius: 9px;
+  background: rgba(48, 216, 144, .055);
+}
+
+.command-diagram-result strong {
+  color: #75e0ad;
+  font: 850 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: .08em;
+}
+
+.command-diagram-result span {
+  color: #b0c0d1;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.command-diagram-result[data-status="BLOCKED"] {
+  border-color: rgba(255, 83, 100, .38);
+  background: rgba(255, 83, 100, .06);
+}
+
+.command-diagram-result[data-status="BLOCKED"] strong {
+  color: #ff8292;
+}
+
+.command-diagram-result[data-status="FAIL"],
+.command-diagram-result[data-status="STOP"] {
+  border-color: rgba(255, 184, 74, .38);
+  background: rgba(255, 184, 74, .06);
+}
+
+.command-diagram-result[data-status="FAIL"] strong,
+.command-diagram-result[data-status="STOP"] strong {
+  color: #ffc66e;
+}
+
+.command-diagram-legend {
+  display: grid;
+  gap: 8px;
+}
+
+.command-diagram-legend span {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #91a4b8;
+  font-size: 11px;
+}
+
+.command-diagram-legend i {
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  border: 1px solid rgba(77, 167, 255, .55);
+  border-radius: 3px;
+  background: rgba(37, 133, 255, .08);
+}
+
+.command-diagram-legend i[data-kind="agent"] {
+  border-color: rgba(0, 215, 245, .55);
+}
+
+.command-diagram-legend i[data-kind="decision"] {
+  border-color: rgba(138, 82, 255, .62);
+  background: rgba(138, 82, 255, .11);
+}
+
+.command-diagram-legend i[data-kind="success"] {
+  border-color: rgba(48, 216, 144, .55);
+  background: rgba(48, 216, 144, .08);
+}
+
+/* Светлая тема не должна превращать модальную схему в отдельный тёмный остров. */
+html[data-theme="light"] .command-diagram-open {
+  background: rgba(0, 127, 157, .055);
+  border-color: rgba(0, 127, 157, .25);
+}
+
+html[data-theme="light"] .command-diagram-dialog {
+  border-color: rgba(23, 112, 181, .3);
+  background: #f7f9fc;
+  box-shadow: 0 36px 100px rgba(31, 57, 84, .24);
+}
+
+html[data-theme="light"] .command-diagram-dialog::backdrop {
+  background: rgba(28, 46, 65, .33);
+}
+
+html[data-theme="light"] .command-diagram-shell {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(0, 127, 157, .07), transparent 30rem),
+    radial-gradient(circle at 100% 12%, rgba(112, 68, 215, .08), transparent 30rem),
+    #f7f9fc;
+}
+
+html[data-theme="light"] .command-diagram-header,
+html[data-theme="light"] .command-diagram-toolbar,
+html[data-theme="light"] .command-diagram-side {
+  border-color: rgba(42, 80, 119, .15);
+}
+
+html[data-theme="light"] .command-diagram-toolbar,
+html[data-theme="light"] .command-diagram-side {
+  background: rgba(238, 243, 249, .9);
+}
+
+html[data-theme="light"] .command-diagram-close,
+html[data-theme="light"] .command-diagram-toolbar button,
+html[data-theme="light"] .command-diagram-panel {
+  background: rgba(255, 255, 255, .88);
+}
+
+html[data-theme="light"] .command-diagram-summary,
+html[data-theme="light"] .command-diagram-fact,
+html[data-theme="light"] .command-diagram-result span,
+html[data-theme="light"] .command-diagram-legend span {
+  color: #53667c;
+}
+
+html[data-theme="light"] .command-diagram-canvas {
+  background:
+    linear-gradient(rgba(49, 92, 135, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(49, 92, 135, .05) 1px, transparent 1px),
+    #f9fbfd;
+  background-size: 28px 28px;
+}
+
+html[data-theme="light"] .command-diagram-node {
+  border-color: rgba(23, 112, 181, .28);
+  background: rgba(255, 255, 255, .96);
+  box-shadow: inset 0 0 24px rgba(23, 112, 181, .025);
+}
+
+html[data-theme="light"] .command-diagram-node--decision {
+  border-color: rgba(112, 68, 215, .42);
+  background: rgba(246, 242, 255, .96);
+}
+
+html[data-theme="light"] .command-diagram-node--agent {
+  border-color: rgba(0, 127, 157, .34);
+  background: rgba(239, 249, 251, .96);
+}
+
+html[data-theme="light"] .command-diagram-node--success {
+  border-color: rgba(8, 125, 80, .34);
+  background: rgba(238, 250, 245, .97);
+}
+
+html[data-theme="light"] .command-diagram-node-label {
+  color: #172739;
+}
+
+html[data-theme="light"] .command-diagram-node-detail,
+html[data-theme="light"] .command-diagram-node-type {
+  color: #677d94;
+}
+
+html[data-theme="light"] .command-diagram-choice {
+  border-color: rgba(42, 80, 119, .2);
+  background: rgba(248, 251, 254, .95);
+  color: #53677d;
+}
+
+html[data-theme="light"] .command-diagram-choice.is-selected {
+  border-color: rgba(112, 68, 215, .45);
+  background: rgba(112, 68, 215, .07);
+  color: #48278b;
+}
+
+@media (max-width: 1080px) {
+  .command-diagram-layout {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+
+  .command-diagram-side {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    border-top: 1px solid rgba(91, 151, 210, .16);
+    border-left: 0;
+    overflow: visible;
+  }
+
+  .command-diagram-panel + .command-diagram-panel {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .command-diagram-dialog {
+    width: calc(100vw - 18px);
+    max-height: calc(100vh - 18px);
+  }
+
+  .command-diagram-shell {
+    max-height: calc(100vh - 20px);
+  }
+
+  .command-diagram-header {
+    padding: 18px;
+  }
+
+  .command-diagram-toolbar {
+    padding: 11px 18px;
+  }
+
+  .command-diagram-canvas {
+    padding: 20px 16px 28px;
+  }
+
+  .command-diagram-flow {
+    min-width: 620px;
+  }
+
+  .command-diagram-side {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-diagram-open,
+  .command-diagram-step {
+    transition: none;
+  }
+}
