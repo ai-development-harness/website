@@ -148,7 +148,7 @@ const BRANCH_RULES = {
       option(
         'Найден дубликат или пересечение',
         'finish',
-        'STOP',
+        'ОСТАНОВКА',
         'Новый STEP не создаётся: используется или уточняется существующий канонический артефакт.'
       ),
     ],
@@ -170,13 +170,13 @@ const BRANCH_RULES = {
   },
   'STEP NEXT': {
     'Есть прерванный STEP?': [
+      option('Нет — выбрать следующую работу'),
       option(
         'Да — продолжить',
         'finish',
         'SUCCESS',
         'Возвращается точная команда RESUME для незавершённого STEP.'
       ),
-      option('Нет — выбрать следующую работу'),
     ],
     'Зависимости / приоритет / риск / критический путь': [
       option('Есть доступный STEP'),
@@ -242,7 +242,7 @@ const BRANCH_RULES = {
       option(
         'Нет — изменение затрагивает контракт',
         'finish',
-        'STOP',
+        'ОСТАНОВКА',
         'PROJECT QUICK FIX прекращается. Пользователю предлагается STEP ADD: <описание>.'
       ),
     ],
@@ -729,18 +729,30 @@ function applyBlockedPreset(context) {
   context.state.selections = {};
   context.state.preset = 'blocked';
 
-  for (let index = 0; index < context.nodes.length; index += 1) {
-    const node = context.nodes[index];
-    const choices = choicesForNode(context.commandKey, node);
-    if (!choices) continue;
+  /*
+   * Первые три узла одинаковы для всех команд. Сначала ищем содержательную
+   * остановку внутри самой команды и только при её отсутствии показываем
+   * общий BLOCKED структурной проверки.
+   */
+  const searchRanges = [
+    { start: 3, end: context.nodes.length },
+    { start: 0, end: Math.min(3, context.nodes.length) },
+  ];
 
-    const terminalChoice = choices.find(
-      (choice) => choice.effect === 'stop' || choice.status === 'BLOCKED'
-    );
+  for (const range of searchRanges) {
+    for (let index = range.start; index < range.end; index += 1) {
+      const node = context.nodes[index];
+      const choices = choicesForNode(context.commandKey, node);
+      if (!choices) continue;
 
-    if (terminalChoice) {
-      context.state.selections[index] = terminalChoice.label;
-      return;
+      const terminalChoice = choices.find(
+        (choice) => choice.effect === 'stop' || choice.status === 'BLOCKED'
+      );
+
+      if (terminalChoice) {
+        context.state.selections[index] = terminalChoice.label;
+        return;
+      }
     }
   }
 }
