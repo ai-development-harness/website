@@ -25,7 +25,7 @@ test.describe('Команды — интерактивные схемы выпо
 
     await dialog.getByRole('button', { name: 'Найден дубликат или пересечение' }).click();
 
-    await expect(dialog.locator('[data-diagram-result]')).toContainText('STOP');
+    await expect(dialog.locator('[data-diagram-result]')).toContainText('ОСТАНОВКА');
     await expect(dialog.locator('[data-diagram-result]')).toContainText('Новый STEP не создаётся');
   });
 
