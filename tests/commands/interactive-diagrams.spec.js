@@ -11,6 +11,15 @@ test.describe('Команды — интерактивные схемы выпо
     await expect(buttons).toHaveCount(await items.count());
   });
 
+  test('в HTML страницы команд нет буквальных \\n между подключаемыми ассетами', async ({ page }) => {
+    await page.goto('/commands/');
+
+    const html = await page.content();
+
+    expect(html).not.toContain('\\n<link');
+    expect(html).not.toContain('\\n<script');
+  });
+
   test('STEP ADD показывает развилки и останавливает путь при дубликате', async ({ page }) => {
     await page.goto('/commands/');
 
