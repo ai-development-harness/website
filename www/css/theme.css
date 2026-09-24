@@ -105,8 +105,42 @@ html[data-theme="light"] .workflow-step:nth-child(4) .workflow-icon::after {
   background: #e8f2fb;
 }
 
+/*
+ * Блок модели контекста на главной в светлой теме получает собственную
+ * поверхность. Общий section--soft здесь выглядел серой полосой и спорил
+ * с белыми карточками внутри.
+ */
+html[data-theme="light"] #traceability.section--soft {
+  background:
+    radial-gradient(circle at 78% 34%, rgba(112, 68, 215, .055), transparent 32%),
+    radial-gradient(circle at 18% 18%, rgba(0, 127, 157, .045), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+}
+
 html[data-theme="light"] .traceability-flow {
-  background: rgba(255, 255, 255, .84);
+  border-color: rgba(23, 112, 181, .22);
+  background: linear-gradient(160deg, rgba(255, 255, 255, .98), rgba(246, 250, 255, .96));
+  box-shadow: 0 24px 60px rgba(31, 57, 84, .09);
+}
+
+html[data-theme="light"] .context-layer {
+  background: rgba(255, 255, 255, .94);
+}
+
+html[data-theme="light"] .context-layer--knowledge {
+  border-color: rgba(112, 68, 215, .3);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(112, 68, 215, .07), transparent 58%),
+    rgba(252, 250, 255, .97);
+}
+
+html[data-theme="light"] .knowledge-parts > div {
+  border-color: rgba(112, 68, 215, .18);
+  background: rgba(247, 243, 255, .72);
+}
+
+html[data-theme="light"] .knowledge-parts strong {
+  color: #5d3aa5;
 }
 
 /* Терминал оставляем тёмным и в светлой теме: это самостоятельный кодовый UI. */
