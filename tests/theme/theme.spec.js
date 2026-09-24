@@ -86,6 +86,32 @@ test.describe('Тема — выбор и сохранение', () => {
     }
   });
 
+  test('в светлой теме цепочки команд используют светлые карточки', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto('/commands/');
+
+    const nodes = page.locator('.command-flow-node');
+    await expect(nodes.first()).toBeVisible();
+
+    const styles = await nodes.evaluateAll((elements) => elements.map((element) => {
+      const style = getComputedStyle(element);
+      return {
+        background: style.backgroundColor,
+        color: style.color,
+      };
+    }));
+
+    const rgb = (value) => (value.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+
+    for (const style of styles) {
+      const background = rgb(style.background);
+      const foreground = rgb(style.color);
+
+      expect(background.reduce((sum, channel) => sum + channel, 0) / 3).toBeGreaterThan(220);
+      expect(foreground.reduce((sum, channel) => sum + channel, 0) / 3).toBeLessThan(170);
+    }
+  });
+
   test('в светлой теме текст исполняемого блока кода имеет высокий контраст', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/workflow/');
