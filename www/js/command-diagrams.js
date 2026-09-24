@@ -619,8 +619,43 @@ function selectedChoice(node, index, commandKey, state) {
   const choices = choicesForNode(commandKey, node);
   if (!choices?.length) return null;
 
-  const selectedLabel = state.selections[index] ?? choices[0].label;
-  return choices.find((choice) => choice.label === selectedLabel) || choices[0];
+  const selectedLabel = state.selections[index];
+  if (!selectedLabel) return null;
+
+  return choices.find((choice) => choice.label === selectedLabel) || null;
+}
+
+function mainChoiceForNode(node, commandKey) {
+  const choices = choicesForNode(commandKey, node);
+  if (!choices?.length) return null;
+
+  /*
+   * Для основного сценария предпочитаем продолжающую ветку. Это важнее
+   * позиции кнопки: например, у некоторых команд первая ветка может быть
+   * успешным ранним завершением.
+   */
+  return (
+    choices.find((choice) => choice.effect === 'continue') ||
+    choices.find((choice) => choice.status === 'SUCCESS' || choice.status === 'PASS') ||
+    choices[0]
+  );
+}
+
+function conditionIsSatisfied(nodes, index, commandKey, state) {
+  const requiredLabel = nodes[index].onlyWhenPrevious;
+  if (!requiredLabel) return true;
+
+  /*
+   * Условная ветка зависит от ранее выбранного решения, а не обязательно
+   * от непосредственно предыдущего узла. Ищем ближайший подходящий выбор
+   * назад по уже пройденной части схемы.
+   */
+  for (let cursor = index - 1; cursor >= 0; cursor -= 1) {
+    const choice = selectedChoice(nodes[cursor], cursor, commandKey, state);
+    if (choice?.label === requiredLabel) return true;
+  }
+
+  return false;
 }
 
 function buildBaseNodes(rawCommand, commandKey, commandItem) {
@@ -667,33 +702,24 @@ function renderDiagram(dialog, context) {
   let terminalIndex = Number.POSITIVE_INFINITY;
   let terminalStatus = 'SUCCESS';
   let terminalResult = defaultResult(nodes);
-  let previousSelectedLabel = null;
 
   nodes.forEach((node, index) => {
-    if (index > terminalIndex) return;
-
-    if (node.onlyWhenPrevious && previousSelectedLabel !== node.onlyWhenPrevious) {
+    if (index > terminalIndex || !conditionIsSatisfied(nodes, index, commandKey, state)) {
       return;
     }
 
     const choice = selectedChoice(node, index, commandKey, state);
-    if (choice) {
-      previousSelectedLabel = choice.label;
-
-      if (choice.effect === 'stop' || choice.effect === 'finish') {
-        terminalIndex = index;
-        terminalStatus = choice.status || (choice.effect === 'stop' ? 'BLOCKED' : 'SUCCESS');
-        terminalResult = choice.result || terminalResult;
-      }
+    if (choice && (choice.effect === 'stop' || choice.effect === 'finish')) {
+      terminalIndex = index;
+      terminalStatus = choice.status || (choice.effect === 'stop' ? 'BLOCKED' : 'SUCCESS');
+      terminalResult = choice.result || terminalResult;
     }
   });
 
   flow.replaceChildren();
 
-  let previousChoiceForVisibility = null;
   nodes.forEach((node, index) => {
-    const hiddenByConditional =
-      node.onlyWhenPrevious && previousChoiceForVisibility !== node.onlyWhenPrevious;
+    const hiddenByConditional = !conditionIsSatisfied(nodes, index, commandKey, state);
     const inactive = index > terminalIndex || hiddenByConditional;
 
     const renderedNode = createFlowNode(
@@ -701,7 +727,15 @@ function renderDiagram(dialog, context) {
       index,
       commandKey,
       state,
-      () => renderDiagram(dialog, context)
+      () => {
+        /*
+         * Ручной выбор означает, что пользователь ушёл от готового пресета.
+         * Это не меняет семантику, но убирает вводящую в заблуждение подсветку
+         * кнопки «Основной путь»/«Пример остановки».
+         */
+        state.preset = 'custom';
+        renderDiagram(dialog, context);
+      }
     );
 
     renderedNode.classList.toggle('is-inactive', inactive);
@@ -711,11 +745,6 @@ function renderDiagram(dialog, context) {
     });
 
     flow.append(renderedNode);
-
-    if (!inactive) {
-      const choice = selectedChoice(node, index, commandKey, state);
-      if (choice) previousChoiceForVisibility = choice.label;
-    }
   });
 
   result.className = 'command-diagram-result';
@@ -735,10 +764,15 @@ function renderDiagram(dialog, context) {
 function applyMainPreset(context) {
   context.state.selections = {};
   context.state.preset = 'main';
+
+  context.nodes.forEach((node, index) => {
+    const choice = mainChoiceForNode(node, context.commandKey);
+    if (choice) context.state.selections[index] = choice.label;
+  });
 }
 
 function applyBlockedPreset(context) {
-  context.state.selections = {};
+  applyMainPreset(context);
   context.state.preset = 'blocked';
 
   /*
