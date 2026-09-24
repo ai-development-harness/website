@@ -67,6 +67,7 @@ const CONDITIONAL_MODEL_COMMANDS = new Set([
 
 const MUTATING_COMMANDS = new Set([
   'PROJECT INIT',
+  'PROJECT STATUS',
   'PROJECT RECONCILE',
   'PROJECT QUICK FIX:',
   'STEP ADD:',
@@ -76,10 +77,13 @@ const MUTATING_COMMANDS = new Set([
   'STEP FIX STEP-NNN',
   'STEP RUN STEP-NNN',
   'STEP AUDIT STEP-NNN',
+  'SKILL FIND:',
   'SKILL INSTALL:',
   'SKILL CREATE:',
   'GITHUB GENERATE TEMPLATES',
+  'RELEASE CHECK',
   'HARNESS UPDATE APPLY',
+  'HARNESS RESUME',
   'GIT COMMIT',
   'GIT PUSH',
   'GIT PR',
@@ -353,7 +357,11 @@ const CUSTOM_FLOWS = {
         option('Да — выполнить STEP PLAN'),
       ],
     },
-    { type: 'agent', label: 'STEP PLAN и независимая проверка плана', optional: true },
+    {
+      type: 'agent',
+      label: 'STEP PLAN и независимая проверка плана',
+      onlyWhenPrevious: 'Да — выполнить STEP PLAN',
+    },
     { type: 'action', label: 'STEP IMPLEMENT' },
     { type: 'gate', label: 'Машинные проверки реализации' },
     { type: 'agent', label: 'Независимая STEP REVIEW' },
@@ -419,6 +427,10 @@ function normalizeCommand(rawCommand) {
 }
 
 function commandModelMode(commandKey) {
+  if (commandKey === 'HARNESS RESUME') {
+    return 'Сама команда без модели; продолжение зависит от сохранённого выполнения';
+  }
+
   if (DETERMINISTIC_COMMANDS.has(commandKey)) {
     return 'Модель не вызывается';
   }
@@ -432,7 +444,7 @@ function commandModelMode(commandKey) {
 
 function commandMutationMode(commandKey) {
   return MUTATING_COMMANDS.has(commandKey)
-    ? 'Команда может изменять состояние'
+    ? 'Команда может изменять рабочие или служебные артефакты'
     : 'Команда работает без изменений проекта';
 }
 
