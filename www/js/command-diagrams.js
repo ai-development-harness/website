@@ -827,6 +827,8 @@ function enhanceCommandItems() {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'command-diagram-open';
+    button.dataset.command = commandKey;
+    button.setAttribute('aria-label', `Открыть интерактивную схему: ${rawCommand}`);
     button.innerHTML =
       '<span class="command-diagram-open__icon" aria-hidden="true">⌘</span><span>Интерактивная схема</span>';
 
