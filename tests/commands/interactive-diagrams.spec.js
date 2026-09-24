@@ -41,7 +41,8 @@ test.describe('Команды — интерактивные схемы выпо
     await expect(dialog.locator('[data-diagram-result]')).toContainText('FAIL');
     await expect(dialog.locator('[data-diagram-result]')).toContainText('STEP FIX STEP-NNN');
 
-    await dialog.getByRole('button', { name: 'BLOCKED', exact: true }).click();
+    const verdictNode = dialog.locator('.command-diagram-node', { hasText: 'Вердикт' });
+    await verdictNode.getByRole('button', { name: 'BLOCKED', exact: true }).click();
     await expect(dialog.locator('[data-diagram-result]')).toContainText('BLOCKED');
     await expect(dialog.locator('[data-diagram-result]')).toContainText('Цикл FIX не запускается');
   });
