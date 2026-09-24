@@ -408,13 +408,13 @@
 }
 
 .command-diagram-result[data-status="FAIL"],
-.command-diagram-result[data-status="STOP"] {
+.command-diagram-result[data-status="ОСТАНОВКА"] {
   border-color: rgba(255, 184, 74, .38);
   background: rgba(255, 184, 74, .06);
 }
 
 .command-diagram-result[data-status="FAIL"] strong,
-.command-diagram-result[data-status="STOP"] strong {
+.command-diagram-result[data-status="ОСТАНОВКА"] strong {
   color: #ffc66e;
 }
 
