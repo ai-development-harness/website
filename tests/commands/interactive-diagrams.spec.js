@@ -14,10 +14,7 @@ test.describe('Команды — интерактивные схемы выпо
   test('STEP ADD показывает развилки и останавливает путь при дубликате', async ({ page }) => {
     await page.goto('/commands/');
 
-    const item = page.locator('.command-item').filter({
-      has: page.getByRole('heading', { name: 'STEP ADD: <описание>', exact: true }),
-    });
-    await item.locator('.command-diagram-open').click();
+    await page.locator('.command-diagram-open[data-command="STEP ADD:"]').click();
 
     const dialog = page.locator('.command-diagram-dialog');
     await expect(dialog).toBeVisible();
@@ -38,10 +35,9 @@ test.describe('Команды — интерактивные схемы выпо
   test('STEP REVIEW позволяет выбрать PASS, FAIL и BLOCKED', async ({ page }) => {
     await page.goto('/commands/');
 
-    const item = page.locator('.command-item').filter({
-      has: page.getByRole('heading', { name: 'STEP REVIEW STEP-NNN', exact: true }),
-    });
-    await item.locator('.command-diagram-open').click();
+    await page
+      .locator('.command-diagram-open[data-command="STEP REVIEW STEP-NNN"]')
+      .click();
 
     const dialog = page.locator('.command-diagram-dialog');
 
@@ -58,10 +54,7 @@ test.describe('Команды — интерактивные схемы выпо
   test('GIT SYNC показывает разные состояния веток', async ({ page }) => {
     await page.goto('/commands/');
 
-    const item = page.locator('.command-item').filter({
-      has: page.getByRole('heading', { name: 'GIT SYNC', exact: true }),
-    });
-    await item.locator('.command-diagram-open').click();
+    await page.locator('.command-diagram-open[data-command="GIT SYNC"]').click();
 
     const dialog = page.locator('.command-diagram-dialog');
     await dialog.getByRole('button', { name: 'Ветки разошлись' }).click();
