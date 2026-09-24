@@ -24,6 +24,10 @@ test.describe('Команды — интерактивные схемы выпо
     await expect(dialog.locator('#command-diagram-title')).toContainText('STEP ADD:');
     await expect(dialog).toContainText('Пользователь вводит команду');
     await expect(dialog).toContainText('harness-dispatch.py start');
+    await expect(dialog.locator('.command-diagram-step.is-inactive')).toHaveCount(0);
+    await expect(
+      dialog.getByRole('button', { name: 'Дубликат не найден', exact: true })
+    ).toBeEnabled();
 
     await dialog.getByRole('button', { name: 'Найден дубликат или пересечение' }).click();
 
