@@ -42,11 +42,15 @@ test.describe('Команды — диаграммы цепочек выполн
 
     const updateApply = page.locator('.command-item').filter({ hasText: 'HARNESS UPDATE APPLY' }).first();
     await expect(updateApply).toContainText('Свежая машинная предварительная проверка');
+    await expect(updateApply).toContainText('Журнал транзакции + резервная копия');
+    await expect(updateApply).toContainText('Отчёт только после PASS');
     await expect(updateApply).toContainText('Показать изменения и предложить GIT CHECK');
     await expect(updateApply).not.toContainText('GIT COMMIT');
 
     const gitCommit = page.locator('.command-item').filter({ hasText: 'GIT COMMIT /' }).first();
     await expect(gitCommit).toContainText('Фактические изменения');
+    await expect(gitCommit).toContainText('Снимок ветки / родителя / дерева');
+    await expect(gitCommit).toContainText('Проверка branch / parent / tree после hooks');
     await expect(gitCommit).not.toContainText('GIT CHECK');
 
     const gitPush = page.locator('.command-item').filter({ hasText: 'GIT PUSH' }).first();
@@ -111,6 +115,8 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(page.locator('#syntax')).toContainText('.harness/reasoning-boundaries.json');
     await expect(page.locator('#execution-status')).toContainText('HARNESS RESUME');
     await expect(page.locator('#execution-status')).toContainText('execution-status.json');
+    await expect(page.locator('#execution-status')).toContainText('execution-status.lock');
+    await expect(page.locator('#execution-status')).toContainText('schemaVersion: 2');
   });
 
   test('диаграммы не создают горизонтальное переполнение страницы', async ({ page }) => {

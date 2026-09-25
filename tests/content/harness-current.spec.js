@@ -45,6 +45,12 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#syntax')).toContainText('STEP RUN STEP-024');
     await expect(page.locator('#git')).toContainText('.harness/local/git/pr-state.json');
     await expect(page.locator('#git')).toContainText('headRefOid');
+    await expect(page.locator('#update')).toContainText('.harness/local/update-journal/');
+    await expect(page.locator('#update')).toContainText('UPDATE_JOURNAL_PENDING');
+    await expect(page.locator('#git')).toContainText('COMMIT_POSTCONDITION_FAILED');
+    await expect(page.locator('#execution-status')).toContainText('execution-status.lock');
+    await expect(page.locator('#execution-status')).toContainText('schemaVersion: 2');
+    await expect(page.locator('#execution-status')).toContainText('recentTerminals');
   });
 
   test('начало работы требует две INIT-проверки и детерминированную финализацию', async ({ page }) => {
@@ -69,6 +75,8 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#layout')).toContainText('.harness/reasoning-boundaries.json');
     await expect(page.locator('#layout')).toContainText('.harness/local/git/pr-state.json');
     await expect(page.locator('#execution-status')).toContainText('HARNESS RESUME');
+    await expect(page.locator('#execution-status')).toContainText('execution-status.lock');
+    await expect(page.locator('#execution-status')).toContainText('recentTerminals');
   });
 
   test('страница валидаторов документирует основные публичные проверки', async ({ page }) => {
@@ -98,6 +106,10 @@ test.describe('Контент — актуальный Harness', () => {
     ]) {
       await expect(article).toContainText(tool);
     }
+    await expect(page.locator('#validate')).toContainText('.env');
+    await expect(page.locator('#validate')).toContainText('приватные SSH/PEM/PGP-ключи');
+    await expect(page.locator('#execution-tools')).toContainText('VERIFICATION_MUTATED_REFS');
+    await expect(page.locator('#reviews')).toContainText('provenance');
   });
 
   test('процесс и FAQ описывают завершение PR и необязательность GitHub CLI', async ({ page }) => {
@@ -107,6 +119,7 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#git-flow')).toContainText('GIT PR FINISH');
     await expect(page.locator('#git-flow')).toContainText('git branch -D');
     await expect(page.locator('#git-flow')).toContainText('gh');
+    await expect(page.locator('#git-flow')).toContainText('COMMIT_POSTCONDITION_FAILED');
 
     await page.goto('/faq/');
     const article = page.locator('article.article');
@@ -114,6 +127,7 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(article).toContainText('HARNESS RESUME');
     await expect(article).toContainText('Обязателен ли GitHub CLI для работы Harness?');
     await expect(article).toContainText('GIT PR FINISH');
+    await expect(article).toContainText('UPDATE_JOURNAL_PENDING');
   });
 
   test('поддержка описывает детерминированное обновление и миграцию проектных документов', async ({ page }) => {
@@ -121,11 +135,15 @@ test.describe('Контент — актуальный Harness', () => {
 
     await expect(page.locator('#update')).toContainText('.harness/tools/harness-update.py');
     await expect(page.locator('#update')).toContainText('без вызова модели');
+    await expect(page.locator('#update')).toContainText('.harness/local/update-journal/');
+    await expect(page.locator('#update')).toContainText('UPDATE_JOURNAL_PENDING');
+    await expect(page.locator('#migration')).toContainText('LEGACY_COMPLETION');
     await expect(page.locator('#legacy')).toContainText('v0.6.0');
     await expect(page.locator('#migration')).toContainText('PROJECT RECONCILE');
     await expect(page.locator('#git-preflight')).toContainText('.harness/tools/git-preflight.py');
     await expect(page.locator('#git-preflight')).toContainText('GIT PR FINISH');
     await expect(page.locator('#git-preflight')).toContainText('.harness/local/git/pr-state.json');
     await expect(page.locator('#git-preflight')).toContainText('gh');
+    await expect(page.locator('#git-preflight')).toContainText('COMMIT_POSTCONDITION_FAILED');
   });
 });
