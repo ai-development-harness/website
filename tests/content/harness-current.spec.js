@@ -45,8 +45,8 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#syntax')).toContainText('STEP RUN STEP-024');
     await expect(page.locator('#git')).toContainText('.harness/local/git/pr-state.json');
     await expect(page.locator('#git')).toContainText('headRefOid');
-    await expect(page.locator('#update')).toContainText('.harness/local/update-journal/');
-    await expect(page.locator('#update')).toContainText('UPDATE_JOURNAL_PENDING');
+    await expect(page.locator('#updates')).toContainText('.harness/local/update-journal/');
+    await expect(page.locator('#updates')).toContainText('UPDATE_JOURNAL_PENDING');
     await expect(page.locator('#git')).toContainText('COMMIT_POSTCONDITION_FAILED');
     await expect(page.locator('#execution-status')).toContainText('execution-status.lock');
     await expect(page.locator('#execution-status')).toContainText('schemaVersion: 2');
