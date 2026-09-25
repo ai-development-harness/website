@@ -50,7 +50,7 @@ test.describe('Команды — диаграммы цепочек выполн
     const gitCommit = page.locator('.command-item').filter({ hasText: 'GIT COMMIT /' }).first();
     await expect(gitCommit).toContainText('Фактические изменения');
     await expect(gitCommit).toContainText('Снимок ветки / родителя / дерева');
-    await expect(gitCommit).toContainText('Проверка branch / parent / tree после hooks');
+    await expect(gitCommit).toContainText('Проверка ветки / родителя / дерева после hooks');
     await expect(gitCommit).not.toContainText('GIT CHECK');
 
     const gitPush = page.locator('.command-item').filter({ hasText: 'GIT PUSH' }).first();

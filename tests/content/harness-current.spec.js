@@ -109,7 +109,7 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#validate')).toContainText('.env');
     await expect(page.locator('#validate')).toContainText('приватные SSH/PEM/PGP-ключи');
     await expect(page.locator('#execution-tools')).toContainText('VERIFICATION_MUTATED_REFS');
-    await expect(page.locator('#reviews')).toContainText('provenance');
+    await expect(page.locator('#reviews')).toContainText('данные происхождения');
   });
 
   test('процесс и FAQ описывают завершение PR и необязательность GitHub CLI', async ({ page }) => {
