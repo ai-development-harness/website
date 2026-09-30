@@ -92,6 +92,7 @@ test.describe('Контент — актуальный Harness', () => {
 
     for (const tool of [
       '.harness/tools/validate.py',
+      '.harness/tools/run-self-tests.py',
       '.harness/tools/harness-dispatch.py',
       '.harness/tools/validate-command.py',
       '.harness/tools/check-command-references.py',
@@ -126,6 +127,8 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(page.locator('#reviews')).toContainText('stable fingerprint');
     await expect(page.locator('#reviews')).toContainText('NO_PROGRESS');
     await expect(page.locator('#execution-tools')).toContainText('gitea → tea');
+    await expect(page.locator('#validate')).toContainText('*-self-test.py');
+    await expect(page.locator('#validate')).toContainText('--list');
   });
 
   test('процесс и FAQ описывают recovery и provider-neutral Pull Request capability', async ({ page }) => {
@@ -147,6 +150,17 @@ test.describe('Контент — актуальный Harness', () => {
     await expect(article).toContainText('Gitea');
     await expect(article).toContainText('GIT PR FINISH');
     await expect(article).toContainText('UPDATE_JOURNAL_PENDING');
+  });
+
+  test('страницы навыков фиксируют provenance через UPSTREAM.md', async ({ page }) => {
+    await page.goto('/architecture/');
+    await expect(page.locator('#skills')).toContainText('UPSTREAM.md');
+    await expect(page.locator('#skills')).toContainText('project-native');
+    await expect(page.locator('#skills')).toContainText('exact upstream/ref/license');
+
+    await page.goto('/commands/');
+    await expect(page.locator('#skills')).toContainText('Source: project-native');
+    await expect(page.locator('#skills')).toContainText('UPSTREAM.md');
   });
 
   test('страница runtimes публикует provider-neutral Runtime Adapter Contract', async ({ page }) => {
