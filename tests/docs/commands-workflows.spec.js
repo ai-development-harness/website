@@ -26,6 +26,10 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(runCommand).toContainText('Финализация STEP');
     await expect(runCommand).toContainText('BLOCKED');
     await expect(runCommand).toContainText('execution.maxFixReviewCycles');
+    await expect(runCommand).toContainText('NO_PROGRESS');
+    await expect(runCommand).toContainText('REPEATED_FINDINGS');
+    await expect(runCommand).toContainText('REGRESSION');
+    await expect(runCommand).toContainText('.harness/tools/repair_cycle.py');
     await expect(runCommand).toContainText('dispatcher детерминированно оркестрирует переходы');
     await expect(runCommand).toContainText('.harness/tools/verification.py');
   });
@@ -59,6 +63,9 @@ test.describe('Команды — диаграммы цепочек выполн
 
     const gitPr = page.locator('.command-item').filter({ hasText: 'GIT PR' }).first();
     await expect(gitPr).toContainText('.harness/tools/git-action.py');
+    await expect(gitPr).toContainText('.harness/tools/pr_provider.py');
+    await expect(gitPr).toContainText('Gitea');
+    await expect(gitPr).toContainText('PROVIDER_LOGIN_AMBIGUOUS');
 
     const reconcile = page.locator('.command-item').filter({ hasText: 'PROJECT RECONCILE' }).first();
     await expect(reconcile).toContainText('Проверка устаревших команд');
@@ -78,7 +85,7 @@ test.describe('Команды — диаграммы цепочек выполн
 
     const doctor = page.locator('.command-item').filter({ hasText: 'HARNESS DOCTOR' }).first();
     await expect(doctor).toContainText('Python 3.11+ / Git');
-    await expect(doctor).toContainText('Codex / Claude Code / gh');
+    await expect(doctor).toContainText('Codex / Claude Code / PR provider CLI');
 
     const config = page.locator('.command-item').filter({ hasText: 'HARNESS CONFIG' }).first();
     await expect(config).toContainText('Эффективная конфигурация без изменений');
@@ -102,7 +109,8 @@ test.describe('Команды — диаграммы цепочек выполн
 
     const finish = page.locator('.command-item').filter({ hasText: 'GIT PR FINISH' }).first();
     await expect(finish).toContainText('MERGED');
-    await expect(finish).toContainText('headRefOid');
+    await expect(finish).toContainText('provider state');
+    await expect(finish).toContainText('head SHA');
     await expect(finish).toContainText('git branch -D');
     await expect(finish).toContainText('Удалить только проверенную локальную ветку PR');
   });
@@ -117,6 +125,8 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(page.locator('#execution-status')).toContainText('execution-status.json');
     await expect(page.locator('#execution-status')).toContainText('execution-status.lock');
     await expect(page.locator('#execution-status')).toContainText('schemaVersion: 2');
+    await expect(page.locator('#execution-status')).toContainText('current.context.sideEffect');
+    await expect(page.locator('#execution-status')).toContainText('AMBIGUOUS');
   });
 
   test('диаграммы не создают горизонтальное переполнение страницы', async ({ page }) => {
