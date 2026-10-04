@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050b14">
 <meta name="color-scheme" content="dark light">
 <title>Codex и Claude Code в AI Development Harness</title>
-<meta name="description" content="Как AI Development Harness работает с Codex и Claude Code: общий протокол, отдельные runtime adapters, роли, model/effort и безопасное обновление конфигурации.">
+<meta name="description" content="Как AI Development Harness работает с Codex и Claude Code: общий протокол, отдельные адаптер среды исполненияs, роли, model/effort и безопасное обновление конфигурации.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ai-development-harness.ru/runtimes/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -17,12 +17,12 @@
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="AI Development Harness">
 <meta property="og:title" content="Codex и Claude Code в AI Development Harness">
-<meta property="og:description" content="Один протокол AI-разработки, два поддерживаемых runtime adapter: Codex и Claude Code. Модели и effort настраиваются отдельно для специализированных ролей.">
+<meta property="og:description" content="Один протокол AI-разработки, два поддерживаемых адаптер среды исполнения: Codex и Claude Code. Модели и effort настраиваются отдельно для специализированных ролей.">
 <meta property="og:url" content="https://ai-development-harness.ru/runtimes/">
 <meta property="og:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Codex и Claude Code в AI Development Harness">
-<meta name="twitter:description" content="Один протокол AI-разработки, два поддерживаемых runtime adapter: Codex и Claude Code. Модели и effort настраиваются отдельно для специализированных ролей.">
+<meta name="twitter:description" content="Один протокол AI-разработки, два поддерживаемых адаптер среды исполнения: Codex и Claude Code. Модели и effort настраиваются отдельно для специализированных ролей.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
 <script src="/js/theme-init.js?v=a84e6c2f"></script>
 <link rel="stylesheet" href="/css/styles.css?v=a84e6c2f">
@@ -85,17 +85,17 @@
 <section id="protocol"><h2>Один протокол, две среды исполнения</h2><p>Команды Harness, требования, ADR, STEP, навыки, политика Git и правила обновления не принадлежат конкретной модели. Канонический контракт репозитория хранится в <code>AGENTS.md</code>, а Codex и Claude Code получают собственную конфигурацию исполнения.</p><div class="code-block"><pre><code>HARNESS PROTOCOL
 AGENTS.md · REQ · ADR · STEP · skills · policies
              ↓
-      runtime adapter
+      адаптер среды исполнения
         ↙         ↘
      Codex     Claude Code</code></pre></div><div class="article-note"><strong>Можно сменить среду исполнения, не меняя смысл проекта.</strong> Состояние работы остаётся в репозитории, поэтому следующая сессия восстанавливает контекст из тех же артефактов.</div></section>
 <section id="contract"><h2>Provider-neutral Runtime Adapter Contract</h2><p>Граница между Harness control plane и конкретным AI runtime формализована в <code>.harness/runtime-adapter-contract.json</code>. Adapter переводит lifecycle, account state и события конкретного provider, но не меняет CTS, STEP/REQ/ADR semantics, resolver или recovery decisions.</p><div class="article-grid"><div class="mini-card"><h3>Capabilities</h3><p>Каждая capability объявляется как <code>native</code>, <code>synthesized</code> или <code>unsupported</code>. Ключи включают runtime identity, authenticated account, model/effort, interactive input, streaming, resume, cancel, subagents, structured output, MCP tools и session/execution IDs.</p></div><div class="mini-card"><h3>Normalized events</h3><p>Control plane работает с закрытым набором событий: <code>run.started</code>, message delta/completed, tool started/completed, <code>input.required</code>, <code>auth.required</code>, <code>run.interrupted</code>, <code>run.completed</code> и <code>run.failed</code>. Неизвестный canonical event fail-closed.</p></div><div class="mini-card"><h3>Account state без secrets</h3><p>Codex использует machine-readable <code>account/read</code> App Server, Claude Code — <code>claude auth status</code>. Harness может показывать безопасную identity/account metadata, но не сохраняет токены, ключи, cookies или credential files.</p></div></div><p>Проверка контракта выполняется детерминированно:</p><div class="code-block"><pre><code>python3 .harness/tools/runtime_adapter_contract.py --json
 python3 .harness/tools/runtime_adapter_contract.py --runtime codex --json
 python3 .harness/tools/runtime_adapter_contract.py --runtime claude --json</code></pre></div></section>
-<section id="context-contract"><h2>Контекст роли выбирает Harness, а не runtime adapter</h2><p>Перед смысловым вызовом Harness строит Context Contract для конкретной роли. Planner, implementer и reviewer получают разные section-level projections STEP, связанных REQ/ADR/OQ, architecture anchors и применимых Project Principles.</p><div class="code-block"><pre><code>STEP + role + repository revision
+<section id="context-contract"><h2>Контекст роли выбирает Harness, а не адаптер среды исполнения</h2><p>Перед смысловым вызовом Harness строит Context Contract для конкретной роли. Планировщик, реализатор и проверяющий получают разные проекции отдельных разделов STEP, связанных REQ/ADR/OQ, ссылки на архитектуру и применимых Project Principles.</p><div class="code-block"><pre><code>STEP + role + repository revision
         ↓
 runtime-neutral Context Contract
         ↓
-Codex adapter / Claude Code adapter</code></pre></div><p>Adapter может отличаться способом физического чтения файлов, но не меняет semantic selection. Дополнительный файл подключается только с явной причиной, а недоступный обязательный контекст приводит к <code>BLOCKED</code> вместо неограниченного preload репозитория.</p></section>
+Codex adapter / Claude Code adapter</code></pre></div><p>Adapter может отличаться способом физического чтения файлов, но не меняет состав обязательного контекста. Дополнительный файл подключается только с явной причиной, а недоступный обязательный контекст приводит к <code>BLOCKED</code> вместо неограниченного предварительной загрузки всего репозитория.</p></section>
 <section id="codex"><h2>Адаптер Codex</h2><div class="article-grid"><div class="mini-card"><h3>Основная конфигурация</h3><p><code>.codex/config.toml</code> регистрирует проектные роли и их файлы конфигурации.</p></div><div class="mini-card"><h3>Специализированные роли</h3><p><code>.codex/agents/*.toml</code> задают модель, уровень рассуждений, изоляцию и инструкции для каждой роли.</p></div></div><p>Модель и уровень рассуждений можно менять независимо для инициализатора, архитектора, планировщика, реализатора, проверяющего и остальных ролей. Это позволяет использовать усиленное рассуждение для архитектуры и независимого ревью, а механическую работу отдавать более экономичному профилю.</p></section>
 <section id="claude"><h2>Адаптер Claude Code</h2><div class="article-grid"><div class="mini-card"><h3>Общий контракт репозитория</h3><p><code>CLAUDE.md</code> импортирует <code>@AGENTS.md</code>, поэтому правила Harness не дублируются в двух независимых файлах.</p></div><div class="mini-card"><h3>Основной профиль</h3><p><code>.claude/settings.json</code> задаёт проектные значения по умолчанию: модель, уровень рассуждений и базовый режим разрешений.</p></div><div class="mini-card"><h3>Специализированные роли</h3><p><code>.claude/agents/*.md</code> задают <code>model</code>, <code>effort</code> и <code>permissionMode</code> для каждой роли.</p></div><div class="mini-card"><h3>Локальные настройки</h3><p><code>.claude/settings.local.json</code> и <code>CLAUDE.local.md</code> позволяют хранить персональные настройки только для Claude вне Git.</p></div></div><p>Роли только для чтения — например архитектор, планировщик и проверяющий — по умолчанию используют режим планирования. Семантическое правило «не менять файлы» остаётся частью контракта Harness, даже если пользователь временно меняет режим основной сессии Claude Code.</p></section>
 <section id="roles"><h2>Роли одинаковы по смыслу</h2><p>Оба адаптера поддерживают один набор ролей Harness. Отличается только формат конфигурации среды исполнения и конкретный выбор модели.</p><div class="code-block"><pre><code>initializer · architect · planner · implementer

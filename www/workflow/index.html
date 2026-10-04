@@ -107,26 +107,26 @@ GIT COMMIT</code></pre></div><p>PROJECT QUICK FIX допустим только 
 GIT PR FINISH</code></pre></div><p><code>STEP IMPLEMENT</code> / <code>STEP REVIEW</code> сами не создают коммиты. <code>GIT CHECK</code>, <code>GIT SYNC</code> и <code>GIT PR FINISH</code> выполняются детерминированно; изменяющие операции проходят <code>.harness/tools/git-preflight.py</code>. Для <code>GIT PUSH</code> после доказанного <code>GIT COMMIT</code> в той же цепочке доступен машинный быстрый путь без повторной смысловой проверки модели.</p><p><code>GIT COMMIT</code> фиксирует проверенный snapshot ветки, родителя и дерева индекса, сверяет его прямо перед commit и проверяет фактические ветка/родитель/дерево после выполнения пользовательских хуки Git. Если проверенное состояние изменилось, команда возвращает <code>COMMIT_POSTCONDITION_FAILED</code> и компенсирует только доказанно принадлежащую ей изменение ref; разрушительный reset не используется.</p><p>Mutation-команды COMMIT/PUSH/PR сохраняют bounded side-effect checkpoint. После crash executor сначала наблюдает внешний результат: уже применённый side effect переиспользуется, доказанно неизменившийся baseline можно безопасно повторить, а неоднозначное состояние блокируется как <code>SIDE_EFFECT_RECOVERY_AMBIGUOUS</code>.</p><p>После успешного <code>GIT PR</code> Harness сохраняет локальное состояние Pull Request. Когда PR уже слит, <code>GIT PR FINISH</code> проверяет состояние <code>MERGED</code>, подтверждает точный head SHA, безопасно возвращает рабочую копию на исходную ветку и удаляет только проверенную локальную ветку PR. Это работает и после squash/rebase-слияния без <code>git branch -D</code>, reset или автоматического rebase.</p><div class="article-note"><strong>Pull Request provider настраивается явно.</strong> GitHub использует пару <code>github → gh</code>, Gitea — <code>gitea → tea</code>. Обычные <code>GIT CHECK</code>, <code>GIT COMMIT</code>, <code>GIT PUSH</code> и <code>GIT SYNC</code> остаются provider-neutral и используют обычный Git.</div></section>
 <section id="quality-gates"><h2>До реализации Harness проверяет качество самого контракта</h2><p>Структурно корректного Markdown недостаточно. Перед реализацией Harness разделяет несколько вопросов, которые раньше легко смешивались в один «хороший план».</p><div class="code-block"><pre><code>структурная проверка
         ↓
-Requirements Quality
+качество требований
         ↓
-Planning Consistency
+согласованность планирования
         ↓
-Architecture Completeness
+архитектурная полнота
         ↓
-implementation</code></pre></div><div class="article-grid"><div class="mini-card"><h3>Requirements Quality</h3><p>Достаточно ли определены поведение, сценарии, данные, ошибки, нефункциональные требования и критерии приёмки? Существенная неоднозначность возвращает <code>NEEDS_INPUT</code> или <code>BLOCKED</code>.</p></div><div class="mini-card"><h3>Planning Consistency</h3><p>Не противоречат ли друг другу REQ, ADR, STEP, зависимости, scope и acceptance? Плохая постановка не передаётся implementer-у как будто она уже истинна.</p></div><div class="mini-card"><h3>Project Principles</h3><p>Применимые blocking <code>PRN-NNN</code> становятся инженерными ограничениями: план должен либо соблюдать принцип, либо содержать явное согласованное отклонение.</p></div></div></section>
-<section id="completion"><h2>REVIEW PASS и завершение STEP — разные решения</h2><p><code>STEP REVIEW</code> отвечает на вопрос, есть ли существенный дефект в проверенной реализации. Completion / Convergence Gate отвечает на другой вопрос: выполнены ли все обязательства текущего STEP, связанных требований и Ready plan.</p><div class="code-block"><pre><code>Verification
+implementation</code></pre></div><div class="article-grid"><div class="mini-card"><h3>Качество требований</h3><p>Достаточно ли определены поведение, сценарии, данные, ошибки, нефункциональные требования и критерии приёмки? Существенная неоднозначность возвращает <code>NEEDS_INPUT</code> или <code>BLOCKED</code>.</p></div><div class="mini-card"><h3>Согласованность планирования</h3><p>Не противоречат ли друг другу REQ, ADR, STEP, зависимости, границы задачи и критерии приёмки? Плохая постановка не передаётся реализатору как будто она уже истинна.</p></div><div class="mini-card"><h3>Project Principles</h3><p>Применимые блокирующие <code>PRN-NNN</code> становятся инженерными ограничениями: план должен либо соблюдать принцип, либо содержать явное согласованное отклонение.</p></div></div></section>
+<section id="completion"><h2>REVIEW PASS и завершение STEP — разные решения</h2><p><code>STEP REVIEW</code> отвечает на вопрос, есть ли существенный дефект в проверенной реализации. Проверка Completion / Convergence отвечает на другой вопрос: выполнены ли все обязательства текущего STEP, связанных требований и готового плана.</p><div class="code-block"><pre><code>Verification
     ↓
 STEP REVIEW
-    ↓ code verdict PASS
+    ↓ вердикт ревью PASS
 Completion / Convergence
     ├─ PASS    → закрыть STEP
     ├─ FAIL    → STEP FIX
-    └─ BLOCKED → остановить RUN</code></pre></div><p>Результат Completion сохраняется в том же неизменяемом отчёте REVIEW. Поэтому успешный code review не может скрыть недоделанный критерий приёмки или обязательство REQ.</p></section>
-<section id="evolution"><h2>Изменение требований не оставляет старые планы «готовыми»</h2><p>REQ, ADR, OQ, STEP и Project Principles могут эволюционировать. Harness использует один planning fingerprint и детерминированный impact analysis, чтобы затронутые планы становились устаревшими без догадок модели.</p><div class="code-block"><pre><code>REQ / ADR / OQ / PRN изменён
+    └─ BLOCKED → остановить RUN</code></pre></div><p>Результат проверки завершённости сохраняется в том же неизменяемом отчёте REVIEW. Поэтому успешное ревью реализации не может скрыть недоделанный критерий приёмки или обязательство REQ.</p></section>
+<section id="evolution"><h2>Изменение требований не оставляет старые планы «готовыми»</h2><p>REQ, ADR, OQ, STEP и Project Principles могут эволюционировать. Harness использует один отпечаток контекста планирования и детерминированный анализ влияния, чтобы затронутые планы становились устаревшими без догадок модели.</p><div class="code-block"><pre><code>REQ / ADR / OQ / PRN изменён
         ↓
-planning context изменился
+контекст планирования изменился
         ↓
-affected plan = stale
+затронутый plan = stale
         ↓
 STEP RUN / IMPLEMENT блокируется
         ↓
