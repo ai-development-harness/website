@@ -95,3 +95,13 @@
   .command-flow-branches, .command-run-plan { grid-template-columns: 1fr; }
   .command-flow--run { padding: 14px; }
 }
+
+/* Таблицы сравнения остаются семантическими table, но на узких экранах
+   прокручиваются горизонтально, чтобы не ломать документацию. */
+.comparison-table-wrap { overflow-x: auto; margin: 22px 0; border: 1px solid var(--border); border-radius: 14px; }
+.comparison-table { width: 100%; min-width: 680px; border-collapse: collapse; background: var(--surface); }
+.comparison-table th, .comparison-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+.comparison-table th { color: var(--text-primary); font-size: 14px; }
+.comparison-table td { color: var(--text-secondary); }
+.comparison-table tr:last-child td { border-bottom: 0; }
+.article-meta { margin: -6px 0 24px; color: var(--text-secondary); font-size: 14px; }

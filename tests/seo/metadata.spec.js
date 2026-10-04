@@ -46,6 +46,31 @@ test.describe('SEO — метаданные публичных страниц', 
     });
   }
 
+  test('главная публикует WebSite и Organization structured data', async ({ page }) => {
+    await page.goto('/');
+    const jsonLd = (await page.locator('script[type="application/ld+json"]').allTextContents())
+      .flatMap((block) => {
+        const value = JSON.parse(block);
+        return value['@graph'] || [value];
+      });
+
+    expect(jsonLd.some((item) => item['@type'] === 'WebSite' && item.name === 'AI Development Harness')).toBeTruthy();
+    expect(jsonLd.some((item) => item['@type'] === 'Organization')).toBeTruthy();
+  });
+
+  test('статьи публикуют Article structured data', async ({ page }) => {
+    for (const path of [
+      '/articles/what-is-ai-coding-harness/',
+      '/articles/persistent-context-codex-claude-code/',
+      '/articles/codex-claude-code-workflow/',
+    ]) {
+      await page.goto(path);
+      const jsonLd = (await page.locator('script[type="application/ld+json"]').allTextContents())
+        .map((block) => JSON.parse(block));
+      expect(jsonLd.some((item) => item['@type'] === 'Article')).toBeTruthy();
+    }
+  });
+
   test('заголовки и описания не повторяются между публичными страницами', async ({ page }) => {
     const titles = [];
     const descriptions = [];
