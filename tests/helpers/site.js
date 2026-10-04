@@ -1,7 +1,7 @@
 export const PRODUCTION_ORIGIN = 'https://ai-development-harness.ru';
 
 export const PUBLIC_PAGES = [
-  { path: '/', h1: 'Ваш репозиторий становится долгосрочной памятью проекта', docs: false },
+  { path: '/', h1: 'Репозиторий как долговременная память для AI-разработки', docs: false },
   { path: '/getting-started/', h1: 'Начало работы', docs: true },
   { path: '/workflow/', h1: 'Процесс разработки', docs: true },
   { path: '/commands/', h1: 'Команды Harness', docs: true },
@@ -11,11 +11,15 @@ export const PUBLIC_PAGES = [
   { path: '/validators/', h1: 'Валидаторы и детерминированные проверки', breadcrumb: 'Валидаторы', docs: true },
   { path: '/maintenance/', h1: 'Поддержка и обновление', docs: true },
   { path: '/faq/', h1: 'Вопросы и ответы', docs: true },
+  { path: '/articles/', h1: 'Статьи об AI-разработке', breadcrumb: 'Статьи', docs: true },
+  { path: '/articles/what-is-ai-coding-harness/', h1: 'Что такое AI coding harness и зачем он нужен', breadcrumb: 'Что такое AI coding harness', docs: true },
+  { path: '/articles/persistent-context-codex-claude-code/', h1: 'Как не терять контекст между сессиями Codex и Claude Code', breadcrumb: 'Контекст между сессиями', docs: true },
+  { path: '/articles/codex-claude-code-workflow/', h1: 'Codex и Claude Code в одном проекте', breadcrumb: 'Codex и Claude Code', docs: true },
 ];
 
 export const DOC_PAGES = PUBLIC_PAGES.filter((page) => page.docs);
 
-export const INTERNAL_ANCHORS = ['problem', 'workflow', 'traceability', 'runtimes', 'example', 'audience'];
+export const INTERNAL_ANCHORS = ['problem', 'what-is-harness', 'workflow', 'comparison', 'traceability', 'runtimes', 'example', 'audience', 'articles'];
 
 /**
  * Возвращает production canonical URL для SEO-проверок.

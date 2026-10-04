@@ -40,6 +40,10 @@ const FALLBACK_PUBLIC_PATHS = [
   '/maintenance/',
   '/faq/',
   '/runtimes/',
+  '/articles/',
+  '/articles/what-is-ai-coding-harness/',
+  '/articles/persistent-context-codex-claude-code/',
+  '/articles/codex-claude-code-workflow/',
 ];
 
 const MAX_RESULTS = 8;

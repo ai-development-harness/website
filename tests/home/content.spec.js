@@ -50,6 +50,12 @@ test.describe('Главная страница — основные секции
     await expect(page.locator('.audience-card')).toHaveCount(3);
   });
 
+  test('объясняет категорию AI coding harness и границу с agent framework', async ({ page }) => {
+    await expect(page.locator('#what-is-harness')).toContainText('AI coding harness');
+    await expect(page.locator('#comparison')).toContainText('Agent framework');
+    await expect(page.locator('#articles a[href="/articles/what-is-ai-coding-harness/"]')).toBeVisible();
+  });
+
   test('показывает шесть карточек документации', async ({ page }) => {
     await expect(page.locator('.docs-grid .doc-card')).toHaveCount(6);
   });

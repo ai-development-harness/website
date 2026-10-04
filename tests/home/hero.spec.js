@@ -15,7 +15,7 @@ test.describe('Главная страница — первый экран', () 
   });
 
   test('показывает ключевое сообщение и основные действия', async ({ page }) => {
-    await expect(page.locator('h1')).toContainText('долгосрочной памятью проекта');
+    await expect(page.locator('h1')).toContainText('долговременная память для AI-разработки');
     await expect(page.locator('.hero-lead')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Использовать шаблон' }).first()).toBeVisible();
     await expect(page.getByRole('link', { name: /Как это работает/ })).toBeVisible();
