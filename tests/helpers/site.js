@@ -15,6 +15,8 @@ export const PUBLIC_PAGES = [
   { path: '/articles/what-is-ai-coding-harness/', h1: 'Что такое AI coding harness и зачем он нужен', breadcrumb: 'Что такое AI coding harness', docs: true },
   { path: '/articles/persistent-context-codex-claude-code/', h1: 'Как не терять контекст между сессиями Codex и Claude Code', breadcrumb: 'Контекст между сессиями', docs: true },
   { path: '/articles/codex-claude-code-workflow/', h1: 'Codex и Claude Code в одном проекте', breadcrumb: 'Codex и Claude Code', docs: true },
+  { path: '/articles/harness-development-lifecycle/', h1: 'Как устроен AI Development Harness: от требований до проверенного изменения', breadcrumb: 'Цикл разработки Harness', docs: true },
+  { path: '/articles/deterministic-core-vs-llm/', h1: 'Что отдавать LLM, а что проверять детерминированно', breadcrumb: 'LLM и детерминированные проверки', docs: true },
 ];
 
 export const DOC_PAGES = PUBLIC_PAGES.filter((page) => page.docs);
