@@ -44,6 +44,8 @@ const FALLBACK_PUBLIC_PATHS = [
   '/articles/what-is-ai-coding-harness/',
   '/articles/persistent-context-codex-claude-code/',
   '/articles/codex-claude-code-workflow/',
+  '/articles/harness-development-lifecycle/',
+  '/articles/deterministic-core-vs-llm/',
 ];
 
 const MAX_RESULTS = 8;
