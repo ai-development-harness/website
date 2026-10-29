@@ -9,6 +9,8 @@
  */
 
 const COMMAND_KEYS = [
+  'HARNESS CLEANUP CHECK',
+  'HARNESS CLEANUP APPLY',
   'HARNESS UPDATE CHECK',
   'HARNESS UPDATE APPLY',
   'PROJECT QUICK FIX:',
@@ -53,6 +55,8 @@ const DETERMINISTIC_COMMANDS = new Set([
   'HARNESS RESUME',
   'HARNESS DOCTOR',
   'HARNESS CONFIG',
+  'HARNESS CLEANUP CHECK',
+  'HARNESS CLEANUP APPLY',
   'HARNESS UPDATE CHECK',
   'HARNESS UPDATE APPLY',
   'GIT CHECK',
@@ -66,6 +70,7 @@ const CONDITIONAL_MODEL_COMMANDS = new Set([
 ]);
 
 const MUTATING_COMMANDS = new Set([
+  'HARNESS CLEANUP APPLY',
   'PROJECT INIT',
   'PROJECT STATUS',
   'PROJECT RECONCILE',
@@ -179,10 +184,10 @@ const BRANCH_RULES = {
         'Да — продолжить',
         'finish',
         'SUCCESS',
-        'Возвращается точная команда RESUME для незавершённого STEP.'
+        'Возвращается исходная корневая команда или цепочка незавершённого STEP; дочерняя команда не запускается отдельно.'
       ),
     ],
-    'Зависимости / приоритет / риск / критический путь': [
+    'Допустимые зависимости / in-progress / приоритет / влияние / риск / порядок': [
       option('Есть доступный STEP'),
       option(
         'Доступной работы нет',
@@ -204,7 +209,7 @@ const BRANCH_RULES = {
         'PASS',
         'finish',
         'PASS',
-        'Проверка пройдена. STEP может быть завершён в соответствии с контрактом.'
+        'Проверка пройдена; завершение STEP требует проверки завершённости. Подтверждённый поздний дефект активного STEP допускает отдельный FIX.'
       ),
       option(
         'FAIL',
@@ -251,17 +256,6 @@ const BRANCH_RULES = {
       ),
     ],
   },
-  'HARNESS UPDATE CHECK': {
-    'Маршрут по графу обновлений': [
-      option('Маршрут найден'),
-      option(
-        'Маршрута нет',
-        'stop',
-        'BLOCKED',
-        'Обновление не применяется: целевой релиз недостижим по графу обновлений.'
-      ),
-    ],
-  },
   'GIT CHECK': {
     'Подозрительные / посторонние изменения': [
       option('Не обнаружены'),
@@ -289,7 +283,7 @@ const BRANCH_RULES = {
         'Политика запрещает',
         'stop',
         'BLOCKED',
-        'Git-policy запрещает создание коммита в текущем состоянии.'
+        'Git-политика запрещает создание коммита в текущем состоянии.'
       ),
     ],
   },
@@ -347,6 +341,97 @@ const BRANCH_RULES = {
  * чтобы пользователь мог руками пройти ветку PASS / FAIL / BLOCKED.
  */
 const CUSTOM_FLOWS = {
+  // @link https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/UPDATES.md
+  // CHECK выбирает единственный target, а APPLY не исполняет промежуточные установки.
+  'HARNESS UPDATE CHECK': [
+    { type: 'input', label: 'Неизменяемая основа из файла состояния и конечный релиз: latest либо TO' },
+    { type: 'decision', label: 'Проверка установки', choices: [
+      option('Обновление доступно'),
+      option('Целевой релиз уже установлен', 'finish', 'NO_UPDATE', 'Изменений нет; промежуточные APPLY не нужны.'),
+      option('Расхождение, конфликт или незавершённый журнал', 'stop', 'BLOCKED', 'Установка заблокирована; UPDATE_JOURNAL_PENDING требует восстановления через APPLY. CHECK ничего не записывает.'),
+    ] },
+    { type: 'success', label: 'Целевой релиз проверен без изменений; состояние STEP не является условием установки' },
+  ],
+  'HARNESS UPDATE APPLY': [
+    { type: 'gate', label: 'Восстановление журнала и свежая проверка установки' },
+    { type: 'decision', label: 'Нужна установка целевого релиза?', choices: [
+      option('Нужно установить целевой релиз'),
+      option('Целевой релиз уже установлен', 'finish', 'NO_UPDATE', 'Установка не требуется; промежуточных APPLY нет.'),
+    ] },
+    { type: 'action', label: 'Одна транзакция напрямую к конечному релизу' },
+    { type: 'decision', label: 'Постусловия установки', choices: [
+      option('Установка подтверждена'),
+      option('Сбой до момента фиксации', 'stop', 'FAIL', 'Откат служебных файлов, файла состояния и локального состояния. Код целевого релиза и полный валидатор проекта не запускаются.'),
+    ] },
+    { type: 'artifact', label: 'Один неизменяемый отчёт UPDATE и фиксация транзакции' },
+    { type: 'success', label: 'UPDATED: конечный релиз установлен. При reloadRequired перезапустить среду перед работой; повторный APPLY не нужен. Далее GIT CHECK.' },
+  ],
+
+  // @link https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/INCREMENTAL_REVIEW.md: утраченный набор изменений блокирует REVIEW,
+  // тогда как непригодный кэш Verification требует полного прогона команд.
+  'STEP REVIEW STEP-NNN': [
+    { type: 'decision', label: 'Объект независимого REVIEW', choices: [
+      option('Первое полное ревью'),
+      option('После FIX — точные изменения и прямые регрессии'),
+      option('Полное по явному запросу'),
+      option('Набор изменений утрачен или устарел', 'stop', 'BLOCKED', 'Нельзя доказать точный набор изменений FIX. REVIEW блокируется; расширение до полного аудита не выполняется молча.'),
+    ] },
+    { type: 'gate', label: 'Свежие результаты проверок, ревизия и контракт' },
+    { type: 'agent', label: 'Независимый проверяющий и обязательные специализированные проверки' },
+    {
+      type: 'decision',
+      label: 'Вердикт',
+      choices: [
+        option('PASS'),
+        option('FAIL', 'finish', 'FAIL', 'Подтверждённые замечания передаются в STEP FIX STEP-NNN.'),
+        option('BLOCKED', 'stop', 'BLOCKED', 'Блокирующая проблема контракта или зависимости. Цикл FIX не запускается.'),
+      ],
+    },
+    // PASS описывает проверенную ревизию. Поздний дефект требует отдельного
+    // подтверждения и разных действий для активного и завершённого STEP.
+    {
+      type: 'decision',
+      label: 'Состояние после PASS',
+      choices: [
+        option('STEP завершён', 'finish', 'PASS', 'Проверка завершённости пройдена. Поздний дефект оформляется отдельным корректирующим STEP; исторический REVIEW не переписывается.'),
+        option('Активный STEP: поздний дефект подтверждён', 'finish', 'SUCCESS', 'Проверенное неизменяемое наблюдение и свежие доказательства разрешают STEP FIX STEP-NNN. Затем нужны новые проверки и независимый REVIEW точных изменений FIX.'),
+        option('Активный STEP: наблюдение не подтверждено', 'stop', 'BLOCKED', 'Одного старого PASS недостаточно для FIX. Нужны подтверждённое наблюдение и актуальные доказательства.'),
+      ],
+    },
+  ],
+  // @link https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/PORTABLE_RESUME.md: перенос запускает новую PLAN,
+  // а локальная контрольная запись всегда проверяется раньше переносимого входа.
+  'HARNESS RESUME': [
+    { type: 'decision', label: 'Локальное продолжение', choices: [
+      option('Есть однозначное локальное продолжение', 'finish', 'SUCCESS', 'Восстановить исходную корневую команду в прежнем executionId после проверки намерения, продвижения и внешних операций.'),
+      option('Новый клон без локальной истории'),
+      option('Старая история или повреждённая контрольная запись', 'stop', 'BLOCKED', 'Переносимый вход не обходит повреждение или утрату локального состояния.'),
+    ] },
+    { type: 'decision', label: 'Ровно одно продолжение?', choices: [
+      option('Один актуальный опубликованный документ передачи'),
+      option('Нет или найдено несколько', 'stop', 'BLOCKED', 'Нет единственного проверенного документа передачи, Ready-плана и независимого отчёта проверки плана.'),
+    ] },
+    { type: 'gate', label: 'Точный HEAD публикации, ветка и отпечатки' },
+    { type: 'success', label: 'Новый локальный STEP PLAN; нужны новая ревизия и новый отчёт проверки плана. Чужие IMPLEMENT/REVIEW/FIX и внешние операции не повторяются.' },
+  ],
+  'HARNESS CLEANUP CHECK': [
+    { type: 'input', label: 'Только подтверждённые каталоги temporaryDirectory' },
+    { type: 'decision', label: 'Владелец, STEP, зависимости и ссылки', choices: [
+      option('Есть допустимые кандидаты'),
+      option('Нужно сохранить файлы', 'finish', 'WARNING', 'Показать причины сохранения, например STEP_NOT_COMPLETE или OWNER_PROOF_MISSING. Ничего не удалять.'),
+    ] },
+    { type: 'success', label: 'Кандидаты, файлы и байты без записи выполнения, блокировки и отчёта' },
+  ],
+  'HARNESS CLEANUP APPLY': [
+    { type: 'gate', label: 'Блокировка состояния выполнения; активное обновление запрещает APPLY' },
+    { type: 'decision', label: 'Повторная проверка каждого каталога', choices: [
+      option('Владелец завершён, STEP доказан, нет ссылок и зависимостей'),
+      option('Каталог защищён или изменился', 'finish', 'WARNING', 'Сохранить каталог; прошлый CHECK и возраст файлов не разрешают удаление. Остальные кандидаты проверяются независимо.'),
+    ] },
+    { type: 'action', label: 'Удалить только заново проверенные каталоги tmp' },
+    { type: 'success', label: 'Результат удаления; предупреждение уборки не отменяет основной SUCCESS' },
+  ],
+
   'STEP RUN STEP-NNN': [
     { type: 'input', label: 'STEP, блокировки и тип' },
     {
@@ -385,17 +470,17 @@ const CUSTOM_FLOWS = {
       ],
     },
     { type: 'action', label: 'STEP FIX', onlyWhenPrevious: 'FAIL — перейти к STEP FIX' },
-    { type: 'gate', label: 'Повторные машинные проверки', onlyWhenPrevious: 'FAIL — перейти к STEP FIX' },
+    { type: 'gate', label: 'Проверка по контракту: полный прогон или проверенная impactMap', onlyWhenPrevious: 'FAIL — перейти к STEP FIX' },
     {
       type: 'decision',
-      label: 'Повторная STEP REVIEW',
+      label: 'Повторная STEP REVIEW: точные изменения FIX и прямые регрессии',
       onlyWhenPrevious: 'FAIL — перейти к STEP FIX',
       choices: [
         option(
           'PASS',
           'finish',
           'SUCCESS',
-          'Исправления приняты. STEP RUN завершает цикл.'
+          'Исправления приняты; завершение STEP требует проверки завершённости.'
         ),
         option(
           'FAIL — повторить цикл',
@@ -670,7 +755,7 @@ function buildBaseNodes(rawCommand, commandKey, commandItem) {
     {
       type: 'dispatcher',
       label: 'harness-dispatch.py start',
-      detail: 'Разбор команды, маршрутизация и регистрация выполнения.',
+      detail: 'Разбор команды и маршрутизация; команды просмотра не регистрируют выполнение.',
     },
     {
       type: 'gate',

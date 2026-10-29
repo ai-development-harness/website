@@ -36,10 +36,10 @@ test.describe('Документация — структура страниц', 
     });
   }
 
-  test('документация обновления описывает маршрут через harness-update-graph.json', async ({ page }) => {
+  test('документация обновления описывает прямую установку конечного релиза', async ({ page }) => {
     for (const path of ['/getting-started/', '/commands/', '/maintenance/']) {
       await page.goto(path);
-      await expect(page.locator('article.article')).toContainText('.harness/harness-update-graph.json');
+      await expect(page.locator('article.article')).toContainText('напрямую к конечному релизу за одну транзакцию');
     }
   });
 

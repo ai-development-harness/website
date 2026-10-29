@@ -6,7 +6,7 @@ test.describe('Команды — диаграммы цепочек выполн
     const commands = page.locator('.command-item');
     const count = await commands.count();
 
-    expect(count).toBeGreaterThanOrEqual(32);
+    expect(count).toBe(34);
     for (let index = 0; index < count; index += 1) {
       await expect(commands.nth(index).locator('.command-flow')).toHaveCount(1);
     }
@@ -30,7 +30,7 @@ test.describe('Команды — диаграммы цепочек выполн
     await expect(runCommand).toContainText('REPEATED_FINDINGS');
     await expect(runCommand).toContainText('REGRESSION');
     await expect(runCommand).toContainText('.harness/tools/repair_cycle.py');
-    await expect(runCommand).toContainText('dispatcher детерминированно оркестрирует переходы');
+    await expect(runCommand).toContainText('диспетчер детерминированно оркестрирует переходы');
     await expect(runCommand).toContainText('.harness/tools/verification.py');
   });
 
@@ -85,7 +85,7 @@ test.describe('Команды — диаграммы цепочек выполн
 
     const doctor = page.locator('.command-item').filter({ hasText: 'HARNESS DOCTOR' }).first();
     await expect(doctor).toContainText('Python 3.11+ / Git');
-    await expect(doctor).toContainText('Codex / Claude Code / PR provider CLI');
+    await expect(doctor).toContainText('Codex / Claude Code / инструмент сервиса PR');
 
     const config = page.locator('.command-item').filter({ hasText: 'HARNESS CONFIG' }).first();
     await expect(config).toContainText('Эффективная конфигурация без изменений');
@@ -109,8 +109,8 @@ test.describe('Команды — диаграммы цепочек выполн
 
     const finish = page.locator('.command-item').filter({ hasText: 'GIT PR FINISH' }).first();
     await expect(finish).toContainText('MERGED');
-    await expect(finish).toContainText('provider state');
-    await expect(finish).toContainText('head SHA');
+    await expect(finish).toContainText('состояние PR в сервисе');
+    await expect(finish).toContainText('SHA исходного коммита');
     await expect(finish).toContainText('git branch -D');
     await expect(finish).toContainText('Удалить только проверенную локальную ветку PR');
   });
