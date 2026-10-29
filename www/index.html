@@ -24,14 +24,14 @@
 <meta name="twitter:title" content="AI Development Harness — процесс и память AI-разработки">
 <meta name="twitter:description" content="Проверяемый процесс для Codex и Claude Code: требования, планы, ревью, доказательства и контекст хранятся вместе с кодом в Git-репозитории.">
 <meta name="twitter:image" content="https://ai-development-harness.ru/assets/social-card.svg">
-<script src="/js/theme-init.js?v=c91e74b2"></script>
-<link rel="stylesheet" href="/css/styles.css?v=c91e74b2">
-<link rel="stylesheet" href="/css/styles-site.css?v=c91e74b2">
-<link rel="stylesheet" href="/css/styles-docs.css?v=c91e74b2">
-<link rel="stylesheet" href="/css/styles-responsive.css?v=c91e74b2">
-<link rel="stylesheet" href="/css/styles-hero-redesign.css?v=c91e74b2">
-<link rel="stylesheet" href="/css/theme.css?v=c91e74b2">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://ai-development-harness.ru/#website","url":"https://ai-development-harness.ru/","name":"AI Development Harness","alternateName":"AI Harness","inLanguage":"ru"},{"@type":"Organization","@id":"https://ai-development-harness.ru/#organization","name":"AI Development Harness","url":"https://ai-development-harness.ru/","logo":"https://ai-development-harness.ru/assets/logo.svg","sameAs":["https://github.com/ai-development-harness"]},{"@type":"SoftwareSourceCode","name":"AI Development Harness","description":"Repository-native protocol for reliable AI-assisted software development with Codex and Claude Code.","codeRepository":"https://github.com/ai-development-harness/ai-development-harness-template","url":"https://ai-development-harness.ru/","publisher":{"@id":"https://ai-development-harness.ru/#organization"}}]}</script>
+<script src="/js/theme-init.js?v=62542678"></script>
+<link rel="stylesheet" href="/css/styles.css?v=62542678">
+<link rel="stylesheet" href="/css/styles-site.css?v=62542678">
+<link rel="stylesheet" href="/css/styles-docs.css?v=62542678">
+<link rel="stylesheet" href="/css/styles-responsive.css?v=62542678">
+<link rel="stylesheet" href="/css/styles-hero-redesign.css?v=62542678">
+<link rel="stylesheet" href="/css/theme.css?v=62542678">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://ai-development-harness.ru/#website", "url": "https://ai-development-harness.ru/", "name": "AI Development Harness", "alternateName": "AI Harness", "inLanguage": "ru"}, {"@type": "Organization", "@id": "https://ai-development-harness.ru/#organization", "name": "AI Development Harness", "url": "https://ai-development-harness.ru/", "logo": "https://ai-development-harness.ru/assets/logo.svg", "sameAs": ["https://github.com/ai-development-harness"]}, {"@type": "SoftwareSourceCode", "name": "AI Development Harness", "description": "Repository-native protocol for reliable AI-assisted software development with Codex and Claude Code.", "codeRepository": "https://github.com/ai-development-harness/ai-development-harness-template", "url": "https://ai-development-harness.ru/", "publisher": {"@id": "https://ai-development-harness.ru/#organization"}}]}</script>
 </head>
 <body>
 <!-- Yandex.Metrika counter -->
@@ -98,7 +98,7 @@
           <div class="workflow-step"><span class="workflow-no">05</span><span class="workflow-icon">⌕</span><div class="workflow-copy"><b>Ревью и доказательства</b><span>Независимое ревью сверяет задачу, реализацию и доказательства</span></div><div class="workflow-outcome">PASS / FAIL / BLOCKED</div></div>
           <div class="workflow-step"><span class="workflow-no">06</span><span class="workflow-icon">⑂</span><div class="workflow-copy"><b>Git</b><span>Публикация изменений выполняется отдельными безопасными командами</span></div><div class="workflow-outcome">проверка → коммит → отправка → PR</div></div>
         </div>
-        <div class="timeline-note"><strong>Стабильный процесс.</strong> Единый dispatcher проверяет переходы, ведёт состояние выполнения и отделяет машинную механику от смысловой работы модели. Незавершённое выполнение можно безопасно восстановить из локального состояния.</div>
+        <div class="timeline-note"><strong>Стабильный процесс.</strong> Единый диспетчер проверяет переходы, ведёт состояние выполнения и отделяет машинную механику от смысловой работы модели. Незавершённое выполнение можно безопасно восстановить из локального состояния.</div>
       </div>
     </div>
 
@@ -123,7 +123,7 @@
 
     <div class="hero-facts" aria-label="Ключевые свойства">
       <div class="hero-fact"><span class="hero-fact-icon">◇</span><b>Открытый шаблон</b><span>Публичный шаблон репозитория, который становится вашим проектом.</span></div>
-      <div class="hero-fact"><span class="hero-fact-icon">⌘</span><b>Проверяемое выполнение</b><span>Команды проходят через единый dispatcher: переходы, состояние и машинные операции отделены от смысловой работы модели.</span></div>
+      <div class="hero-fact"><span class="hero-fact-icon">⌘</span><b>Проверяемое выполнение</b><span>Команды проходят через единый диспетчер: переходы, состояние и машинные операции отделены от смысловой работы модели.</span></div>
       <div class="hero-fact"><span class="hero-fact-icon">⇄</span><b>Codex и Claude Code</b><span>Два адаптера среды исполнения используют один протокол Harness и общую память проекта.</span></div>
     </div>
   </div>
@@ -167,9 +167,9 @@
 
 <section class="section" id="comparison">
   <div class="container">
-    <div class="section-intro section-intro--split"><div><div class="eyebrow">Граница ответственности</div><h2 class="section-title section-title--sm">Harness управляет разработкой, а не runtime приложения</h2></div><p>Это важное отличие от фреймворка агентов: Harness живёт рядом с кодом проекта и организует работу агента над этим кодом.</p></div>
+    <div class="section-intro section-intro--split"><div><div class="eyebrow">Граница ответственности</div><h2 class="section-title section-title--sm">Harness управляет разработкой, а не среда исполнения приложения</h2></div><p>Это важное отличие от фреймворка агентов: Harness живёт рядом с кодом проекта и организует работу агента над этим кодом.</p></div>
     <div class="article-grid">
-      <div class="mini-card"><h3>AI Development Harness</h3><p>REQ, ADR, PRN, STEP, verification, review, Git policy и восстановление выполнения. Среда исполнения разработки — Codex или Claude Code.</p></div>
+      <div class="mini-card"><h3>AI Development Harness</h3><p>REQ, ADR, PRN, STEP, проверки, ревью, Git политика и восстановление выполнения. Среда исполнения разработки — Codex или Claude Code.</p></div>
       <div class="mini-card"><h3>Фреймворк агентов</h3><p>Агенты, инструменты, сообщения и оркестрация внутри самого AI-приложения. Это другой слой и другая ответственность.</p></div>
     </div>
     <p><a class="text-link" href="/architecture/#harness-vs-framework">Сравнить подробнее в архитектуре →</a></p>
@@ -250,9 +250,9 @@
     </nav>
   </div>
 </footer>
-<script src="/js/release.js?v=c91e74b2"></script>
-<script src="/js/theme.js?v=c91e74b2"></script>
-<script src="/js/main.js?v=c91e74b2"></script>
-<script type="module" src="/js/search.js?v=c91e74b2"></script>
+<script src="/js/release.js?v=62542678"></script>
+<script src="/js/theme.js?v=62542678"></script>
+<script src="/js/main.js?v=62542678"></script>
+<script type="module" src="/js/search.js?v=62542678"></script>
 </body>
 </html>

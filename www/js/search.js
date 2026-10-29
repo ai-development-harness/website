@@ -46,6 +46,9 @@ const FALLBACK_PUBLIC_PATHS = [
   '/articles/codex-claude-code-workflow/',
   '/articles/harness-development-lifecycle/',
   '/articles/deterministic-core-vs-llm/',
+  '/articles/late-defects-after-review/',
+  '/articles/incremental-review-verification/',
+  '/articles/portable-handoff/',
 ];
 
 const MAX_RESULTS = 8;

@@ -59,11 +59,7 @@ test.describe('SEO — метаданные публичных страниц', 
   });
 
   test('статьи публикуют Article structured data', async ({ page }) => {
-    for (const path of [
-      '/articles/what-is-ai-coding-harness/',
-      '/articles/persistent-context-codex-claude-code/',
-      '/articles/codex-claude-code-workflow/',
-    ]) {
+    for (const { path } of PUBLIC_PAGES.filter((entry) => entry.path.startsWith('/articles/') && entry.path !== '/articles/')) {
       await page.goto(path);
       const jsonLd = (await page.locator('script[type="application/ld+json"]').allTextContents())
         .map((block) => JSON.parse(block));

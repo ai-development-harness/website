@@ -10,7 +10,7 @@ const CANONICAL_COMMAND_PATTERNS = [
   /\bGITHUB GENERATE TEMPLATES\b/g,
   /\bRELEASE CHECK\b/g,
   /\bHARNESS (?:HELP|STATUS|RESUME|DOCTOR|CONFIG)\b/g,
-  /\bHARNESS UPDATE (?:CHECK|APPLY)\b/g,
+  /\bHARNESS (?:UPDATE|CLEANUP) (?:CHECK|APPLY)\b/g,
   /\bGIT PR FINISH\b/g,
   /\bGIT (?:CHECK|COMMIT|PUSH|PR|SYNC)\b/g,
 ];
@@ -132,4 +132,26 @@ test.describe('Контент — русская терминология', () =
       expect(text).toContain(command);
     }
   });
+});
+
+// Проверяем поясняющий текст отдельно от команд, путей и имён полей в code/pre.
+// Запрет охватывает прежние англоязычные вставки, а не названия технологий и статусы.
+const UNTRANSLATED_PROSE = /\b(?:handoff|checkpoint|scope|producer-bound|standalone|snapshot|findings?|fingerprints?|toolchain|configured|dispatcher|target)\b/i;
+
+test.describe('Контент — русский язык пояснений', () => {
+  for (const publicPage of PUBLIC_PAGES) {
+    test(`страница ${publicPage.path} не подменяет русские пояснения английскими словами`, async ({ page }) => {
+      await page.goto(publicPage.path);
+      const texts = await page.locator('body').evaluate((body) => {
+        const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+        const values = [];
+        let node;
+        while ((node = walker.nextNode())) {
+          if (!node.parentElement?.closest('code, pre, script, style')) values.push(node.nodeValue);
+        }
+        return values.join(' ');
+      });
+      expect(texts).not.toMatch(UNTRANSLATED_PROSE);
+    });
+  }
 });

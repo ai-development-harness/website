@@ -1,0 +1,143 @@
+{
+  "repository": "https://github.com/ai-development-harness/ai-development-harness-template",
+  "revision": "318bb21a840b1bcf1c97b575566afc255f2137b7",
+  "source": ".harness/command-transitions.json",
+  "commands": [
+    {
+      "canonical": "PROJECT INIT",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "PROJECT STATUS",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "PROJECT RECONCILE",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "PROJECT QUICK FIX:",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "STEP ADD:",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "STEP LIST",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "STEP SHOW STEP-NNN",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "STEP NEXT",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "STEP PLAN STEP-NNN",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "STEP IMPLEMENT STEP-NNN",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "STEP REVIEW STEP-NNN",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "STEP FIX STEP-NNN",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "STEP RUN STEP-NNN",
+      "reasoning": "conditional"
+    },
+    {
+      "canonical": "STEP AUDIT STEP-NNN",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "SKILL FIND:",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "SKILL INSTALL:",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "SKILL CREATE:",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "GITHUB GENERATE TEMPLATES",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "RELEASE CHECK",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "HARNESS HELP",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "HARNESS UPDATE CHECK",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "HARNESS UPDATE APPLY",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "HARNESS STATUS",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "HARNESS RESUME",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "HARNESS DOCTOR",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "HARNESS CONFIG",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "HARNESS CLEANUP CHECK",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "HARNESS CLEANUP APPLY",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "GIT CHECK",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "GIT COMMIT",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "GIT PUSH",
+      "reasoning": "conditional"
+    },
+    {
+      "canonical": "GIT PR",
+      "reasoning": "required"
+    },
+    {
+      "canonical": "GIT PR FINISH",
+      "reasoning": "none"
+    },
+    {
+      "canonical": "GIT SYNC",
+      "reasoning": "none"
+    }
+  ]
+}
