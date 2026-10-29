@@ -20,6 +20,7 @@ export const PUBLIC_PAGES = [
   { path: '/articles/portable-handoff/', h1: 'Как продолжить AI-разработку на другом компьютере и не потерять состояние проекта', breadcrumb: 'Работа на другом компьютере', docs: true },
   { path: '/articles/incremental-review-verification/', h1: 'Почему REVIEW после FIX не должен заново проверять весь проект', breadcrumb: 'Повторное ревью после FIX', docs: true },
   { path: '/articles/late-defects-after-review/', h1: 'Ошибку нашли после REVIEW PASS: как безопасно исправлять поздние дефекты', breadcrumb: 'Дефект после REVIEW PASS', docs: true },
+  { path: '/articles/engineering-decisions-adr-git/', h1: 'Почему так устроено: как AI восстанавливает инженерные решения по ADR и Git', breadcrumb: 'Как восстановить причины инженерного решения', docs: true },
 ];
 
 export const DOC_PAGES = PUBLIC_PAGES.filter((page) => page.docs);

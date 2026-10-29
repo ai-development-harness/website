@@ -209,7 +209,7 @@ const BRANCH_RULES = {
         'PASS',
         'finish',
         'PASS',
-        'Проверка пройдена; завершение STEP требует проверка завершённости. Подтверждённый поздний дефект активного STEP допускает отдельный FIX.'
+        'Проверка пройдена; завершение STEP требует проверки завершённости. Подтверждённый поздний дефект активного STEP допускает отдельный FIX.'
       ),
       option(
         'FAIL',
@@ -367,7 +367,7 @@ const CUSTOM_FLOWS = {
     { type: 'success', label: 'UPDATED: конечный релиз установлен. При reloadRequired перезапустить среду перед работой; повторный APPLY не нужен. Далее GIT CHECK.' },
   ],
 
-  // @link https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/INCREMENTAL_REVIEW.md: потерянный delta блокирует REVIEW,
+  // @link https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/INCREMENTAL_REVIEW.md: утраченный набор изменений блокирует REVIEW,
   // тогда как непригодный кэш Verification требует полного прогона команд.
   'STEP REVIEW STEP-NNN': [
     { type: 'decision', label: 'Объект независимого REVIEW', choices: [
@@ -378,10 +378,29 @@ const CUSTOM_FLOWS = {
     ] },
     { type: 'gate', label: 'Свежие результаты проверок, ревизия и контракт' },
     { type: 'agent', label: 'Независимый проверяющий и обязательные специализированные проверки' },
-    { type: 'decision', label: 'Вердикт' },
+    {
+      type: 'decision',
+      label: 'Вердикт',
+      choices: [
+        option('PASS'),
+        option('FAIL', 'finish', 'FAIL', 'Подтверждённые замечания передаются в STEP FIX STEP-NNN.'),
+        option('BLOCKED', 'stop', 'BLOCKED', 'Блокирующая проблема контракта или зависимости. Цикл FIX не запускается.'),
+      ],
+    },
+    // PASS описывает проверенную ревизию. Поздний дефект требует отдельного
+    // подтверждения и разных действий для активного и завершённого STEP.
+    {
+      type: 'decision',
+      label: 'Состояние после PASS',
+      choices: [
+        option('STEP завершён', 'finish', 'PASS', 'Проверка завершённости пройдена. Поздний дефект оформляется отдельным корректирующим STEP; исторический REVIEW не переписывается.'),
+        option('Активный STEP: поздний дефект подтверждён', 'finish', 'SUCCESS', 'Проверенное неизменяемое наблюдение и свежие доказательства разрешают STEP FIX STEP-NNN. Затем нужны новые проверки и независимый REVIEW точных изменений FIX.'),
+        option('Активный STEP: наблюдение не подтверждено', 'stop', 'BLOCKED', 'Одного старого PASS недостаточно для FIX. Нужны подтверждённое наблюдение и актуальные доказательства.'),
+      ],
+    },
   ],
   // @link https://github.com/ai-development-harness/ai-development-harness-template/blob/main/.harness/docs/PORTABLE_RESUME.md: перенос запускает новую PLAN,
-  // а локальный checkpoint всегда проверяется раньше переносимого входа.
+  // а локальная контрольная запись всегда проверяется раньше переносимого входа.
   'HARNESS RESUME': [
     { type: 'decision', label: 'Локальное продолжение', choices: [
       option('Есть однозначное локальное продолжение', 'finish', 'SUCCESS', 'Восстановить исходную корневую команду в прежнем executionId после проверки намерения, продвижения и внешних операций.'),
@@ -454,14 +473,14 @@ const CUSTOM_FLOWS = {
     { type: 'gate', label: 'Проверка по контракту: полный прогон или проверенная impactMap', onlyWhenPrevious: 'FAIL — перейти к STEP FIX' },
     {
       type: 'decision',
-      label: 'Повторная STEP REVIEW',
+      label: 'Повторная STEP REVIEW: точные изменения FIX и прямые регрессии',
       onlyWhenPrevious: 'FAIL — перейти к STEP FIX',
       choices: [
         option(
           'PASS',
           'finish',
           'SUCCESS',
-          'Исправления приняты; завершение STEP требует проверка завершённости.'
+          'Исправления приняты; завершение STEP требует проверки завершённости.'
         ),
         option(
           'FAIL — повторить цикл',

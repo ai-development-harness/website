@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PUBLIC_PAGES } from '../helpers/site.js';
 
-const articles = PUBLIC_PAGES.filter((entry) => /portable-handoff|incremental-review-verification|late-defects-after-review/.test(entry.path));
+const articles = PUBLIC_PAGES.filter((entry) => /portable-handoff|incremental-review-verification|late-defects-after-review|engineering-decisions-adr-git/.test(entry.path));
 
 test.describe('Статьи — перенос, повторные проверки и поздние дефекты', () => {
   for (const article of articles) {
@@ -30,4 +30,15 @@ test.describe('Статьи — перенос, повторные провер�
     await expect(page.locator('#reuse')).toContainText('invalidatedChecks');
     await expect(page.locator('#reuse')).toContainText('полный прогон');
   });
+});
+
+
+test('статья об инженерных решениях отделяет факты от выводов и ссылается на реальную историю', async ({ page }) => {
+  await page.goto('/articles/engineering-decisions-adr-git/');
+  await expect(page.locator('#claims')).toContainText('Документированный факт');
+  await expect(page.locator('#claims')).toContainText('Обоснованный вывод');
+  await expect(page.locator('#claims')).toContainText('Пробел в доказательствах');
+  await expect(page.locator('#case a[href$="/issues/342"]')).toBeVisible();
+  await expect(page.locator('#case a[href$="/commit/88755a09c0052201f057664d07d2af48d2185a3b"]')).toBeVisible();
+  await expect(page.locator('#conflicts')).toContainText('Более поздняя дата коммита не отменяет ADR автоматически');
 });

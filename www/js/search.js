@@ -49,6 +49,7 @@ const FALLBACK_PUBLIC_PATHS = [
   '/articles/late-defects-after-review/',
   '/articles/incremental-review-verification/',
   '/articles/portable-handoff/',
+  '/articles/engineering-decisions-adr-git/',
 ];
 
 const MAX_RESULTS = 8;

@@ -56,3 +56,17 @@ test.describe('Команды — безопасные развилки восс
     await expect(dialog.locator('[data-diagram-result]')).toContainText('не выполняется молча');
   });
 });
+
+
+test('после PASS активный и завершённый STEP требуют разных действий', async ({ page }) => {
+  await page.goto('/commands/');
+  await page.locator('[data-command="STEP REVIEW STEP-NNN"]').click();
+  const dialog = page.locator('.command-diagram-dialog');
+  await dialog.getByRole('button', { name: 'Активный STEP: поздний дефект подтверждён', exact: true }).click();
+  await expect(dialog.locator('[data-diagram-result]')).toContainText('STEP FIX STEP-NNN');
+  await expect(dialog.locator('[data-diagram-result]')).toContainText('новые проверки');
+  await dialog.getByRole('button', { name: 'STEP завершён', exact: true }).click();
+  await expect(dialog.locator('[data-diagram-result]')).toContainText('отдельным корректирующим STEP');
+  await dialog.getByRole('button', { name: 'Активный STEP: наблюдение не подтверждено', exact: true }).click();
+  await expect(dialog.locator('[data-diagram-result]')).toContainText('BLOCKED');
+});

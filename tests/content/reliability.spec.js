@@ -54,3 +54,24 @@ test.describe('Контент — команды и надёжность Harness
     await expect(section).toContainText('VERIFICATION_INPUTS_STALE');
   });
 });
+
+
+// Каждая команда проверяется отдельно: последовательный обход всех диалогов
+// превышал лимит одного случая в WebKit и мешал точно определить место сбоя.
+test.describe('Режим модели в схемах всех канонических команд', () => {
+  const expectedModes = {
+    none: /Модель не вызывается|Сама команда без модели/,
+    required: /Модель обязательна/,
+    conditional: /Модель зависит от сценария/,
+  };
+
+  for (const entry of baseline.commands) {
+    test(`команда ${entry.canonical} показывает режим из реестра Harness`, async ({ page }) => {
+      await page.goto('/commands/');
+      await page.locator(`.command-diagram-open[data-command="${entry.canonical}"]`).click();
+      const dialog = page.locator('.command-diagram-dialog');
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toContainText(expectedModes[entry.reasoning]);
+    });
+  }
+});
